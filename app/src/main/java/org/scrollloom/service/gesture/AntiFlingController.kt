@@ -37,4 +37,6 @@ class AntiFlingController(
             result
         }
     }
+
+    fun cancelCurrentGesture(): Boolean = dispatcher.sendCancelGesture()
 }
