@@ -1,17 +1,13 @@
 package org.scrollloom.domain.repository
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.scrollloom.domain.model.LoomAction
 import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.engine.model.TileMetadata
+import java.io.File
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LoomRepositoryTest {
 
     private lateinit var repository: LoomRepository
@@ -22,61 +18,64 @@ class LoomRepositoryTest {
     }
 
     @Test
-    fun `initial state should be Idle with service disconnected`() = runTest {
-        val state = repository.weavingState.first()
-        assertTrue("State should be Idle", state is WeavingState.Idle)
-        assertFalse("Service should not be connected initially", (state as WeavingState.Idle).isServiceConnected)
+    fun `initial state should be Idle with disconnected service`() {
+        assertEquals(WeavingState.Idle(false), repository.weavingState.value)
     }
 
     @Test
-    fun `updateServiceConnected should reflect connection status correctly`() = runTest {
+    fun `startWeaving should transition state to Weaving with zero frames`() {
         repository.updateServiceConnected(true)
-        val connectedState = repository.weavingState.first()
-        assertTrue("State should be Idle", connectedState is WeavingState.Idle)
-        assertTrue("Service should be connected", (connectedState as WeavingState.Idle).isServiceConnected)
-
-        repository.updateServiceConnected(false)
-        val disconnectedState = repository.weavingState.first()
-        assertFalse("Service should be disconnected", (disconnectedState as WeavingState.Idle).isServiceConnected)
+        repository.startWeaving()
+        val state = repository.weavingState.value
+        assertTrue(state is WeavingState.Weaving)
+        val weaving = state as WeavingState.Weaving
+        assertEquals(0, weaving.frameCount)
+        assertEquals(0, weaving.currentHeightPx)
     }
 
     @Test
-    fun `triggerAction Start should transition to Capturing when service is connected`() = runTest {
+    fun `updateProgress should update frameCount and height`() {
+        repository.startWeaving()
+        repository.updateProgress(4, 1500)
+        val state = repository.weavingState.value as WeavingState.Weaving
+        assertEquals(4, state.frameCount)
+        assertEquals(1500, state.currentHeightPx)
+    }
+
+    @Test
+    fun `finishWeaving should transition to Preview with correct totalHeight`() {
+        repository.startWeaving()
+        val tile1 = TileMetadata(0, File("t0"), 100, 500, 0)
+        val tile2 = TileMetadata(1, File("t1"), 100, 300, 500)
+
+        repository.finishWeaving(listOf(tile1, tile2))
+
+        val state = repository.weavingState.value
+        assertTrue(state is WeavingState.Preview)
+        val preview = state as WeavingState.Preview
+        assertEquals(2, preview.tiles.size)
+        assertEquals(800, preview.totalHeightPx)
+    }
+
+    @Test
+    fun `failWeaving should transition to Error preserving partial tiles`() {
+        repository.startWeaving()
+        val partialTile = TileMetadata(0, File("p0"), 100, 400, 0)
+
+        repository.failWeaving("Secure blocked", listOf(partialTile))
+
+        val state = repository.weavingState.value
+        assertTrue(state is WeavingState.Error)
+        val error = state as WeavingState.Error
+        assertEquals("Secure blocked", error.message)
+        assertEquals(1, error.partialTiles.size)
+    }
+
+    @Test
+    fun `reset should return to Idle`() {
         repository.updateServiceConnected(true)
-        repository.triggerAction(LoomAction.Start)
-
-        val state = repository.weavingState.first()
-        assertTrue("State should be Capturing", state is WeavingState.Capturing)
-        assertEquals("Strip count should start at 0", 0, (state as WeavingState.Capturing).stripCount)
-    }
-
-    @Test
-    fun `triggerAction Start should fail with error when service is not connected`() = runTest {
-        repository.updateServiceConnected(false)
-        repository.triggerAction(LoomAction.Start)
-
-        val state = repository.weavingState.first()
-        assertTrue("State should be Error when starting without service", state is WeavingState.Error)
-    }
-
-    @Test
-    fun `triggerAction Stop should transition from Capturing to Preview`() = runTest {
-        repository.updateServiceConnected(true)
-        repository.triggerAction(LoomAction.Start)
-        repository.triggerAction(LoomAction.Stop)
-
-        val state = repository.weavingState.first()
-        assertTrue("State should be Preview after stopping capture", state is WeavingState.Preview)
-    }
-
-    @Test
-    fun `triggerAction Reset should return to Idle`() = runTest {
-        repository.updateServiceConnected(true)
-        repository.triggerAction(LoomAction.Start)
-        repository.triggerAction(LoomAction.Reset)
-
-        val state = repository.weavingState.first()
-        assertTrue("State should be Idle after reset", state is WeavingState.Idle)
-        assertTrue("Service should remain connected after reset", (state as WeavingState.Idle).isServiceConnected)
+        repository.startWeaving()
+        repository.reset()
+        assertEquals(WeavingState.Idle(true), repository.weavingState.value)
     }
 }

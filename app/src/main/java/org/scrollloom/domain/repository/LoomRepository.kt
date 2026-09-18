@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.scrollloom.domain.model.LoomAction
 import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.engine.model.TileMetadata
 
 class LoomRepository {
 
@@ -23,26 +24,46 @@ class LoomRepository {
         }
     }
 
+    fun startWeaving() {
+        _weavingState.value = WeavingState.Weaving(frameCount = 0, currentHeightPx = 0)
+    }
+
+    fun updateProgress(frameCount: Int, currentHeight: Int) {
+        if (_weavingState.value is WeavingState.Weaving) {
+            _weavingState.value = WeavingState.Weaving(frameCount, currentHeight)
+        }
+    }
+
+    fun finishWeaving(tiles: List<TileMetadata>) {
+        val totalHeight = tiles.sumOf { it.height }
+        _weavingState.value = WeavingState.Preview(tiles, totalHeight)
+    }
+
+    fun failWeaving(message: String, partialTiles: List<TileMetadata> = emptyList()) {
+        _weavingState.value = WeavingState.Error(message, partialTiles)
+    }
+
+    fun reset() {
+        _weavingState.value = WeavingState.Idle(isServiceConnected = isConnected)
+    }
+
     fun triggerAction(action: LoomAction) {
         when (action) {
             is LoomAction.Start -> {
                 if (!isConnected) {
                     _weavingState.value = WeavingState.Error("无障碍服务尚未启用，请先开启服务")
                 } else {
-                    _weavingState.value = WeavingState.Capturing(stripCount = 0)
+                    startWeaving()
                 }
             }
             is LoomAction.Stop -> {
-                if (_weavingState.value is WeavingState.Capturing) {
-                    _weavingState.value = WeavingState.Preview(tileCount = 0, totalHeightPx = 0)
+                val current = _weavingState.value
+                if (current is WeavingState.Weaving) {
+                    _weavingState.value = WeavingState.Preview(emptyList(), current.currentHeightPx)
                 }
             }
-            is LoomAction.Reset -> {
-                _weavingState.value = WeavingState.Idle(isServiceConnected = isConnected)
-            }
-            is LoomAction.ReportError -> {
-                _weavingState.value = WeavingState.Error(action.message)
-            }
+            is LoomAction.Reset -> reset()
+            is LoomAction.ReportError -> failWeaving(action.message)
         }
     }
 }

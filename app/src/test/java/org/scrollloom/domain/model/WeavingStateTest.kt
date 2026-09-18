@@ -3,6 +3,8 @@ package org.scrollloom.domain.model
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.scrollloom.engine.model.TileMetadata
+import java.io.File
 
 class WeavingStateTest {
 
@@ -11,17 +13,17 @@ class WeavingStateTest {
         val idle = WeavingState.Idle(isServiceConnected = true)
         assertTrue(idle.isServiceConnected)
 
-        val capturing = WeavingState.Capturing(stripCount = 5)
-        assertEquals(5, capturing.stripCount)
+        val weaving = WeavingState.Weaving(frameCount = 5, currentHeightPx = 2500)
+        assertEquals(5, weaving.frameCount)
+        assertEquals(2500, weaving.currentHeightPx)
 
-        val weaving = WeavingState.Weaving(progress = 0.75f)
-        assertEquals(0.75f, weaving.progress, 0.001f)
+        val tile = TileMetadata(0, File("t0"), 100, 1000, 0)
+        val preview = WeavingState.Preview(tiles = listOf(tile), totalHeightPx = 1000)
+        assertEquals(1, preview.tiles.size)
+        assertEquals(1000, preview.totalHeightPx)
 
-        val preview = WeavingState.Preview(tileCount = 3, totalHeightPx = 6000)
-        assertEquals(3, preview.tileCount)
-        assertEquals(6000, preview.totalHeightPx)
-
-        val error = WeavingState.Error("Security window blocked")
+        val error = WeavingState.Error("Security window blocked", listOf(tile))
         assertEquals("Security window blocked", error.message)
+        assertEquals(1, error.partialTiles.size)
     }
 }

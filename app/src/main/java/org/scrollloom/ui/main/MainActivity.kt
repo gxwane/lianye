@@ -46,6 +46,12 @@ import org.scrollloom.ui.common.theme.LoomGreen
 import org.scrollloom.ui.common.theme.LoomRed
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
+import android.widget.Toast
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import org.scrollloom.engine.export.MediaExportManager
+import org.scrollloom.ui.preview.ScrollPreviewScreen
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,12 +60,39 @@ class MainActivity : ComponentActivity() {
             ScrollLoomTheme {
                 val repository = App.instance.appComponent.loomRepository
                 val weavingState by repository.weavingState.collectAsState()
+                val exportManager = remember { MediaExportManager(contentResolver) }
+                val context = LocalContext.current
 
-                MainScreen(
-                    state = weavingState,
-                    onOpenAccessibilitySettings = { openAccessibilitySettings() },
-                    onOpenAppDetailsSettings = { openAppDetailsSettings() }
-                )
+                when (val current = weavingState) {
+                    is WeavingState.Preview -> {
+                        ScrollPreviewScreen(
+                            tiles = current.tiles,
+                            onSaveClick = {
+                                val uri = exportManager.saveTilesToGallery(current.tiles)
+                                if (uri != null) {
+                                    Toast.makeText(context, "长卷已成功存入相册！", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            onShareClick = {
+                                val uri = exportManager.saveTilesToGallery(current.tiles)
+                                if (uri != null) {
+                                    val shareIntent = exportManager.createShareIntent(uri)
+                                    startActivity(Intent.createChooser(shareIntent, "分享长卷"))
+                                }
+                            },
+                            onBackClick = {
+                                repository.reset()
+                            }
+                        )
+                    }
+                    else -> {
+                        MainScreen(
+                            state = weavingState,
+                            onOpenAccessibilitySettings = { openAccessibilitySettings() },
+                            onOpenAppDetailsSettings = { openAppDetailsSettings() }
+                        )
+                    }
+                }
             }
         }
     }
