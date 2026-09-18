@@ -167,12 +167,12 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(24.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(R.string.app_name),
@@ -185,7 +185,7 @@ fun MainScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             ServiceStatusCard(
                 isConnected = isServiceConnected,
@@ -193,7 +193,7 @@ fun MainScreen(
             )
 
             if (!isServiceConnected && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 RestrictedSettingsCard(
                     onOpenAppDetailsSettings = onOpenAppDetailsSettings,
                     onOpenBatteryOptimization = onOpenBatteryOptimization
@@ -223,7 +223,7 @@ fun ServiceStatusCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -285,7 +285,7 @@ fun RestrictedSettingsCard(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "🛡️ " + stringResource(R.string.btn_restricted_settings_guide),
                 fontWeight = FontWeight.Bold,

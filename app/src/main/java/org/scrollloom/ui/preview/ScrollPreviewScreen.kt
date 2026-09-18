@@ -14,8 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -54,7 +59,15 @@ fun ScrollPreviewScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("长卷预览 (${totalHeight}px)") }
+                title = { Text("长卷预览 (${totalHeight}px)") },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "返回"
+                        )
+                    }
+                }
             )
         },
         bottomBar = {
@@ -64,25 +77,18 @@ fun ScrollPreviewScreen(
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedButton(
-                    onClick = onBackClick,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("返回")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = onSaveClick,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1.2f)
                 ) {
-                    Text("存入相册")
+                    Text("存入相册", maxLines = 1)
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
+                Spacer(modifier = Modifier.width(12.dp))
+                FilledTonalButton(
                     onClick = onShareClick,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("分享")
+                    Text("分享长卷", maxLines = 1)
                 }
             }
         },

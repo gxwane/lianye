@@ -68,6 +68,10 @@ class LoomAccessibilityService : AccessibilityService() {
                     val tiles = engine.startWeaving()
                     if (engine.state.value == LoomState.COMPLETED) {
                         repository.finishWeaving(tiles)
+                        val intent = Intent(this@LoomAccessibilityService, MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                        startActivity(intent)
                     } else {
                         repository.failWeaving("长截图未完成", tiles)
                     }

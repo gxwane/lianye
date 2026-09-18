@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,8 +35,8 @@ fun LoomFloatingBubble(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
+        modifier = modifier.defaultMinSize(minWidth = 48.dp, minHeight = 48.dp),
+        shape = RoundedCornerShape(24.dp),
         color = MaterialTheme.colorScheme.primaryContainer,
         shadowElevation = 6.dp
     ) {
@@ -64,7 +65,8 @@ private fun IdleBubble(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -96,7 +98,8 @@ private fun WeavingBubble(frameCount: Int, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(
@@ -120,7 +123,8 @@ private fun FinishedBubble(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = "✅", fontSize = 14.sp)
@@ -138,7 +142,8 @@ private fun ErrorBubble(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .defaultMinSize(minWidth = 48.dp, minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = "⚠️", fontSize = 14.sp)

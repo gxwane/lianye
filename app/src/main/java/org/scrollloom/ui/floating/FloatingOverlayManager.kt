@@ -3,7 +3,9 @@ package org.scrollloom.ui.floating
 import android.content.Context
 import android.graphics.PixelFormat
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -11,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.scrollloom.domain.model.WeavingState
 import org.scrollloom.domain.repository.LoomRepository
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
@@ -49,12 +52,17 @@ class FloatingOverlayManager(
             setContent {
                 ScrollLoomTheme {
                     val state by repository.weavingState.collectAsState()
-                    LoomFloatingBubble(
-                        state = state,
-                        onStartClick = onStartCapture,
-                        onStopClick = onStopCapture,
-                        onPreviewClick = onOpenPreview
-                    )
+                    LaunchedEffect(state) {
+                        this@apply.visibility = if (state is WeavingState.Preview) View.GONE else View.VISIBLE
+                    }
+                    if (state !is WeavingState.Preview) {
+                        LoomFloatingBubble(
+                            state = state,
+                            onStartClick = onStartCapture,
+                            onStopClick = onStopCapture,
+                            onPreviewClick = onOpenPreview
+                        )
+                    }
                 }
             }
         }
@@ -68,17 +76,25 @@ class FloatingOverlayManager(
     suspend fun hideBeforeCapture() {
         val view = composeView ?: return
         scope.launch(Dispatchers.Main) {
-            view.alpha = 0.0f
+            view.visibility = View.INVISIBLE
+            windowParams.alpha = 0.0f
+            if (isAttached && view.isAttachedToWindow) {
+                windowManager.updateViewLayout(view, windowParams)
+            }
         }.join()
 
-        // Hybrid Timing Guard: At least 2 VSYNC intervals (40ms physical floor)
-        delay(40L)
+        // Timing Guard: 80ms covers 5+ VSYNC frames for SurfaceFlinger transaction commit
+        delay(80L)
     }
 
     fun showAfterCapture() {
         val view = composeView ?: return
         scope.launch(Dispatchers.Main) {
-            view.alpha = 1.0f
+            view.visibility = View.VISIBLE
+            windowParams.alpha = 1.0f
+            if (isAttached && view.isAttachedToWindow) {
+                windowManager.updateViewLayout(view, windowParams)
+            }
         }
     }
 
