@@ -35,7 +35,7 @@ class OverlapMatcher(
         val leftLuma = IntArray(h)
         val centerLuma = IntArray(h)
         val rightLuma = IntArray(h)
-        val horizontalVar = LongArray(h)
+        val horizontalVar = LongArray(0)
 
         val leftCount = maxOf(1, col1End - startX)
         val centerCount = maxOf(1, col2End - col1End)
@@ -45,7 +45,6 @@ class OverlapMatcher(
             var sumLeft = 0L
             var sumCenter = 0L
             var sumRight = 0L
-            var sumAll = 0L
 
             for (x in startX until endX) {
                 val p = slice.getPixel(x, y)
@@ -60,25 +59,11 @@ class OverlapMatcher(
                     x < col2End -> sumCenter += luma
                     else -> sumRight += luma
                 }
-                sumAll += luma
             }
 
             leftLuma[y] = (sumLeft / leftCount).toInt()
             centerLuma[y] = (sumCenter / centerCount).toInt()
             rightLuma[y] = (sumRight / rightCount).toInt()
-
-            val meanAll = (sumAll / effW).toInt()
-            var sumSq = 0L // P1 Fix: Long accumulator against 4K overflow
-            for (x in startX until endX) {
-                val p = slice.getPixel(x, y)
-                val r = (p ushr 16) and 0xFF
-                val g = (p ushr 8) and 0xFF
-                val b = p and 0xFF
-                val luma = (77 * r + 150 * g + 29 * b) ushr 8
-                val diff = luma - meanAll
-                sumSq += (diff * diff)
-            }
-            horizontalVar[y] = sumSq / effW
         }
 
         return LumaSignature(h, leftLuma, centerLuma, rightLuma, horizontalVar)
@@ -166,6 +151,8 @@ class OverlapMatcher(
         var minScore2 = Float.MAX_VALUE
         var bestDeltaY2 = 0
 
+        val scores = FloatArray(maxShift + 1) { Float.MAX_VALUE }
+
         val searchStep = 1
         for (deltaY in 0..maxShift step searchStep) {
             val tStartNext = tStartPrev - deltaY
@@ -176,39 +163,54 @@ class OverlapMatcher(
                 sigNext, tStartNext,
                 tH, rowMask
             )
+            scores[deltaY] = score
 
-            val penalizedScore = if (priorDeltaY != null) {
-                val diff = deltaY - priorDeltaY
-                score + 0.04f * (diff * diff)
-            } else {
-                score
-            }
-
-            if (penalizedScore < minScore1) {
+            if (score < minScore1) {
                 if (kotlin.math.abs(deltaY - bestDeltaY1) >= 15) {
                     minScore2 = minScore1
                     bestDeltaY2 = bestDeltaY1
                 }
-                minScore1 = penalizedScore
+                minScore1 = score
                 bestDeltaY1 = deltaY
-            } else if (penalizedScore < minScore2 && kotlin.math.abs(deltaY - bestDeltaY1) >= 15) {
-                minScore2 = penalizedScore
+            } else if (score < minScore2 && kotlin.math.abs(deltaY - bestDeltaY1) >= 15) {
+                minScore2 = score
                 bestDeltaY2 = deltaY
             }
         }
 
-        // P1 Fix: Laplace smoothed ambiguity ratio to prevent NaN
+        // Laplace smoothed ambiguity ratio: ratio >= 0.85 means best score is within 15% of second best
         val ambiguityRatio = if (minScore2 < Float.MAX_VALUE) {
             (minScore1 + 1.0f) / (minScore2 + 1.0f)
         } else {
             0.0f
         }
 
-        val isBottomReached = (bestDeltaY1 <= 2 && minScore1 <= 15.0f)
+        var finalDeltaY = bestDeltaY1
+        var finalScore = minScore1
+
+        // If ambiguous (ambiguityRatio >= 0.85) and we have a priorDeltaY, disambiguate using Gaussian prior penalty
+        if (ambiguityRatio >= 0.85f && priorDeltaY != null) {
+            var minPenalizedScore = Float.MAX_VALUE
+            val threshold = minScore1 * 1.25f + 5.0f
+            for (deltaY in 0..maxShift step searchStep) {
+                val s = scores[deltaY]
+                if (s <= threshold) {
+                    val diff = deltaY - priorDeltaY
+                    val penalized = s + 0.04f * (diff * diff)
+                    if (penalized < minPenalizedScore) {
+                        minPenalizedScore = penalized
+                        finalDeltaY = deltaY
+                        finalScore = s
+                    }
+                }
+            }
+        }
+
+        val isBottomReached = (finalDeltaY <= 2 && finalScore <= 15.0f)
 
         return MatchResult(
-            deltaY = bestDeltaY1,
-            sadScore = minScore1,
+            deltaY = finalDeltaY,
+            sadScore = finalScore,
             ambiguityRatio = ambiguityRatio,
             isBottomReached = isBottomReached,
             isSecureBlocked = false
@@ -280,19 +282,22 @@ class OverlapMatcher(
     }
 
     private fun isFrameAllBlack(slice: PixelSlice): Boolean {
-        val stepX = maxOf(1, slice.width / 10)
-        val stepY = maxOf(1, slice.height / 20)
+        val stepX = maxOf(1, slice.width / 30)
+        val stepY = maxOf(1, slice.height / 40)
+        var total = 0
+        var black = 0
         for (y in 0 until slice.height step stepY) {
             for (x in 0 until slice.width step stepX) {
+                total++
                 val pixel = slice.getPixel(x, y)
                 val r = (pixel ushr 16) and 0xFF
                 val g = (pixel ushr 8) and 0xFF
                 val b = pixel and 0xFF
-                if (r > 5 || g > 5 || b > 5) {
-                    return false
+                if (r <= 2 && g <= 2 && b <= 2) {
+                    black++
                 }
             }
         }
-        return true
+        return total > 0 && black == total
     }
 }

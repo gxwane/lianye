@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.scrollloom.engine.model.TileMetadata
+import androidx.activity.compose.BackHandler
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 
@@ -44,6 +45,10 @@ fun ScrollPreviewScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    BackHandler {
+        onBackClick()
+    }
+
     val totalHeight = tiles.sumOf { it.height }
 
     Scaffold(

@@ -47,10 +47,16 @@ import org.scrollloom.ui.common.theme.LoomRed
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.scrollloom.engine.export.MediaExportManager
 import org.scrollloom.ui.preview.ScrollPreviewScreen
 
@@ -67,19 +73,36 @@ class MainActivity : ComponentActivity() {
 
                 when (val current = weavingState) {
                     is WeavingState.Preview -> {
+                        var exportedUri by remember { mutableStateOf<Uri?>(null) }
+                        val coroutineScope = rememberCoroutineScope()
+
                         ScrollPreviewScreen(
                             tiles = current.tiles,
                             onSaveClick = {
-                                val uri = exportManager.saveTilesToGallery(current.tiles)
-                                if (uri != null) {
-                                    Toast.makeText(context, "长卷已成功存入相册！", Toast.LENGTH_SHORT).show()
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    val uri = exportedUri ?: exportManager.saveTilesToGallery(current.tiles)
+                                    withContext(Dispatchers.Main) {
+                                        if (uri != null) {
+                                            exportedUri = uri
+                                            Toast.makeText(context, "长卷已成功存入相册！", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, "保存失败，请检查存储权限", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                                 }
                             },
                             onShareClick = {
-                                val uri = exportManager.saveTilesToGallery(current.tiles)
-                                if (uri != null) {
-                                    val shareIntent = exportManager.createShareIntent(uri)
-                                    startActivity(Intent.createChooser(shareIntent, "分享长卷"))
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    val uri = exportedUri ?: exportManager.saveTilesToGallery(current.tiles)
+                                    withContext(Dispatchers.Main) {
+                                        if (uri != null) {
+                                            exportedUri = uri
+                                            val shareIntent = exportManager.createShareIntent(uri)
+                                            startActivity(Intent.createChooser(shareIntent, "分享长卷"))
+                                        } else {
+                                            Toast.makeText(context, "导出失败", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                                 }
                             },
                             onBackClick = {

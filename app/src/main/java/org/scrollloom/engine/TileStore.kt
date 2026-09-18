@@ -25,6 +25,7 @@ class TileStore(
         if (!storageDir.exists()) {
             storageDir.mkdirs()
         }
+        cleanupOrphanedTileFiles()
     }
 
     fun appendStrip(strip: PixelSlice) {
@@ -53,8 +54,14 @@ class TileStore(
             }
         }
         currentFile?.let { if (it.exists()) it.delete() }
+        cleanupOrphanedTileFiles()
         tiles.clear()
         resetState()
+    }
+
+    private fun cleanupOrphanedTileFiles() {
+        storageDir.listFiles { f -> f.name.startsWith("tile_") && f.name.endsWith(".bin") }
+            ?.forEach { it.delete() }
     }
 
     private fun validateWidth(w: Int) {

@@ -3,6 +3,7 @@ package org.scrollloom.engine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
 import org.scrollloom.engine.model.LoomState
 import org.scrollloom.engine.model.PixelSlice
 import org.scrollloom.engine.model.TileMetadata
@@ -13,10 +14,15 @@ class LoomEngine(
     private val overlapMatcher: OverlapMatcher,
     private val antiFlingController: AntiFlingController,
     private val tileStore: TileStore,
-    private val frameCapturer: FrameCapturer
+    private val frameCapturer: FrameCapturer,
+    private val varianceMaskEngine: TemporalVarianceMask = TemporalVarianceMask()
 ) {
     private val _state = MutableStateFlow(LoomState.IDLE)
     val state: StateFlow<LoomState> = _state.asStateFlow()
+
+    private val weaveMutex = Mutex()
+    private val frameWindow = mutableListOf<PixelSlice>()
+    private var priorDeltaY: Int? = null
 
     @Volatile
     private var isStopRequested = false
@@ -27,17 +33,25 @@ class LoomEngine(
             startX = 500f, startY = 1200f, endX = 500f, endY = 600f
         )
     ): List<TileMetadata> {
-        isStopRequested = false
-        _state.value = LoomState.CAPTURING
-
-        var prevSlice: PixelSlice? = null
+        if (!weaveMutex.tryLock()) {
+            return emptyList()
+        }
 
         try {
+            tileStore.clear()
+            frameWindow.clear()
+            priorDeltaY = null
+            isStopRequested = false
+            _state.value = LoomState.CAPTURING
+
+            var prevSlice: PixelSlice? = null
+
             val initialFrame = frameCapturer.captureFrame() ?: run {
                 _state.value = LoomState.ERROR
                 return emptyList()
             }
             tileStore.appendStrip(initialFrame)
+            frameWindow.add(initialFrame)
             prevSlice = initialFrame
 
             for (frameIndex in 1 until maxFrames) {
@@ -69,6 +83,8 @@ class LoomEngine(
             antiFlingController.cancelCurrentGesture()
             tileStore.clear()
             throw e
+        } finally {
+            weaveMutex.unlock()
         }
     }
 
@@ -85,7 +101,28 @@ class LoomEngine(
         val nextSlice = frameCapturer.captureFrame() ?: return FrameStepResult.Stop
 
         _state.value = LoomState.WEAVING
-        val matchResult = overlapMatcher.match(prevSlice, nextSlice)
+        frameWindow.add(nextSlice)
+        if (frameWindow.size > 3) {
+            frameWindow.removeAt(0)
+        }
+
+        val rowMask = if (frameWindow.size == 3) {
+            varianceMaskEngine.computeRowMask(frameWindow[0], frameWindow[1], frameWindow[2])
+        } else {
+            null
+        }
+
+        val matchResult = overlapMatcher.match(
+            prevSlice = prevSlice,
+            nextSlice = nextSlice,
+            rowMask = rowMask,
+            priorDeltaY = priorDeltaY
+        )
+
+        if (matchResult.deltaY > 0) {
+            priorDeltaY = matchResult.deltaY
+        }
+
         if (matchResult.isSecureBlocked) return FrameStepResult.Error
 
         if (matchResult.isBottomReached) {

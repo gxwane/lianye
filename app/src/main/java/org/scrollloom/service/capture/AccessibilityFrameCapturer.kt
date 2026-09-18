@@ -48,18 +48,26 @@ class AccessibilityFrameCapturer(
     private fun extractPixelSlice(result: AccessibilityService.ScreenshotResult): PixelSlice? {
         val buffer = result.hardwareBuffer
         val colorSpace = result.colorSpace
+        var hwBitmap: Bitmap? = null
+        var softBitmap: Bitmap? = null
         return try {
-            val hwBitmap = Bitmap.wrapHardwareBuffer(buffer, colorSpace) ?: return null
+            hwBitmap = Bitmap.wrapHardwareBuffer(buffer, colorSpace) ?: return null
             val w = hwBitmap.width
             val h = hwBitmap.height
             val pixels = IntArray(w * h)
-            val softBitmap = hwBitmap.copy(Bitmap.Config.ARGB_8888, false)
+            softBitmap = hwBitmap.copy(Bitmap.Config.ARGB_8888, false) ?: return null
             softBitmap.getPixels(pixels, 0, w, 0, 0, w, h)
-            softBitmap.recycle()
-            hwBitmap.recycle()
             PixelSlice(pixels, w, h)
+        } catch (t: Throwable) {
+            null
         } finally {
+            softBitmap?.recycle()
+            hwBitmap?.recycle()
             buffer.close()
         }
+    }
+
+    fun release() {
+        executor.shutdown()
     }
 }

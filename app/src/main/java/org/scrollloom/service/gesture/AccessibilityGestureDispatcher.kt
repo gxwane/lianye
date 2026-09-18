@@ -47,12 +47,8 @@ class AccessibilityGestureDispatcher(
     }
 
     override fun sendCancelGesture(): Boolean {
-        val cancelPath = Path().apply {
-            moveTo(0f, 0f)
-            lineTo(0f, 0f)
-        }
-        val cancelStroke = GestureDescription.StrokeDescription(cancelPath, 0L, 1L)
-        val cancelGesture = GestureDescription.Builder().addStroke(cancelStroke).build()
-        return service.dispatchGesture(cancelGesture, null, null)
+        // AOSP AccessibilityService does not support cancelling gestures via virtual taps.
+        // We intentionally avoid sending a (0, 0) tap which could click the app's top-left back/close button.
+        return true
     }
 }

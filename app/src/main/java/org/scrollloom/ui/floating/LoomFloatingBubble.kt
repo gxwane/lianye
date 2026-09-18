@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.scrollloom.domain.model.WeavingState
@@ -102,7 +102,7 @@ private fun WeavingBubble(frameCount: Int, onClick: () -> Unit) {
         Surface(
             modifier = Modifier
                 .size(8.dp)
-                .alpha(alpha),
+                .graphicsLayer { this.alpha = alpha },
             shape = RoundedCornerShape(4.dp),
             color = Color.Red
         ) {}

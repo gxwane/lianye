@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Zero Network](https://img.shields.io/badge/Network-0%20Permission-success.svg)](app/src/main/AndroidManifest.xml)
-[![Platform](https://img.shields.io/badge/Android-11%2B%20(API%2030%2B)-brightgreen.svg)](docs/AOSP_CONSTRAINTS.md)
+[![Platform](https://img.shields.io/badge/Android-11%2B%20(API%2030%2B)-brightgreen.svg)](#-项目简介-overview)
 [![Build Guard](https://img.shields.io/badge/Guard-verifyZeroNetworkDependencies-teal.svg)](app/build.gradle.kts)
 
 > **Stitch any scrollable screen, entirely offline.**  
@@ -130,17 +130,6 @@
 # 4. 编译 Release 正式发行包 (已启用 ProGuard 混淆保护)
 ./gradlew assembleRelease
 ```
-
----
-
-## 📂 完整知识资产与文档导航 (Documentation Hub)
-
-* 📐 **[技术架构与算法设计白皮书](docs/ARCHITECTURE.md)**：2026 工业级架构规范，包含 3 栏投影、时域方差掩码、双 ROI 提取与 4 大终审补丁设计。
-* 🗺️ **[产品路线图与里程碑](docs/ROADMAP.md)**：从 Phase 0 脚手架到 Phase 4 开源发布的四阶段敏捷实施计划。
-* 🔬 **[参考开源项目深度解析](docs/REFERENCES.md)**：深入剖析参考项目 `garregusev/android-scroll-capture` 带来的实战避坑经验与生产范式。
-* 🌍 **[生态调研、竞品全景与立项决策](docs/ECOSYSTEM_AND_COMPETITORS.md)**：LongShot 的兴衰、闭源商业工具的隐私信任困境、以及放弃国内商业市场的财务与政策硬核论证。
-* ⚙️ **[AOSP 底层硬限制与失效机理](docs/AOSP_CONSTRAINTS.md)**：333ms 节流常量、FLAG_SECURE、Android 15 录屏强制弹窗、VSYNC 管线时延、WebP 16k 物理上限与 30k 智能分卷论证。
-* 🎨 **[品牌决策、安全哲学与定位战略](docs/BRAND_AND_STRATEGY.md)**：五大命名避坑推演、Loom 隐喻体系、拒绝“Zero-permission”文字游戏的结构性安全哲学。
 
 ---
 

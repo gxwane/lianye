@@ -11,6 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.scrollloom.App
+import org.scrollloom.domain.model.WeavingState
 import org.scrollloom.engine.LoomEngine
 import org.scrollloom.engine.OverlapMatcher
 import org.scrollloom.engine.TileStore
@@ -26,6 +27,7 @@ class LoomAccessibilityService : AccessibilityService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var overlayManager: FloatingOverlayManager? = null
     private var loomEngine: LoomEngine? = null
+    private var frameCapturer: AccessibilityFrameCapturer? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -39,7 +41,7 @@ class LoomAccessibilityService : AccessibilityService() {
         val overlapMatcher = OverlapMatcher()
 
         var overlay: FloatingOverlayManager? = null
-        val frameCapturer = AccessibilityFrameCapturer(
+        val capturer = AccessibilityFrameCapturer(
             service = this,
             onPreCapture = {
                 overlay?.hideBeforeCapture()
@@ -48,9 +50,10 @@ class LoomAccessibilityService : AccessibilityService() {
                 overlay?.showAfterCapture()
             }
         )
+        frameCapturer = capturer
 
         val tileStore = TileStore(cacheDir)
-        val engine = LoomEngine(overlapMatcher, antiFlingController, tileStore, frameCapturer)
+        val engine = LoomEngine(overlapMatcher, antiFlingController, tileStore, capturer)
         loomEngine = engine
 
         overlay = FloatingOverlayManager(
@@ -59,6 +62,7 @@ class LoomAccessibilityService : AccessibilityService() {
             repository = repository,
             scope = serviceScope,
             onStartCapture = {
+                if (repository.weavingState.value is WeavingState.Weaving) return@FloatingOverlayManager
                 serviceScope.launch {
                     repository.startWeaving()
                     val tiles = engine.startWeaving()
@@ -98,6 +102,8 @@ class LoomAccessibilityService : AccessibilityService() {
         Log.i(TAG, "LoomAccessibilityService unbind")
         App.instance.appComponent.loomRepository.updateServiceConnected(false)
         overlayManager?.hide()
+        frameCapturer?.release()
+        frameCapturer = null
         serviceScope.cancel()
         return super.onUnbind(intent)
     }
@@ -107,6 +113,8 @@ class LoomAccessibilityService : AccessibilityService() {
         Log.i(TAG, "LoomAccessibilityService destroyed")
         App.instance.appComponent.loomRepository.updateServiceConnected(false)
         overlayManager?.hide()
+        frameCapturer?.release()
+        frameCapturer = null
         serviceScope.cancel()
     }
 

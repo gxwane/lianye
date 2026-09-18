@@ -24,7 +24,7 @@ class FloatingOverlayManager(
     private val onOpenPreview: () -> Unit
 ) {
     private var composeView: ComposeView? = null
-    private val lifecycleBridge = FloatingLifecycleBridge()
+    private var lifecycleBridge: FloatingLifecycleBridge? = null
     private var isAttached = false
 
     private val windowParams = WindowManager.LayoutParams().apply {
@@ -42,6 +42,9 @@ class FloatingOverlayManager(
     fun show() {
         if (isAttached) return
 
+        val bridge = FloatingLifecycleBridge()
+        lifecycleBridge = bridge
+
         val view = ComposeView(context).apply {
             setContent {
                 ScrollLoomTheme {
@@ -56,7 +59,7 @@ class FloatingOverlayManager(
             }
         }
 
-        lifecycleBridge.attach(view)
+        bridge.attach(view)
         windowManager.addView(view, windowParams)
         composeView = view
         isAttached = true
@@ -82,7 +85,8 @@ class FloatingOverlayManager(
     fun hide() {
         if (!isAttached) return
         val view = composeView ?: return
-        lifecycleBridge.detach(view)
+        lifecycleBridge?.detach(view)
+        lifecycleBridge = null
         windowManager.removeView(view)
         composeView = null
         isAttached = false
