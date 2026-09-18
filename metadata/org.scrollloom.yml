@@ -1,0 +1,32 @@
+Categories:
+  - Multimedia
+  - System
+License: MIT
+AuthorName: ScrollLoom Contributors
+SourceCode: https://github.com/scrollloom/scroll-loom
+IssueTracker: https://github.com/scrollloom/scroll-loom/issues
+
+AutoUpdateMode: None
+UpdateCheckMode: Tags
+
+Summary: Stitch any scrollable screen, entirely offline
+Description: |-
+  ScrollLoom (长卷) is a modern, structurally private, completely offline long screenshot utility for Android 11+ (API 30+).
+
+  Key Features:
+  * Zero Network Permission: Absolutely no android.permission.INTERNET declared, physically enforced by compile-time guard tasks.
+  * Blind Accessibility Service: Operates without canRetrieveWindowContent or view inspection; purely performs silent screen capture and simulated swipe gestures.
+  * Frictionless Overlay: Lightweight floating bubble via TYPE_ACCESSIBILITY_OVERLAY without cumbersome SYSTEM_ALERT_WINDOW settings prompts.
+  * Edge-Case Defenses: 3-column luminance projection, Trimmed SAD, Laplace ambiguity ratio test, continueStroke anti-fling hold, and temporal variance header masking.
+  * Streaming Anti-OOM Pipeline: Incremental 1024px chunked TileStore and direct-to-MediaStore streaming PNG assembler with heap peak under 1MB.
+
+RepoType: git
+Repo: https://github.com/scrollloom/scroll-loom.git
+
+Builds:
+  - versionName: 0.1.0
+    versionCode: 1
+    commit: v0.1.0
+    subdir: app
+    gradle:
+      - yes

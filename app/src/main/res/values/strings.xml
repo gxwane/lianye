@@ -10,4 +10,12 @@
     <string name="privacy_badge_zero_net">绝对零网络权限</string>
     <string name="privacy_badge_blind">盲无障碍服务</string>
     <string name="privacy_badge_local">纯离线本地算法</string>
+    <string name="btn_copy_adb_command">复制极客 ADB 解锁命令</string>
+    <string name="toast_adb_copied">ADB 命令已复制至剪贴板！</string>
+    <string name="btn_battery_optimization">配置电池白名单 (防杀后台)</string>
+    <string name="guide_title">长截屏极速上手指引</string>
+    <string name="guide_step_1">1. 开启上方无障碍服务，屏幕侧边将显现悬浮胶囊；</string>
+    <string name="guide_step_2">2. 切换至需要长截屏的任意应用（微信、浏览器、社交动态等）；</string>
+    <string name="guide_step_3">3. 轻触胶囊「开始」，应用将自动向下滚动并逐帧编织；</string>
+    <string name="guide_step_4">4. 再次轻触或触底自动结束，立即进入大图预览、相册保存与分享。</string>
 </resources>

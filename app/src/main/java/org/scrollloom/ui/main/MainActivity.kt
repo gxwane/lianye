@@ -48,7 +48,9 @@ import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
 import android.widget.Toast
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import org.scrollloom.engine.export.MediaExportManager
 import org.scrollloom.ui.preview.ScrollPreviewScreen
 
@@ -89,7 +91,8 @@ class MainActivity : ComponentActivity() {
                         MainScreen(
                             state = weavingState,
                             onOpenAccessibilitySettings = { openAccessibilitySettings() },
-                            onOpenAppDetailsSettings = { openAppDetailsSettings() }
+                            onOpenAppDetailsSettings = { openAppDetailsSettings() },
+                            onOpenBatteryOptimization = { openBatteryOptimizationSettings() }
                         )
                     }
                 }
@@ -111,13 +114,28 @@ class MainActivity : ComponentActivity() {
         }
         startActivity(intent)
     }
+
+    private fun openBatteryOptimizationSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            val intent = Intent(Settings.ACTION_SETTINGS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+        }
+    }
 }
 
 @Composable
 fun MainScreen(
     state: WeavingState,
     onOpenAccessibilitySettings: () -> Unit,
-    onOpenAppDetailsSettings: () -> Unit
+    onOpenAppDetailsSettings: () -> Unit,
+    onOpenBatteryOptimization: () -> Unit
 ) {
     val isServiceConnected = (state as? WeavingState.Idle)?.isServiceConnected ?: false
 
@@ -153,8 +171,14 @@ fun MainScreen(
 
             if (!isServiceConnected && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Spacer(modifier = Modifier.height(20.dp))
-                RestrictedSettingsCard(onOpenAppDetailsSettings = onOpenAppDetailsSettings)
+                RestrictedSettingsCard(
+                    onOpenAppDetailsSettings = onOpenAppDetailsSettings,
+                    onOpenBatteryOptimization = onOpenBatteryOptimization
+                )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+            UsageGuideCard()
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -222,7 +246,15 @@ fun ServiceStatusCard(
 }
 
 @Composable
-fun RestrictedSettingsCard(onOpenAppDetailsSettings: () -> Unit) {
+fun RestrictedSettingsCard(
+    onOpenAppDetailsSettings: () -> Unit,
+    onOpenBatteryOptimization: () -> Unit
+) {
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+    val adbCommand = "adb shell appops set org.scrollloom ACCESS_RESTRICTED_SETTINGS allow"
+    val copiedToastText = stringResource(R.string.toast_adb_copied)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -238,7 +270,7 @@ fun RestrictedSettingsCard(onOpenAppDetailsSettings: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "针对 Android 13+ 侧载应用，系统默认限制无障碍开关开启。若开关置灰不可点：\n1. 点击下方按钮直达「应用信息」；\n2. 点击右上角「⋮ 更多」；\n3. 选择「允许受限制的设置」并验证锁屏密码。",
+                text = "针对 Android 13+ 侧载应用，系统默认限制无障碍开关开启。若开关置灰不可点：\n1. 点击下方按钮直达「应用信息」；\n2. 点击右上角「⋮ 更多」；\n3. 选择「允许受限制的设置」并验证锁屏凭据。",
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 13.sp,
                 lineHeight = 19.sp
@@ -251,6 +283,78 @@ fun RestrictedSettingsCard(onOpenAppDetailsSettings: () -> Unit) {
             ) {
                 Text(text = "打开应用信息以解锁")
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(adbCommand))
+                        Toast.makeText(context, copiedToastText, Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(text = stringResource(R.string.btn_copy_adb_command), fontSize = 11.sp)
+                }
+                OutlinedButton(
+                    onClick = onOpenBatteryOptimization,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(text = stringResource(R.string.btn_battery_optimization), fontSize = 11.sp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun UsageGuideCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Text(
+                text = "✨ " + stringResource(R.string.guide_title),
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.guide_step_1),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                lineHeight = 18.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.guide_step_2),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                lineHeight = 18.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.guide_step_3),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                lineHeight = 18.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.guide_step_4),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                lineHeight = 18.sp
+            )
         }
     }
 }
