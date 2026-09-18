@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ScrollLoom</string>
+    <string name="app_name_zh">长卷</string>
+    <string name="accessibility_service_label">ScrollLoom 滚动长卷编织服务</string>
+    <string name="accessibility_service_description">ScrollLoom 离线长截屏服务。仅在您触发长截屏时执行静默屏幕抓取与防甩动手势滚动。绝不监听任何控件节点，绝不读取界面文字，绝对零网络权限。</string>
+    <string name="status_service_active">无障碍服务已就绪</string>
+    <string name="status_service_inactive">无障碍服务未启用</string>
+    <string name="btn_enable_service">前往系统开启服务</string>
+    <string name="btn_restricted_settings_guide">Android 13+ 受限制设置解锁向导</string>
+    <string name="privacy_badge_zero_net">绝对零网络权限</string>
+    <string name="privacy_badge_blind">盲无障碍服务</string>
+    <string name="privacy_badge_local">纯离线本地算法</string>
+</resources>
