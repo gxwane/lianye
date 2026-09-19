@@ -2,6 +2,7 @@ package org.scrollloom.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
@@ -12,11 +13,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.scrollloom.App
 import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.engine.FrameCapturer
 import org.scrollloom.engine.LoomEngine
 import org.scrollloom.engine.OverlapMatcher
 import org.scrollloom.engine.TileStore
 import org.scrollloom.engine.model.LoomState
-import org.scrollloom.service.capture.AccessibilityFrameCapturer
+import org.scrollloom.service.capture.FrameCapturerFactory
 import org.scrollloom.service.gesture.AccessibilityGestureDispatcher
 import org.scrollloom.service.gesture.AntiFlingController
 import org.scrollloom.ui.floating.FloatingOverlayManager
@@ -24,10 +26,10 @@ import org.scrollloom.ui.main.MainActivity
 
 class LoomAccessibilityService : AccessibilityService() {
 
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var overlayManager: FloatingOverlayManager? = null
     private var loomEngine: LoomEngine? = null
-    private var frameCapturer: AccessibilityFrameCapturer? = null
+    private var frameCapturer: FrameCapturer? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -38,10 +40,11 @@ class LoomAccessibilityService : AccessibilityService() {
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val gestureDispatcher = AccessibilityGestureDispatcher(this)
         val antiFlingController = AntiFlingController(gestureDispatcher)
-        val overlapMatcher = OverlapMatcher()
+        val density = resources.displayMetrics.density
+        val overlapMatcher = OverlapMatcher(screenDensity = density)
 
         var overlay: FloatingOverlayManager? = null
-        val capturer = AccessibilityFrameCapturer(
+        val capturer = FrameCapturerFactory.create(
             service = this,
             onPreCapture = {
                 overlay?.hideBeforeCapture()
@@ -63,7 +66,7 @@ class LoomAccessibilityService : AccessibilityService() {
             scope = serviceScope,
             onStartCapture = {
                 if (repository.weavingState.value is WeavingState.Weaving) return@FloatingOverlayManager
-                serviceScope.launch {
+                serviceScope.launch(Dispatchers.Default) {
                     repository.startWeaving()
                     val tiles = engine.startWeaving()
                     if (engine.state.value == LoomState.COMPLETED) {
@@ -89,7 +92,21 @@ class LoomAccessibilityService : AccessibilityService() {
         )
 
         overlayManager = overlay
-        overlay.show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            overlay.show()
+        } else {
+            // Android 10 (API 29): Only show overlay once MediaProjection permission is granted
+            // to avoid Huawei EMUI "Screen overlay detected" tapjacking security dialog block
+            serviceScope.launch {
+                repository.isProjectionGranted.collect { granted ->
+                    if (granted) {
+                        overlay.show()
+                    } else {
+                        overlay.hide()
+                    }
+                }
+            }
+        }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {

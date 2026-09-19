@@ -78,4 +78,13 @@ class LoomRepositoryTest {
         repository.reset()
         assertEquals(WeavingState.Idle(true), repository.weavingState.value)
     }
+
+    @Test
+    fun `updateProjectionGranted should update isProjectionGranted StateFlow`() {
+        repository.updateProjectionGranted(true)
+        assertTrue(repository.isProjectionGranted.value)
+        repository.updateProjectionGranted(false)
+        org.junit.Assert.assertFalse(repository.isProjectionGranted.value)
+    }
 }
+

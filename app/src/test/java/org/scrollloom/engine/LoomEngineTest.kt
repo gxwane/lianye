@@ -94,6 +94,22 @@ class LoomEngineTest {
     }
 
     @Test
+    fun `consecutive stationary frames should terminate with completed state`() = runTest {
+        val basePattern = generatePattern(width, height)
+        val frame0 = extractSlice(basePattern, 0, height)
+        val frame1 = extractSlice(basePattern, 0, height) // Stationary frame 1
+        val frame2 = extractSlice(basePattern, 0, height) // Stationary frame 2
+
+        val capturer = FakeFrameCapturer(listOf(frame0, frame1, frame2))
+        val engine = LoomEngine(overlapMatcher, antiFlingController, tileStore, capturer)
+
+        val tiles = engine.startWeaving(maxFrames = 10)
+
+        assertEquals("Engine state should be COMPLETED", LoomState.COMPLETED, engine.state.value)
+        assertFalse("Tiles should not be empty", tiles.isEmpty())
+    }
+
+    @Test
     fun `secure blocked frame should transition to ERROR and stop`() = runTest {
         val normalFrame = generatePattern(width, height)
         val blackPixels = IntArray(width * height) { -0x1000000 }
@@ -107,6 +123,61 @@ class LoomEngineTest {
         assertEquals("Engine state should be ERROR", LoomState.ERROR, engine.state.value)
         // Initial frame should be preserved in error so user doesn't lose what was already captured
         assertFalse("Initial captured tiles should be preserved on error", tiles.isEmpty())
+    }
+
+    @Test
+    fun `detectBottomBarHeight should accurately detect stationary footer`() {
+        val testH = 600
+        val testW = 100
+        val footerH = 80
+        val deltaY = 80
+
+        val slice0 = generateSliceWithFixedBottom(testW, testH, footerH, scrollOffset = 0)
+        val slice1 = generateSliceWithFixedBottom(testW, testH, footerH, scrollOffset = deltaY)
+
+        val engine = LoomEngine(overlapMatcher, antiFlingController, tileStore, FakeFrameCapturer(emptyList()))
+        val detected = engine.detectBottomBarHeight(slice0, slice1, deltaY)
+
+        assertEquals("Detected bottom bar height should match exactly", footerH, detected)
+    }
+
+    @Test
+    fun `weaving app with fixed bottom bar should append footer only once at end`() = runTest {
+        val testH = 600
+        val testW = 100
+        val footerH = 80
+        val shiftY = 80
+
+        val slice0 = generateSliceWithFixedBottom(testW, testH, footerH, scrollOffset = 0)
+        val slice1 = generateSliceWithFixedBottom(testW, testH, footerH, scrollOffset = shiftY)
+        val slice2 = generateSliceWithFixedBottom(testW, testH, footerH, scrollOffset = shiftY * 2)
+
+        val capturer = FakeFrameCapturer(listOf(slice0, slice1, slice2))
+        val engine = LoomEngine(overlapMatcher, antiFlingController, tileStore, capturer)
+
+        val tiles = engine.startWeaving(maxFrames = 3)
+
+        assertEquals("Engine state should be COMPLETED", LoomState.COMPLETED, engine.state.value)
+        // Frame 0 body (testH - footerH = 520) + Frame 1 (shiftY = 80) + Frame 2 (shiftY = 80) + Final Footer (footerH = 80) = 760
+        val totalHeight = tiles.sumOf { it.height }
+        assertEquals("Total assembled height with single footer", (testH - footerH) + shiftY * 2 + footerH, totalHeight)
+    }
+
+    private fun generateSliceWithFixedBottom(w: Int, h: Int, footerH: Int, scrollOffset: Int): PixelSlice {
+        val base = generatePattern(w, h + scrollOffset + footerH)
+        val pixels = IntArray(w * h)
+        // Body (0 until h - footerH): scrolls with scrollOffset
+        for (y in 0 until (h - footerH)) {
+            val srcY = y + scrollOffset
+            System.arraycopy(base.pixels, srcY * w, pixels, y * w, w)
+        }
+        // Fixed footer (h - footerH until h): stationary across all frames
+        for (y in (h - footerH) until h) {
+            for (x in 0 until w) {
+                pixels[y * w + x] = if (x % 8 < 4) -0x5500aa else -0x223344
+            }
+        }
+        return PixelSlice(pixels, w, h)
     }
 
     private fun generatePattern(w: Int, h: Int): PixelSlice {

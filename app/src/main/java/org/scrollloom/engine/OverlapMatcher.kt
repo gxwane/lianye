@@ -8,7 +8,8 @@ import java.util.Arrays
 class OverlapMatcher(
     val templateHeight: Int = 256,
     val maxSearchRange: Int = 800,
-    val trimRatio: Float = 0.15f
+    val trimRatio: Float = 0.15f,
+    val screenDensity: Float = 2.0f
 ) {
     init {
         require(templateHeight in 32..1024) { "templateHeight $templateHeight must be within 32..1024" }
@@ -69,19 +70,28 @@ class OverlapMatcher(
         return LumaSignature(h, leftLuma, centerLuma, rightLuma, horizontalVar)
     }
 
-    fun chooseTemplateStart(prevSlice: PixelSlice, sig: LumaSignature, rowMask: BooleanArray? = null): Int {
+    fun chooseTemplateStart(
+        prevSlice: PixelSlice,
+        sig: LumaSignature,
+        rowMask: BooleanArray? = null,
+        density: Float = screenDensity
+    ): Int {
         val h = sig.height
         val tH = minOf(templateHeight, h)
         if (h <= tH) return 0
 
-        val scanStart = h - tH
-        val scanEnd = maxOf(0, tH / 2)
+        val topMarginPx = minOf((h * 0.25f).toInt(), maxOf((h * 0.10f).toInt(), (80 * density).toInt()))
+        val bottomMarginPx = minOf((h * 0.28f).toInt(), maxOf((h * 0.14f).toInt(), (100 * density).toInt()))
+
+        val scanStart = minOf(h - tH, (h - bottomMarginPx) - tH)
+        val scanEnd = maxOf(0, topMarginPx)
+
+        if (scanStart <= scanEnd) {
+            return maxOf(0, (h - tH) / 2)
+        }
 
         var bestY = scanStart
-        var maxVariance = -1.0f
-
-        val minVarianceThreshold = 25.0f
-        val minGradThreshold = 80L
+        var maxNormalizedVariance = -1.0f
 
         for (y in scanStart downTo scanEnd) {
             var sumL = 0L
@@ -105,15 +115,18 @@ class OverlapMatcher(
 
             if (staticCount > tH / 4) continue // Avoid selecting static headers as template
 
-            val mean = sumL.toDouble() / tH
-            val variance = (sumSq.toDouble() / tH - mean * mean).toFloat()
+            val meanLuma = (sumL.toDouble() / tH).toFloat()
+            val rawVariance = (sumSq.toDouble() / tH - meanLuma * meanLuma).toFloat()
+            val contrastFactor = maxOf(5.0f, (meanLuma * (255.0f - meanLuma)) / 255.0f)
+            val normalizedVar = rawVariance / contrastFactor
+            val minGradThreshold = maxOf(20L, (80L * (contrastFactor / 63.75f)).toLong())
 
-            if (variance > maxVariance) {
-                maxVariance = variance
+            if (normalizedVar > maxNormalizedVariance) {
+                maxNormalizedVariance = normalizedVar
                 bestY = y
             }
 
-            if (variance >= minVarianceThreshold && gradEnergy >= minGradThreshold) {
+            if (normalizedVar >= 0.5f && gradEnergy >= minGradThreshold) {
                 return y
             }
         }
@@ -142,7 +155,10 @@ class OverlapMatcher(
         val sigNext = extractLumaSignature(nextSlice)
 
         val tH = minOf(templateHeight, sigPrev.height)
-        val tStartPrev = chooseTemplateStart(prevSlice, sigPrev, rowMask)
+        val tStartPrev = chooseTemplateStart(prevSlice, sigPrev, rowMask, screenDensity)
+
+        val stationaryLimitPx = maxOf(4, (6.0f * screenDensity).toInt())
+        val peakSuppressionRadius = maxOf(6, (8.0f * screenDensity).toInt())
 
         val maxShift = minOf(maxSearchRange, tStartPrev)
         var minScore1 = Float.MAX_VALUE
@@ -166,13 +182,13 @@ class OverlapMatcher(
             scores[deltaY] = score
 
             if (score < minScore1) {
-                if (kotlin.math.abs(deltaY - bestDeltaY1) >= 15) {
+                if (kotlin.math.abs(deltaY - bestDeltaY1) >= peakSuppressionRadius) {
                     minScore2 = minScore1
                     bestDeltaY2 = bestDeltaY1
                 }
                 minScore1 = score
                 bestDeltaY1 = deltaY
-            } else if (score < minScore2 && kotlin.math.abs(deltaY - bestDeltaY1) >= 15) {
+            } else if (score < minScore2 && kotlin.math.abs(deltaY - bestDeltaY1) >= peakSuppressionRadius) {
                 minScore2 = score
                 bestDeltaY2 = deltaY
             }
@@ -185,35 +201,94 @@ class OverlapMatcher(
             0.0f
         }
 
-        var finalDeltaY = bestDeltaY1
-        var finalScore = minScore1
-
-        // If ambiguous (ambiguityRatio >= 0.85) and we have a priorDeltaY, disambiguate using Gaussian prior penalty
-        if (ambiguityRatio >= 0.85f && priorDeltaY != null) {
-            var minPenalizedScore = Float.MAX_VALUE
-            val threshold = minScore1 * 1.25f + 5.0f
-            for (deltaY in 0..maxShift step searchStep) {
-                val s = scores[deltaY]
-                if (s <= threshold) {
-                    val diff = deltaY - priorDeltaY
-                    val penalized = s + 0.04f * (diff * diff)
-                    if (penalized < minPenalizedScore) {
-                        minPenalizedScore = penalized
-                        finalDeltaY = deltaY
-                        finalScore = s
-                    }
-                }
+        // --- 1. Find best stationary candidate in 0..stationaryLimitPx window ---
+        var minStationaryScore = Float.MAX_VALUE
+        var bestStationaryDeltaY = 0
+        val stationaryLimit = minOf(stationaryLimitPx, maxShift)
+        for (d in 0..stationaryLimit) {
+            if (scores[d] < minStationaryScore) {
+                minStationaryScore = scores[d]
+                bestStationaryDeltaY = d
             }
         }
 
-        val isBottomReached = (finalDeltaY <= 2 && finalScore <= 15.0f)
+        var finalDeltaY = bestDeltaY1
+        var finalScore = minScore1
+
+        // --- 2. Disambiguation with Prior Displacement ---
+        if (ambiguityRatio >= 0.85f && priorDeltaY != null && priorDeltaY > stationaryLimitPx) {
+            var minPenalizedSlidingScore = Float.MAX_VALUE
+            var bestSlidingDeltaY = -1
+            var bestSlidingScore = Float.MAX_VALUE
+
+            val slidingThreshold = minScore1 * 1.15f + 2.0f
+            val sigma = maxOf(8.0f, 0.25f * priorDeltaY)
+            val twoSigmaSq = 2.0f * sigma * sigma
+
+            for (deltaY in (stationaryLimitPx + 1)..maxShift step searchStep) {
+                val s = scores[deltaY]
+                if (s <= slidingThreshold) {
+                    val diff = (deltaY - priorDeltaY).toFloat()
+                    val penalty = (diff * diff) / twoSigmaSq
+                    val penalized = s + penalty
+                    if (penalized < minPenalizedSlidingScore) {
+                        minPenalizedSlidingScore = penalized
+                        bestSlidingDeltaY = deltaY
+                        bestSlidingScore = s
+                    }
+                }
+            }
+
+            var sumL = 0L
+            var sumSq = 0L
+            for (j in 0 until tH) {
+                val l = sigPrev.centerLuma[tStartPrev + j].toLong()
+                sumL += l
+                sumSq += l * l
+            }
+            val mean = sumL.toDouble() / tH
+            val rawVar = (sumSq.toDouble() / tH - mean * mean).toFloat()
+            val contrastFactor = maxOf(5.0f, (mean.toFloat() * (255.0f - mean.toFloat())) / 255.0f)
+            val normalizedVar = rawVar / contrastFactor
+
+            if (bestSlidingDeltaY > stationaryLimitPx) {
+                // If the global minimum was already stationary (bestDeltaY1 <= stationaryLimitPx),
+                // only allow the sliding candidate to override stationary if the template actually
+                // has significant feature texture (normalizedVar >= 0.5f) and is a true periodic tie
+                // (sliding score within 1.5 of stationary score).
+                // Flat/low-texture backgrounds must NEVER be mistaken for periodic patterns.
+                val isTruePeriodicTie = (normalizedVar >= 0.5f) && (bestSlidingScore <= minStationaryScore + 1.5f)
+                if (bestDeltaY1 > stationaryLimitPx || isTruePeriodicTie) {
+                    finalDeltaY = bestSlidingDeltaY
+                    finalScore = bestSlidingScore
+                } else {
+                    finalDeltaY = bestStationaryDeltaY
+                    finalScore = minStationaryScore
+                }
+            } else if (bestDeltaY1 <= stationaryLimitPx) {
+                finalDeltaY = bestStationaryDeltaY
+                finalScore = minStationaryScore
+            }
+        } else if (bestDeltaY1 <= stationaryLimitPx) {
+            finalDeltaY = bestStationaryDeltaY
+            finalScore = minStationaryScore
+        }
+
+        // --- 3. Stationary, Dynamic Scene & Bottom-reached Detection ---
+        val isStationary = finalDeltaY <= stationaryLimitPx
+        // Single frame bottom reached: must be truly stationary AND residual clean (<= 3.5f per pixel, total <= 14.0f)
+        val isBottomReached = isStationary && (finalScore / 4.0f <= 3.5f)
+        val isDynamicScene = !isStationary && (finalScore / 4.0f > 10.0f)
+        val cleanDeltaY = if (isStationary) 0 else finalDeltaY
 
         return MatchResult(
-            deltaY = finalDeltaY,
+            deltaY = cleanDeltaY,
             sadScore = finalScore,
             ambiguityRatio = ambiguityRatio,
             isBottomReached = isBottomReached,
-            isSecureBlocked = false
+            isSecureBlocked = false,
+            isStationary = isStationary,
+            isDynamicScene = isDynamicScene
         )
     }
 

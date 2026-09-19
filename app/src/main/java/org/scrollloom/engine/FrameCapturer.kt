@@ -7,4 +7,7 @@ import org.scrollloom.engine.model.PixelSlice
  */
 interface FrameCapturer {
     suspend fun captureFrame(): PixelSlice?
+    fun prepareSession() {}
+    fun releaseSession() {}
+    fun release() {}
 }

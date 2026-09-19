@@ -57,10 +57,29 @@ import androidx.compose.ui.text.AnnotatedString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.media.projection.MediaProjectionManager
+import androidx.activity.result.contract.ActivityResultContracts
 import org.scrollloom.engine.export.MediaExportManager
+import org.scrollloom.service.capture.LoomMediaProjectionService
 import org.scrollloom.ui.preview.ScrollPreviewScreen
 
 class MainActivity : ComponentActivity() {
+
+    private val mediaProjectionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            LoomMediaProjectionService.start(this, result.resultCode, result.data!!)
+            Toast.makeText(this, "屏幕捕获已授权，服务已就绪", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "未授予截屏权限，长截屏无法启动", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun requestMediaProjection() {
+        val projectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        mediaProjectionLauncher.launch(projectionManager.createScreenCaptureIntent())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +87,7 @@ class MainActivity : ComponentActivity() {
             ScrollLoomTheme {
                 val repository = App.instance.appComponent.loomRepository
                 val weavingState by repository.weavingState.collectAsState()
+                val isProjectionGranted by repository.isProjectionGranted.collectAsState()
                 val exportManager = remember { MediaExportManager(contentResolver) }
                 val context = LocalContext.current
 
@@ -113,6 +133,8 @@ class MainActivity : ComponentActivity() {
                     else -> {
                         MainScreen(
                             state = weavingState,
+                            isProjectionGranted = isProjectionGranted,
+                            onRequestMediaProjection = { requestMediaProjection() },
                             onOpenAccessibilitySettings = { openAccessibilitySettings() },
                             onOpenAppDetailsSettings = { openAppDetailsSettings() },
                             onOpenBatteryOptimization = { openBatteryOptimizationSettings() }
@@ -120,6 +142,14 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val repository = App.instance.appComponent.loomRepository
+        if (repository.weavingState.value is WeavingState.Preview) {
+            repository.reset()
         }
     }
 
@@ -156,6 +186,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     state: WeavingState,
+    isProjectionGranted: Boolean,
+    onRequestMediaProjection: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
     onOpenAppDetailsSettings: () -> Unit,
     onOpenBatteryOptimization: () -> Unit
@@ -192,6 +224,14 @@ fun MainScreen(
                 onOpenAccessibilitySettings = onOpenAccessibilitySettings
             )
 
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                Spacer(modifier = Modifier.height(14.dp))
+                MediaProjectionStatusCard(
+                    isGranted = isProjectionGranted,
+                    onRequestPermission = onRequestMediaProjection
+                )
+            }
+
             if (!isServiceConnected && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Spacer(modifier = Modifier.height(14.dp))
                 RestrictedSettingsCard(
@@ -206,6 +246,60 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             PrivacyBadgesSection()
+        }
+    }
+}
+
+@Composable
+fun MediaProjectionStatusCard(
+    isGranted: Boolean,
+    onRequestPermission: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .height(12.dp)
+                        .width(12.dp)
+                        .background(
+                            color = if (isGranted) LoomGreen else LoomRed,
+                            shape = RoundedCornerShape(6.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = if (isGranted) "屏幕捕获已就绪 (Android 10)" else "屏幕捕获未授权 (Android 10)",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Android 10 (API 29) 需一次性授予截屏授权以建立本地录制通道。ScrollLoom 绝不上网，100% 离线运行。",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+            )
+
+            if (!isGranted) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onRequestPermission,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(text = "授权屏幕捕获")
+                }
+            }
         }
     }
 }

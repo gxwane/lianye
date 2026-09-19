@@ -7,12 +7,21 @@ import org.scrollloom.domain.model.LoomAction
 import org.scrollloom.domain.model.WeavingState
 import org.scrollloom.engine.model.TileMetadata
 
+import android.os.Build
+
 class LoomRepository {
 
     private val _weavingState = MutableStateFlow<WeavingState>(WeavingState.Idle(false))
     val weavingState: StateFlow<WeavingState> = _weavingState.asStateFlow()
 
+    private val _isProjectionGranted = MutableStateFlow(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+    val isProjectionGranted: StateFlow<Boolean> = _isProjectionGranted.asStateFlow()
+
     private var isConnected = false
+
+    fun updateProjectionGranted(granted: Boolean) {
+        _isProjectionGranted.value = granted
+    }
 
     fun updateServiceConnected(connected: Boolean) {
         isConnected = connected

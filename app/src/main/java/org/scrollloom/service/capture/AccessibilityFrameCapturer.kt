@@ -3,12 +3,15 @@ package org.scrollloom.service.capture
 import android.accessibilityservice.AccessibilityService
 import android.graphics.Bitmap
 import android.view.Display
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.scrollloom.engine.FrameCapturer
 import org.scrollloom.engine.model.PixelSlice
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 
+@RequiresApi(Build.VERSION_CODES.R)
 class AccessibilityFrameCapturer(
     private val service: AccessibilityService,
     var onPreCapture: (suspend () -> Unit)? = null,
@@ -67,7 +70,7 @@ class AccessibilityFrameCapturer(
         }
     }
 
-    fun release() {
+    override fun release() {
         executor.shutdown()
     }
 }

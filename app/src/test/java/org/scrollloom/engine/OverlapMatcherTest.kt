@@ -140,6 +140,99 @@ class OverlapMatcherTest {
     }
 
     @Test
+    fun `micro displacement under 15px should terminate with bottom reached and zero out deltaY to eliminate ghost strips`() {
+        val shiftY = 11
+        val basePattern = generateRealisticUiPattern(width, height + shiftY)
+        val prevSlice = extractSlice(basePattern, 0, height)
+        val nextSlice = extractSlice(basePattern, shiftY, height)
+
+        val result = matcher.match(prevSlice, nextSlice)
+
+        assertTrue("Displacement <= 15px must trigger isBottomReached", result.isBottomReached)
+        assertEquals("DeltaY must be zeroed out to eliminate ghost strips", 0, result.deltaY)
+    }
+
+    @Test
+    fun `large prior displacement should NEVER override stationary frames`() {
+        val basePattern = generateRealisticUiPattern(width, height)
+        val prevSlice = extractSlice(basePattern, 0, height)
+        val nextSlice = extractSlice(basePattern, 0, height)
+
+        val result = matcher.match(prevSlice, nextSlice, priorDeltaY = 350)
+
+        assertTrue("Zero physical movement with large prior must still trigger isBottomReached", result.isBottomReached)
+        assertEquals("Final deltaY must remain 0 despite 350px prior", 0, result.deltaY)
+    }
+
+    @Test
+    fun `overscroll micro jitter under 10px with flat background must terminate cleanly`() {
+        val h = 600
+        val w = 100
+        val pixels = IntArray(w * (h + 10)) { -0x111112 }
+        for (y in 480..495) {
+            for (x in 30..70) pixels[y * w + x] = -0x1000000
+        }
+        val slice1 = PixelSlice(pixels, w, h)
+        val slice2 = extractSlice(PixelSlice(pixels, w, h + 10), 3, h)
+
+        val customMatcher = OverlapMatcher(templateHeight = 128, maxSearchRange = 300)
+        val result = customMatcher.match(slice1, slice2, priorDeltaY = 350)
+        assertTrue("Micro jitter on flat background must trigger isBottomReached", result.isBottomReached)
+        assertEquals("DeltaY must be zeroed out", 0, result.deltaY)
+    }
+
+    @Test
+    fun `overscroll heavy distortion with high SAD should be marked dynamic or high score without crash`() {
+        val basePattern = generateRealisticUiPattern(width, height)
+        val prevSlice = extractSlice(basePattern, 0, height)
+        // Completely distorted/random pixels in nextSlice simulating overscroll rubber band distortion
+        val distortedPixels = IntArray(width * height) { Random.nextInt(0, 0xFFFFFF) or -0x1000000 }
+        val nextSlice = PixelSlice(distortedPixels, width, height)
+
+        val result = matcher.match(prevSlice, nextSlice)
+
+        assertTrue("Distortion with high SAD must have high score (>20f)", result.sadScore > 20.0f)
+    }
+
+    @Test
+    fun `dark theme low contrast cards should select valid template and match displacement`() {
+        val h = 600
+        val w = 200
+        val shiftY = 80
+        // Dark theme background: #121212, dark cards: #1E1E1E with text
+        val darkPixels = IntArray(w * (h + shiftY)) { 0xFF121212.toInt() }
+        for (cardStart in listOf(100, 250, 400)) {
+            for (y in cardStart until (cardStart + 90)) {
+                for (x in 20 until 180) {
+                    val isText = (y % 15 in 2..4) && (x in 30..150)
+                    darkPixels[y * w + x] = if (isText) 0xFF808080.toInt() else 0xFF1E1E1E.toInt()
+                }
+            }
+        }
+        val darkFull = PixelSlice(darkPixels, w, h + shiftY)
+        val prevSlice = extractSlice(darkFull, 0, h)
+        val nextSlice = extractSlice(darkFull, shiftY, h)
+
+        val darkMatcher = OverlapMatcher(screenDensity = 2.0f)
+        val result = darkMatcher.match(prevSlice, nextSlice)
+
+        assertEquals("Dark theme displacement should be accurately detected", shiftY.toDouble(), result.deltaY.toDouble(), 2.0)
+    }
+
+    @Test
+    fun `scale-adaptive gaussian prior should allow natural variance for large prior`() {
+        val shiftY = 240
+        val basePattern = generateRealisticUiPattern(width, height + shiftY)
+        val prevSlice = extractSlice(basePattern, 0, height)
+        val nextSlice = extractSlice(basePattern, shiftY, height)
+
+        // Prior is 255 (15px off from 240). With scale-adaptive sigma = max(8, 0.25*255) = 63.75,
+        // penalty = 15^2 / (2 * 63.75^2) = 0.027, extremely smooth and non-locking
+        val result = matcher.match(prevSlice, nextSlice, priorDeltaY = 255)
+        assertEquals("Adaptive prior must easily lock onto real shift of 240", shiftY.toDouble(), result.deltaY.toDouble(), 1.0)
+    }
+
+    @Test
     fun `all black frame should trigger secure window blocked`() {
         val blackPixels = IntArray(width * height) { -0x1000000 } // All black (0xFF000000)
         val blackSlice = PixelSlice(blackPixels, width, height)
