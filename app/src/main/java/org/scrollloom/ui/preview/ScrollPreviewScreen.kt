@@ -36,8 +36,16 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import android.content.res.Configuration
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import org.scrollloom.engine.model.TileMetadata
+import org.scrollloom.ui.common.theme.ScrollLoomTheme
 import androidx.activity.compose.BackHandler
+import java.io.File
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 
@@ -50,8 +58,10 @@ fun ScrollPreviewScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    BackHandler {
-        onBackClick()
+    if (!LocalInspectionMode.current) {
+        BackHandler {
+            onBackClick()
+        }
     }
 
     val totalHeight = tiles.sumOf { it.height }
@@ -108,13 +118,43 @@ fun ScrollPreviewScreen(
 
 @Composable
 private fun TileItem(tile: TileMetadata) {
+    val aspect = if (tile.height > 0) tile.width.toFloat() / tile.height.toFloat() else 1f
+
+    if (LocalInspectionMode.current) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(aspect)
+                .background(
+                    if (tile.index % 2 == 0) MaterialTheme.colorScheme.surfaceVariant
+                    else MaterialTheme.colorScheme.surface
+                )
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Tile #${tile.index + 1}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${tile.width} × ${tile.height} px (Y: ${tile.startY})",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
+        }
+        return
+    }
+
     val bitmapState by produceState<ImageBitmap?>(initialValue = null, tile) {
         value = withContext(Dispatchers.IO) {
             loadTileBitmap(tile)
         }
     }
-
-    val aspect = if (tile.height > 0) tile.width.toFloat() / tile.height.toFloat() else 1f
 
     Box(
         modifier = Modifier
@@ -153,3 +193,26 @@ private fun loadTileBitmap(tile: TileMetadata): ImageBitmap? {
         null
     }
 }
+
+// ==================== Preview 区域 ====================
+
+private fun createMockTiles(): List<TileMetadata> = listOf(
+    TileMetadata(0, File("mock_0.raw"), 1080, 800, 0),
+    TileMetadata(1, File("mock_1.raw"), 1080, 800, 800),
+    TileMetadata(2, File("mock_2.raw"), 1080, 800, 1600)
+)
+
+@Preview(name = "长卷预览 - 浅色", group = "Screens", showSystemUi = true)
+@Preview(name = "长卷预览 - 深色", group = "Screens", uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun PreviewScrollPreviewScreen() {
+    ScrollLoomTheme(dynamicColor = false) {
+        ScrollPreviewScreen(
+            tiles = createMockTiles(),
+            onSaveClick = {},
+            onShareClick = {},
+            onBackClick = {}
+        )
+    }
+}
+

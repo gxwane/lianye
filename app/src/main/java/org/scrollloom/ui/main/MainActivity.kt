@@ -59,6 +59,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.media.projection.MediaProjectionManager
 import androidx.activity.result.contract.ActivityResultContracts
+import android.content.res.Configuration
+import androidx.compose.ui.tooling.preview.Preview
 import org.scrollloom.engine.export.MediaExportManager
 import org.scrollloom.service.capture.LoomMediaProjectionService
 import org.scrollloom.ui.preview.ScrollPreviewScreen
@@ -190,11 +192,14 @@ fun MainScreen(
     onRequestMediaProjection: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
     onOpenAppDetailsSettings: () -> Unit,
-    onOpenBatteryOptimization: () -> Unit
+    onOpenBatteryOptimization: () -> Unit,
+    modifier: Modifier = Modifier,
+    showMediaProjectionCard: Boolean = Build.VERSION.SDK_INT < Build.VERSION_CODES.R,
+    showRestrictedSettingsCard: Boolean = (!((state as? WeavingState.Idle)?.isServiceConnected ?: false)) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 ) {
     val isServiceConnected = (state as? WeavingState.Idle)?.isServiceConnected ?: false
 
-    Scaffold { innerPadding ->
+    Scaffold(modifier = modifier) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -224,7 +229,7 @@ fun MainScreen(
                 onOpenAccessibilitySettings = onOpenAccessibilitySettings
             )
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (showMediaProjectionCard) {
                 Spacer(modifier = Modifier.height(14.dp))
                 MediaProjectionStatusCard(
                     isGranted = isProjectionGranted,
@@ -232,7 +237,7 @@ fun MainScreen(
                 )
             }
 
-            if (!isServiceConnected && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (showRestrictedSettingsCard) {
                 Spacer(modifier = Modifier.height(14.dp))
                 RestrictedSettingsCard(
                     onOpenAppDetailsSettings = onOpenAppDetailsSettings,
@@ -524,3 +529,103 @@ fun BadgeItem(title: String, subtitle: String) {
         }
     }
 }
+
+// ==================== 卡片独立 Preview 区域 ====================
+
+@Preview(name = "服务状态 - 激活与未激活", group = "Cards", showBackground = true)
+@Composable
+private fun PreviewServiceStatusCard() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            ServiceStatusCard(isConnected = true, onOpenAccessibilitySettings = {})
+            ServiceStatusCard(isConnected = false, onOpenAccessibilitySettings = {})
+        }
+    }
+}
+
+@Preview(name = "录屏授权状态 (Android 10)", group = "Cards", showBackground = true)
+@Composable
+private fun PreviewMediaProjectionStatusCard() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            MediaProjectionStatusCard(isGranted = false, onRequestPermission = {})
+            MediaProjectionStatusCard(isGranted = true, onRequestPermission = {})
+        }
+    }
+}
+
+@Preview(name = "受限设置向导 (Android 13+)", group = "Cards", showBackground = true)
+@Composable
+private fun PreviewRestrictedSettingsCard() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            RestrictedSettingsCard(onOpenAppDetailsSettings = {}, onOpenBatteryOptimization = {})
+        }
+    }
+}
+
+@Preview(name = "上手指引与隐私徽章", group = "Cards", showBackground = true)
+@Composable
+private fun PreviewUsageGuideAndBadges() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            UsageGuideCard()
+            Spacer(modifier = Modifier.height(16.dp))
+            PrivacyBadgesSection()
+        }
+    }
+}
+
+// ==================== 全屏场景 Preview 区域 ====================
+
+@Preview(name = "主屏 - 服务已就绪 (Light)", group = "Screens", showSystemUi = true)
+@Composable
+private fun PreviewMainScreenConnected() {
+    ScrollLoomTheme(dynamicColor = false) {
+        MainScreen(
+            state = WeavingState.Idle(isServiceConnected = true),
+            isProjectionGranted = true,
+            onRequestMediaProjection = {},
+            onOpenAccessibilitySettings = {},
+            onOpenAppDetailsSettings = {},
+            onOpenBatteryOptimization = {},
+            showMediaProjectionCard = false,
+            showRestrictedSettingsCard = false
+        )
+    }
+}
+
+@Preview(name = "主屏 - 首次安装受限制 (Android 14)", group = "Screens", showSystemUi = true)
+@Composable
+private fun PreviewMainScreenRestricted() {
+    ScrollLoomTheme(dynamicColor = false) {
+        MainScreen(
+            state = WeavingState.Idle(isServiceConnected = false),
+            isProjectionGranted = false,
+            onRequestMediaProjection = {},
+            onOpenAccessibilitySettings = {},
+            onOpenAppDetailsSettings = {},
+            onOpenBatteryOptimization = {},
+            showMediaProjectionCard = false,
+            showRestrictedSettingsCard = true
+        )
+    }
+}
+
+@Preview(name = "主屏 - 深色模式", group = "Screens", uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+private fun PreviewMainScreenDarkMode() {
+    ScrollLoomTheme(darkTheme = true, dynamicColor = false) {
+        MainScreen(
+            state = WeavingState.Idle(isServiceConnected = true),
+            isProjectionGranted = true,
+            onRequestMediaProjection = {},
+            onOpenAccessibilitySettings = {},
+            onOpenAppDetailsSettings = {},
+            onOpenBatteryOptimization = {},
+            showMediaProjectionCard = false,
+            showRestrictedSettingsCard = false
+        )
+    }
+}
+

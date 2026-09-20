@@ -24,7 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.tooling.preview.Preview
 import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
 @Composable
 fun LoomFloatingBubble(
@@ -155,3 +159,67 @@ private fun ErrorBubble(onClick: () -> Unit) {
         )
     }
 }
+
+// ==================== Preview 区域 ====================
+
+@Preview(name = "1. 空闲态 (Light)", group = "FloatingBubble", showBackground = true)
+@Preview(name = "1. 空闲态 (Dark)", group = "FloatingBubble", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun PreviewLoomFloatingBubbleIdle() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            LoomFloatingBubble(
+                state = WeavingState.Idle(isServiceConnected = true),
+                onStartClick = {},
+                onStopClick = {},
+                onPreviewClick = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "2. 编织中 5屏 (Light)", group = "FloatingBubble", showBackground = true)
+@Composable
+private fun PreviewLoomFloatingBubbleWeaving() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            LoomFloatingBubble(
+                state = WeavingState.Weaving(frameCount = 5),
+                onStartClick = {},
+                onStopClick = {},
+                onPreviewClick = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "3. 拼接完成 (Light)", group = "FloatingBubble", showBackground = true)
+@Composable
+private fun PreviewLoomFloatingBubbleFinished() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            LoomFloatingBubble(
+                state = WeavingState.Preview(emptyList()),
+                onStartClick = {},
+                onStopClick = {},
+                onPreviewClick = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "4. 异常重试 (Light)", group = "FloatingBubble", showBackground = true)
+@Composable
+private fun PreviewLoomFloatingBubbleError() {
+    ScrollLoomTheme(dynamicColor = false) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            LoomFloatingBubble(
+                state = WeavingState.Error("拼接中断"),
+                onStartClick = {},
+                onStopClick = {},
+                onPreviewClick = {}
+            )
+        }
+    }
+}
+
