@@ -18,4 +18,8 @@
     <string name="guide_step_2">2. 切换至需要长截屏的任意应用（微信、浏览器、社交动态等）；</string>
     <string name="guide_step_3">3. 轻触胶囊「开始」，应用将自动向下滚动并逐帧编织；</string>
     <string name="guide_step_4">4. 再次轻触或触底自动结束，立即进入大图预览、相册保存与分享。</string>
+    <string name="bubble_desc_idle">开始编织长卷</string>
+    <string name="bubble_desc_weaving">正在编织长卷</string>
+    <string name="bubble_desc_finished">长卷编织完成</string>
+    <string name="bubble_desc_error">编织异常重试</string>
 </resources>

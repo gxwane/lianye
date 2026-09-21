@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,12 +23,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.tooling.preview.Preview
+import org.scrollloom.R
 import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.ui.common.theme.LoomGreen
+import org.scrollloom.ui.common.theme.LoomRed
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
 
 @Composable
@@ -73,11 +79,13 @@ private fun IdleBubble(onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "🧶",
-            fontSize = 14.sp
+        Icon(
+            painter = painterResource(id = R.drawable.ic_bubble_idle),
+            contentDescription = stringResource(R.string.bubble_desc_idle),
+            modifier = Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.onPrimaryContainer
         )
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "长卷",
             style = MaterialTheme.typography.labelMedium,
@@ -106,13 +114,14 @@ private fun WeavingBubble(frameCount: Int, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(
+        Icon(
+            painter = painterResource(id = R.drawable.ic_bubble_recording),
+            contentDescription = stringResource(R.string.bubble_desc_weaving),
             modifier = Modifier
-                .size(8.dp)
+                .size(18.dp)
                 .graphicsLayer { this.alpha = alpha },
-            shape = RoundedCornerShape(4.dp),
-            color = Color.Red
-        ) {}
+            tint = LoomRed
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "已织 $frameCount 屏 (完成)",
@@ -131,8 +140,13 @@ private fun FinishedBubble(onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "✅", fontSize = 14.sp)
-        Spacer(modifier = Modifier.width(6.dp))
+        Icon(
+            painter = painterResource(id = R.drawable.ic_bubble_finished),
+            contentDescription = stringResource(R.string.bubble_desc_finished),
+            modifier = Modifier.size(18.dp),
+            tint = LoomGreen
+        )
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "查看长卷",
             style = MaterialTheme.typography.labelMedium,
@@ -150,8 +164,13 @@ private fun ErrorBubble(onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "⚠️", fontSize = 14.sp)
-        Spacer(modifier = Modifier.width(6.dp))
+        Icon(
+            painter = painterResource(id = R.drawable.ic_bubble_error),
+            contentDescription = stringResource(R.string.bubble_desc_error),
+            modifier = Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "重试",
             style = MaterialTheme.typography.labelMedium,
