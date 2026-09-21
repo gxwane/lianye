@@ -10,3 +10,7 @@ captures/
 *.apk
 *.aab
 docs/
+design/specs/
+design/mockups/
+design/tokens/
+

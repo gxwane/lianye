@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <defs>
+    <linearGradient id="bgC" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E17" />
+      <stop offset="100%" stop-color="#121826" />
+    </linearGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+
+  <rect width="108" height="108" fill="url(#bgC)" />
+
+  <g id="optical_loom">
+    <!-- Outer Hexagonal Shutter Frame -->
+    <polygon points="54,24 78,38 78,70 54,84 30,70 30,38" 
+             stroke="#1E293B" stroke-width="2" fill="none" />
+
+    <!-- Inner Continuous Weaving Path (Loom Shuttle passing through folded scroll) -->
+    <path d="M 54 26 
+             L 74 38 
+             L 74 68 
+             L 54 80 
+             L 34 68 
+             L 34 38 
+             Z" 
+          stroke="url(#lineGrad)" stroke-width="4.5" stroke-linejoin="round" fill="none" />
+
+    <!-- Central S-Weave diagonal bridge -->
+    <path d="M 34 38 L 74 68 M 74 38 L 34 68" 
+          stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round" opacity="0.4" />
+
+    <!-- Golden Loom Core Diamond -->
+    <polygon points="54,46 62,54 54,62 46,54" fill="#F59E0B" />
+  </g>
+</svg>

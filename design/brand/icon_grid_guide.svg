@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <defs>
+    <style>
+      .grid-border { fill: none; stroke: #4A5568; stroke-width: 0.5; stroke-dasharray: 2,2; }
+      .safe-zone { fill: none; stroke: #48BB78; stroke-width: 1; }
+      .parallax-margin { fill: none; stroke: #ED8936; stroke-width: 0.75; stroke-dasharray: 1,1; }
+      .center-line { stroke: #718096; stroke-width: 0.5; }
+      .label-text { font-family: sans-serif; font-size: 3.5px; fill: #A0AEC0; }
+    </style>
+  </defs>
+
+  <!-- 108x108 全幅画布外框 -->
+  <rect x="0" y="0" width="108" height="108" class="grid-border" />
+
+  <!-- 外围 18dp 视差边缘缓冲层 (72x72 内框) -->
+  <rect x="18" y="18" width="72" height="72" class="parallax-margin" rx="8" />
+
+  <!-- 核心 66dp 直径安全可视区 (圆心 54, 54，半径 33) -->
+  <circle cx="54" cy="54" r="33" class="safe-zone" />
+
+  <!-- 十字中心基准线 -->
+  <line x1="54" y1="0" x2="54" y2="108" class="center-line" />
+  <line x1="0" y1="54" x2="108" y2="54" class="center-line" />
+
+  <!-- 黄金对角线与关键图形框 -->
+  <circle cx="54" cy="54" r="22" stroke="#4299E1" stroke-width="0.5" stroke-dasharray="1,1" fill="none" />
+  <rect x="26" y="26" width="56" height="56" stroke="#4299E1" stroke-width="0.5" stroke-dasharray="1,1" fill="none" />
+
+  <!-- 标注 -->
+  <text x="56" y="23" class="label-text">Safe Zone (66dp)</text>
+  <text x="4" y="8" class="label-text">108x108 Full Canvas</text>
+</svg>

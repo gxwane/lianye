@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <g fill="#FFFFFF">
+    <!-- Outer Shuttle Body with Center Slot Subtracted (EvenOdd or Path with Cutout) -->
+    <path fill-rule="evenodd" d="M 54 23 
+             C 62 33, 76 44, 76 54 
+             C 76 64, 62 75, 54 85 
+             C 46 75, 32 64, 32 54 
+             C 32 44, 46 33, 54 23 Z 
+             M 50 40 
+             A 4 4 0 0 1 58 40 
+             L 58 68 
+             A 4 4 0 0 1 50 68 Z" />
+
+    <!-- Floating Central Thread Line -->
+    <rect x="52.5" y="32" width="3" height="44" rx="1.5" />
+  </g>
+</svg>

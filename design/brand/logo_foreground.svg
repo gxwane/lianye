@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <defs>
+    <linearGradient id="shuttleBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#1E88E5" />
+      <stop offset="100%" stop-color="#0F52BA" />
+    </linearGradient>
+    <linearGradient id="coreGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <g id="foreground">
+    <!-- Outer Aerodynamic Diamond / Loom Shuttle Silhouette -->
+    <path d="M 54 23 
+             C 62 33, 76 44, 76 54 
+             C 76 64, 62 75, 54 85 
+             C 46 75, 32 64, 32 54 
+             C 32 44, 46 33, 54 23 Z" 
+          fill="url(#shuttleBody)" />
+
+    <!-- Inner Faceted Left Shade -->
+    <path d="M 54 23 
+             C 46 33, 32 44, 32 54 
+             C 32 64, 46 75, 54 85 
+             L 54 23 Z" 
+          fill="#000000" opacity="0.25" />
+
+    <!-- Center Cutout (Negative Space Scroll Slot) -->
+    <rect x="50" y="36" width="8" height="36" rx="4" fill="#090D16" />
+
+    <!-- Golden Loom Thread Core -->
+    <line x1="54" y1="28" x2="54" y2="80" stroke="url(#coreGold)" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+</svg>

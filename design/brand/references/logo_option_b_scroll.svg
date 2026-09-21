@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <defs>
+    <linearGradient id="bgB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19" />
+      <stop offset="100%" stop-color="#171E2E" />
+    </linearGradient>
+
+    <!-- Outer Scroll Leaf: Vibrant Sky Blue -->
+    <linearGradient id="scrollOuter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Inner Scroll Fold: Deep Indigo Blue -->
+    <linearGradient id="scrollInner" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E88E5" />
+      <stop offset="100%" stop-color="#1E3A8A" />
+    </linearGradient>
+  </defs>
+
+  <rect width="108" height="108" fill="url(#bgB)" />
+
+  <!-- Single Elegant Unrolling Scroll Silhouette -->
+  <g id="pure_scroll">
+    <!-- Back / Under Fold -->
+    <path d="M 40 28 
+             L 68 28 
+             C 76 28, 80 34, 78 42 
+             L 66 74 
+             C 64 80, 58 84, 50 84 
+             L 36 84 
+             C 44 84, 48 78, 50 72 
+             L 58 44 
+             C 60 38, 56 34, 48 34 
+             L 40 34 Z" 
+          fill="url(#scrollInner)" />
+
+    <!-- Front / Unrolling Flowing Surface -->
+    <path d="M 32 38 
+             C 32 30, 40 26, 50 26 
+             L 72 26 
+             C 62 26, 56 32, 54 40 
+             L 42 72 
+             C 40 78, 34 82, 28 82 
+             C 32 82, 38 78, 40 72 
+             L 50 44 
+             C 52 38, 48 34, 40 34 
+             C 35 34, 32 36, 32 38 Z" 
+          fill="url(#scrollOuter)" />
+
+    <!-- A single gold fiber accent -->
+    <circle cx="50" cy="54" r="3" fill="#F59E0B" />
+  </g>
+</svg>
