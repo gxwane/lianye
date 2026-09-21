@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer Shuttle Body with Center Slot Cutout (EvenOdd) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M54,23 C62,33 76,44 76,54 C76,64 62,75 54,85 C46,75 32,64 32,54 C32,44 46,33 54,23 Z M50,40 A4,4 0 0,1 58,40 L58,68 A4,4 0 0,1 50,68 Z" />
+
+    <!-- Floating Center Thread Core -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M52.5,33.5 A1.5,1.5 0 0,1 55.5,33.5 L55.5,74.5 A1.5,1.5 0 0,1 52.5,74.5 Z" />
+</vector>

@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- 1. Outer Aerodynamic Loom Shuttle Body -->
     <path
-        android:fillColor="#89B4FA"
-        android:pathData="M34,24h40a10,10 0 0,1 10,10v40a10,10 0 0,1 -10,10h-40a10,10 0 0,1 -10,-10v-40a10,10 0 0,1 10,-10z" />
+        android:pathData="M54,23 C62,33 76,44 76,54 C76,64 62,75 54,85 C46,75 32,64 32,54 C32,44 46,33 54,23 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="108"
+                android:endY="108"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF38BDF8" />
+                <item android:offset="0.5" android:color="#FF1E88E5" />
+                <item android:offset="1.0" android:color="#FF0F52BA" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- 2. Faceted Left Shade for 3D Precision Depth -->
     <path
-        android:fillColor="#CDD6F4"
-        android:pathData="M40,38h28v6h-28zM40,51h28v6h-28zM40,64h20v6h-20z" />
+        android:fillColor="#40000000"
+        android:pathData="M54,23 C46,33 32,44 32,54 C32,64 46,75 54,85 L54,23 Z" />
+
+    <!-- 3. Center Negative Space Slot -->
+    <path
+        android:fillColor="#FF090D16"
+        android:pathData="M50,40 A4,4 0 0,1 58,40 L58,68 A4,4 0 0,1 50,68 Z" />
+
+    <!-- 4. Golden Loom Thread Core (Vertical Line) -->
+    <path
+        android:pathData="M54,28 L54,80"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="54"
+                android:startY="28"
+                android:endX="54"
+                android:endY="80"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFFDE047" />
+                <item android:offset="1.0" android:color="#FFF59E0B" />
+            </gradient>
+        </aapt:attr>
+    </path>
 </vector>
