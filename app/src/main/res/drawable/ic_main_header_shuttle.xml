@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- 1. Aerodynamic Shuttle Body with Cyber Blue Gradient -->
+    <path
+        android:pathData="M24,7 C27.5,12 34,18 34,24 C34,30 27.5,36 24,41 C20.5,36 14,30 14,24 C14,18 20.5,12 24,7 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="48"
+                android:endY="48"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF38BDF8" />
+                <item android:offset="0.5" android:color="#FF1E88E5" />
+                <item android:offset="1.0" android:color="#FF0F52BA" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- 2. Left Facet Shade for Precision 3D Depth -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M24,7 C20.5,12 14,18 14,24 C14,30 20.5,36 24,41 L24,7 Z" />
+
+    <!-- 3. Center Negative Space Slot -->
+    <path
+        android:fillColor="#FF090D16"
+        android:pathData="M22,17 A2,2 0 0,1 26,17 L26,31 A2,2 0 0,1 22,31 Z" />
+
+    <!-- 4. Golden Thread Core -->
+    <path
+        android:pathData="M24,10 L24,38"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="24"
+                android:startY="10"
+                android:endX="24"
+                android:endY="38"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFFDE047" />
+                <item android:offset="1.0" android:color="#FFF59E0B" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

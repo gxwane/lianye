@@ -22,4 +22,16 @@
     <string name="bubble_desc_weaving">正在编织长卷</string>
     <string name="bubble_desc_finished">长卷编织完成</string>
     <string name="bubble_desc_error">编织异常重试</string>
+    <string name="app_subtitle">离线纯粹长截屏</string>
+    <string name="privacy_section_title">架构级安全承诺</string>
+    <string name="privacy_badge_zero_net_sub">无INTERNET</string>
+    <string name="privacy_badge_blind_sub">无文本读取</string>
+    <string name="privacy_badge_local_sub">本地瓦片</string>
+    <string name="media_projection_title">Android 10 屏幕捕获授权</string>
+    <string name="media_projection_desc">检测到当前处于 Android 10 系统。需要额外授予一次屏幕捕获权限以启动底层 VirtualDisplay 流式合成。</string>
+    <string name="btn_grant_media_projection">授权屏幕捕获</string>
+    <string name="toast_media_projection_granted">屏幕捕获已授权，服务已就绪</string>
+    <string name="toast_media_projection_denied">未授予截屏权限，长截屏无法启动</string>
+    <string name="restricted_settings_desc">针对 Android 13+ 侧载应用，系统默认限制无障碍开关开启。若开关置灰不可点：\n1. 点击下方按钮直达「应用信息」；\n2. 点击右上角「⋮ 更多」；\n3. 选择「允许受限制的设置」并验证锁屏凭据。</string>
+    <string name="btn_open_app_details">打开应用信息以解锁</string>
 </resources>
