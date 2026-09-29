@@ -270,7 +270,7 @@ fun AboutSheetContent(
                         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
                     ) {
                         Text(
-                            text = "Apache-2.0",
+                            text = "MIT",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.SemiBold,
