@@ -3,27 +3,32 @@ package org.scrollloom.ui.main
 import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.scrollloom.domain.model.WeavingState
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
-import org.scrollloom.ui.main.components.MainHeader
+import org.scrollloom.ui.main.components.AboutBottomSheet
+import org.scrollloom.ui.main.components.MainTopBar
+import org.scrollloom.ui.main.components.MasterHeroControl
 import org.scrollloom.ui.main.components.MediaProjectionStatusCard
-import org.scrollloom.ui.main.components.PrivacyBadgesSection
-import org.scrollloom.ui.main.components.RestrictedSettingsCard
-import org.scrollloom.ui.main.components.ServiceStatusCard
-import org.scrollloom.ui.main.components.UsageGuideCard
 
 /**
  * 纯粹 UI 状态模型，集中计算系统版本逻辑，彻底隔离平台依赖与 Compose 渲染。
@@ -50,6 +55,14 @@ data class MainUiState(
     }
 }
 
+/**
+ * 零冗余极简主控屏 (Zero-Redundancy Primary Console)。
+ *
+ * 1. 顶部：规范 TopAppBar，唯一正规二级入口 (ⓘ)；
+ * 2. 居中：单一决定性触控核心 (MasterHeroControl)，绝无打架并存控件；
+ * 3. 二级：受限排障与关于信息收敛于清晰的 AboutBottomSheet。
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     uiState: MainUiState,
@@ -60,67 +73,94 @@ fun MainScreen(
     onCopyAdbCommand: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(modifier = modifier) { innerPadding ->
-        Column(
+    var showAboutSheet by remember { mutableStateOf(false) }
+
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            MainTopBar(
+                onShowAbout = { showAboutSheet = true }
+            )
+        }
+    ) { innerPadding ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Spacer(modifier = Modifier.height(4.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Android 10 屏幕捕获授权卡片 (仅在 Android 10 且未授权时展示)
+                if (uiState.showMediaProjectionCard) {
+                    MediaProjectionStatusCard(
+                        isGranted = uiState.isProjectionGranted,
+                        onRequestPermission = onRequestMediaProjection
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
-            // 1. 48dp 织梭品牌徽标与标语区 (紧凑高度预算 ~112dp)
-            MainHeader()
+                // 核心交互：单一决定性触控核心仪 (MasterHeroControl)
+                MasterHeroControl(
+                    isConnected = uiState.isServiceConnected,
+                    isRestricted = uiState.showRestrictedSettingsCard,
+                    onPrimaryAction = {
+                        if (uiState.showRestrictedSettingsCard) {
+                            onOpenAppDetailsSettings()
+                        } else {
+                            onOpenAccessibilitySettings()
+                        }
+                    },
+                    onShowAbout = {
+                        showAboutSheet = true
+                    }
+                )
+            }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 2. 无障碍核心开关状态卡片
-            ServiceStatusCard(
-                isConnected = uiState.isServiceConnected,
-                onOpenAccessibilitySettings = onOpenAccessibilitySettings
+        // 二级关于与说明底板 (承载必要结构化说明与受限解锁排障)
+        if (showAboutSheet) {
+            AboutBottomSheet(
+                onDismissRequest = { showAboutSheet = false },
+                onOpenAppDetailsSettings = onOpenAppDetailsSettings,
+                onOpenBatteryOptimization = onOpenBatteryOptimization,
+                onCopyAdbCommand = onCopyAdbCommand
             )
-
-            // 3. Android 10 录屏授权卡片 (仅在 Android 10 下展现)
-            if (uiState.showMediaProjectionCard) {
-                Spacer(modifier = Modifier.height(14.dp))
-                MediaProjectionStatusCard(
-                    isGranted = uiState.isProjectionGranted,
-                    onRequestPermission = onRequestMediaProjection
-                )
-            }
-
-            // 4. Android 13+ 受限制设置引导卡片 (仅在服务未开启且 Android 13+ 下展现)
-            if (uiState.showRestrictedSettingsCard) {
-                Spacer(modifier = Modifier.height(14.dp))
-                RestrictedSettingsCard(
-                    onOpenAppDetailsSettings = onOpenAppDetailsSettings,
-                    onOpenBatteryOptimization = onOpenBatteryOptimization,
-                    onCopyAdbCommand = onCopyAdbCommand
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 5. 使用指引向导
-            UsageGuideCard()
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 6. 架构级隐私安全承诺微标区
-            PrivacyBadgesSection()
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 // ==================== Preview 区域 ====================
 
-@Preview(name = "1. 主屏 - 服务已就绪 (Light)", group = "MainScreen", showBackground = true)
-@Preview(name = "1. 主屏 - 服务已就绪 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "1. 主屏 - 未启用 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "1. 主屏 - 未启用 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun PreviewMainScreenInactive() {
+    ScrollLoomTheme(dynamicColor = false) {
+        MainScreen(
+            uiState = MainUiState(
+                isServiceConnected = false,
+                isProjectionGranted = true,
+                showMediaProjectionCard = false,
+                showRestrictedSettingsCard = false
+            ),
+            onRequestMediaProjection = {},
+            onOpenAccessibilitySettings = {},
+            onOpenAppDetailsSettings = {},
+            onOpenBatteryOptimization = {},
+            onCopyAdbCommand = {}
+        )
+    }
+}
+
+@Preview(name = "2. 主屏 - 服务已就绪 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "2. 主屏 - 服务已就绪 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun PreviewMainScreenActive() {
     ScrollLoomTheme(dynamicColor = false) {
@@ -140,8 +180,8 @@ private fun PreviewMainScreenActive() {
     }
 }
 
-@Preview(name = "2. 主屏 - Android 14 首次受限制设置 (Light)", group = "MainScreen", showBackground = true)
-@Preview(name = "2. 主屏 - Android 14 首次受限制设置 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "3. 主屏 - Android 14 首次受限制设置 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "3. 主屏 - Android 14 首次受限制设置 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun PreviewMainScreenRestrictedSettings() {
     ScrollLoomTheme(dynamicColor = false) {
@@ -161,7 +201,7 @@ private fun PreviewMainScreenRestrictedSettings() {
     }
 }
 
-@Preview(name = "3. 主屏 - Android 10 未授权录屏 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "4. 主屏 - Android 10 未授权录屏 (Light)", group = "MainScreen", showBackground = true)
 @Composable
 private fun PreviewMainScreenAndroid10Unauthenticated() {
     ScrollLoomTheme(dynamicColor = false) {
