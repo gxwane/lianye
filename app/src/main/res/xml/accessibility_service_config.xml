@@ -3,4 +3,5 @@
     android:description="@string/accessibility_service_description"
     android:canTakeScreenshot="true"
     android:canPerformGestures="true"
-    android:notificationTimeout="100" />
+    android:notificationTimeout="100"
+    android:settingsActivity="org.scrollloom.ui.main.MainActivity" />

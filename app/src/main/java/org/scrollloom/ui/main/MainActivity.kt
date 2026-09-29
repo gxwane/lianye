@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         val repository = App.instance.appComponent.loomRepository
-        if (repository.weavingState.value is WeavingState.Preview) {
+        if (!isChangingConfigurations && repository.weavingState.value is WeavingState.Preview) {
             repository.reset()
         }
     }
