@@ -15,3 +15,7 @@ design/mockups/
 design/tokens/
 .kotlin/
 
+# Signing credentials - NEVER commit these
+*.jks
+*.keystore
+keystore.properties

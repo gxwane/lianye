@@ -1,0 +1,95 @@
+name: Deploy F-Droid Repo
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-fdroid-repo:
+    name: Build & Deploy F-Droid Repository
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install fdroidserver
+        run: |
+          sudo add-apt-repository ppa:fdroid/fdroidserver -y
+          sudo apt-get update
+          sudo apt-get install -y fdroidserver
+
+      - name: Download latest release APK
+        run: |
+          mkdir -p fdroid/repo
+          # Download the APK asset from the triggering release
+          gh release download "${{ github.event.release.tag_name }}" \
+            --pattern "*.apk" \
+            --dir fdroid/repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decode F-Droid repo signing keystore
+        run: |
+          echo "${{ secrets.FDROID_KEYSTORE_BASE64 }}" | base64 -d > fdroid/keystore.jks
+
+      - name: Initialize fdroid config
+        run: |
+          cat > fdroid/config.yml << 'EOF'
+          repo_url: "https://gxwane.github.io/scroll-loom/fdroid/repo"
+          repo_name: "ScrollLoom"
+          repo_description: "Official ScrollLoom F-Droid repository. Zero network, MIT licensed."
+          archive_older: 3
+          keystore: keystore.jks
+          repo_keyalias: fdroid
+          EOF
+
+      - name: Build F-Droid index
+        working-directory: fdroid
+        env:
+          FDROID_KEYSTORE_PASS: ${{ secrets.FDROID_KEYSTORE_PASS }}
+        run: |
+          fdroid update --create-metadata --rename-apks \
+            --keystore keystore.jks \
+            --keystorepass "$FDROID_KEYSTORE_PASS" \
+            --repo-keyalias fdroid \
+            --keypass "$FDROID_KEYSTORE_PASS"
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p pages/fdroid
+          cp -r fdroid/repo pages/fdroid/
+          # Generate a simple index.html pointing to the repo
+          cat > pages/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head><meta charset="UTF-8"><title>ScrollLoom F-Droid Repo</title></head>
+          <body>
+          <h1>ScrollLoom F-Droid Repository</h1>
+          <p>Add this URL to your F-Droid client:</p>
+          <code>https://gxwane.github.io/scroll-loom/fdroid/repo</code>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

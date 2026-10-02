@@ -1,8 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
 }
+
+// Load signing credentials from local.properties (never committed to git)
+// In CI/CD, these are provided via environment variables from GitHub Secrets
+val localProps = Properties().also { props ->
+    val f = rootProject.file("local.properties")
+    if (f.exists()) props.load(f.inputStream())
+}
+
+fun localProp(key: String): String? =
+    System.getenv(key) ?: localProps.getProperty(key)
 
 android {
     namespace = "org.scrollloom"
@@ -18,10 +30,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = localProp("storeFile")?.let { file(it) }
+            storePassword = localProp("storePassword")
+            keyAlias = localProp("keyAlias")
+            keyPassword = localProp("keyPassword")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -40,6 +62,13 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    // Strips Google dependency metadata for reproducible builds
+    // Required for F-Droid Reproducible Build verification
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     testOptions {
