@@ -15,16 +15,43 @@
 
     <!-- 触控核心微提示与动作 -->
     <string name="action_hint_enable">轻触开启</string>
-    <string name="action_hint_disable">轻触停止</string>
+    <string name="action_hint_disable">轻触停用</string>
     <string name="action_hint_restricted">轻触解锁</string>
     <string name="btn_restricted_guide_pill">查看解锁指南 ›</string>
     <string name="btn_enable_service">前往系统开启服务</string>
+
+    <!-- 开启引导微底板 (Pre-Flight Guide) -->
+    <string name="preflight_guide_title">开启长截屏服务</string>
+    <string name="preflight_guide_desc">系统设置中层级较深，请按以下路径找到并开启：</string>
+    <string name="preflight_btn_confirm">记住路径，前往系统开启</string>
+    <string name="preflight_privacy_note">100% 离线 · 零网络权限 · 随时可停用</string>
 
     <!-- 悬浮球描述 -->
     <string name="bubble_desc_idle">开始编织长卷</string>
     <string name="bubble_desc_weaving">正在编织长卷</string>
     <string name="bubble_desc_finished">长卷编织完成</string>
     <string name="bubble_desc_error">编织异常重试</string>
+
+    <!-- 机型静默感知行前微提示 -->
+    <string name="vendor_hint_xiaomi">请切至【通用】>【已下载的服务】开启 ScrollLoom</string>
+    <string name="vendor_hint_oppo">请切至【通用】>【已下载的应用】开启 ScrollLoom</string>
+    <string name="vendor_hint_vivo">请在无障碍中点击【已下载的服务】开启</string>
+    <string name="vendor_hint_huawei">请在无障碍中点击【已安装的服务】开启</string>
+    <string name="vendor_hint_samsung">请滑至下方点击【已安装的应用程序】开启</string>
+    <string name="vendor_hint_aosp">请在列表中选择【已下载的应用】开启</string>
+
+    <!-- 受限设置双向穿梭排障卡片文案 -->
+    <string name="troubleshoot_title_blocked">开关置灰无法开启？</string>
+    <string name="troubleshoot_desc_blocked">系统对非商店安装的应用默认限制，按以下 3 步即可放行：</string>
+    <string name="troubleshoot_step_1">1. 点击下方按钮，直达「应用信息」页</string>
+    <string name="troubleshoot_step_2">2. 点击右上角「⋮」更多，选择「允许受限制的设置」</string>
+    <string name="troubleshoot_step_3">3. 验证锁屏指纹或密码后返回本应用</string>
+    <string name="troubleshoot_btn_grant">⚡ 直达应用信息放行</string>
+
+    <string name="troubleshoot_title_allowed">🎉 限制已成功解除！</string>
+    <string name="troubleshoot_desc_allowed">系统安全限制已放行，请返回无障碍设置正式开启服务。</string>
+    <string name="troubleshoot_btn_return_a11y">🚀 重返无障碍开启服务</string>
+    <string name="troubleshoot_return_hint">重要提示：开关不在应用信息页中，必须返回无障碍设置开启。</string>
 
     <!-- 二级说明页 (About & Guide) 结构化卡片文案 -->
     <string name="about_title">关于与说明</string>
@@ -38,11 +65,11 @@
     <string name="about_privacy_gesture_title">手势无障碍</string>
     <string name="about_privacy_gesture_desc">仅用于模拟匀速滑动手势，不读取界面文本或按键。</string>
 
-    <string name="about_section_restricted">开关置灰不可点击？</string>
+    <string name="about_section_restricted">开关置灰无法开启？</string>
     <string name="about_restricted_intro">针对非应用商店安装的软件，Android 默认锁定无障碍权限：</string>
-    <string name="about_restricted_step1">1. 进入系统「应用信息」页</string>
-    <string name="about_restricted_step2">2. 点击右上角「⋮」更多</string>
-    <string name="about_restricted_step3">3. 选择「允许受限制的设置」并验证解锁凭据</string>
+    <string name="about_restricted_step1">1. 在无障碍设置中轻触 ScrollLoom 触发系统受限提示</string>
+    <string name="about_restricted_step2">2. 进入应用信息页，点击右上角「⋮」更多</string>
+    <string name="about_restricted_step3">3. 选择「允许受限制的设置」验证密码，并重新返回无障碍开启</string>
     <string name="btn_open_app_details">直达系统应用详情页 ›</string>
     <string name="btn_copy_adb_command">复制 ADB 解锁命令</string>
     <string name="toast_adb_copied">ADB 命令已复制至剪贴板！</string>

@@ -14,3 +14,5 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+# 4. Keep Floating Overlay UI & Lifecycles
+-keep class org.scrollloom.ui.floating.** { *; }

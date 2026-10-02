@@ -29,22 +29,28 @@ class FloatingLifecycleBridge : LifecycleOwner, ViewModelStoreOwner, SavedStateR
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
 
-    fun attach(view: View) {
+    fun attach(root: View, child: View? = null) {
         savedStateRegistryController.performRestore(null)
-        view.setViewTreeLifecycleOwner(this)
-        view.setViewTreeViewModelStoreOwner(this)
-        view.setViewTreeSavedStateRegistryOwner(this)
+        root.setViewTreeLifecycleOwner(this)
+        root.setViewTreeViewModelStoreOwner(this)
+        root.setViewTreeSavedStateRegistryOwner(this)
+
+        if (child != null && child !== root) {
+            child.setViewTreeLifecycleOwner(this)
+            child.setViewTreeViewModelStoreOwner(this)
+            child.setViewTreeSavedStateRegistryOwner(this)
+        }
 
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
 
-    fun detach(composeView: ComposeView) {
+    fun detach(root: View? = null, composeView: ComposeView? = null) {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        composeView.disposeComposition()
+        composeView?.disposeComposition()
         store.clear()
     }
 }

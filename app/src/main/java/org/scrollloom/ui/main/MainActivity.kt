@@ -25,16 +25,26 @@ import org.scrollloom.App
 import org.scrollloom.R
 import org.scrollloom.domain.model.WeavingState
 import org.scrollloom.engine.export.MediaExportManager
+import org.scrollloom.platform.DeviceVendor
+import org.scrollloom.platform.DeviceVendorDetector
+import org.scrollloom.platform.RestrictedSettingsHelper
+import org.scrollloom.service.LoomAccessibilityService
 import org.scrollloom.service.capture.LoomMediaProjectionService
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
+import org.scrollloom.ui.main.components.PreFlightGuideBottomSheet
 import org.scrollloom.ui.preview.ScrollPreviewScreen
 
 class MainActivity : ComponentActivity() {
+
+    private var hasAttemptedEnable by mutableStateOf(false)
+    private var hasEncounteredRestriction by mutableStateOf(false)
+    private val isRestrictedBlockedState = mutableStateOf(false)
 
     private val mediaProjectionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
+            App.instance.appComponent.loomRepository.updateProjectionGranted(true)
             LoomMediaProjectionService.start(this, result.resultCode, result.data!!)
             Toast.makeText(this, getString(R.string.toast_media_projection_granted), Toast.LENGTH_SHORT).show()
         } else {
@@ -47,6 +57,7 @@ class MainActivity : ComponentActivity() {
         mediaProjectionLauncher.launch(projectionManager.createScreenCaptureIntent())
     }
 
+    @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,6 +67,8 @@ class MainActivity : ComponentActivity() {
                 val isProjectionGranted by repository.isProjectionGranted.collectAsState()
                 val exportManager = remember { MediaExportManager(contentResolver) }
                 val context = LocalContext.current
+                val isRestrictedBlocked by isRestrictedBlockedState
+                var showPreFlightGuide by remember { mutableStateOf(false) }
 
                 when (val current = weavingState) {
                     is WeavingState.Preview -> {
@@ -97,17 +110,58 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     else -> {
+                        val uiState = MainUiState.create(
+                            weavingState = weavingState,
+                            isProjectionGranted = isProjectionGranted,
+                            hasAttemptedEnable = hasAttemptedEnable,
+                            hasEncounteredRestriction = hasEncounteredRestriction,
+                            isRestrictedBlocked = isRestrictedBlocked,
+                            preFlightHintRes = DeviceVendorDetector.getPreFlightHintRes()
+                        )
+
                         MainScreen(
-                            uiState = MainUiState.create(weavingState, isProjectionGranted),
+                            uiState = uiState,
                             onRequestMediaProjection = { requestMediaProjection() },
-                            onOpenAccessibilitySettings = { openAccessibilitySettings() },
+                            onStartService = {
+                                if (DeviceVendorDetector.currentVendor == DeviceVendor.AOSP) {
+                                    openAccessibilitySettings()
+                                } else {
+                                    showPreFlightGuide = true
+                                }
+                            },
+                            onStopService = {
+                                val success = LoomAccessibilityService.disableCurrentService()
+                                if (!success) {
+                                    openAccessibilitySettings()
+                                }
+                            },
                             onOpenAppDetailsSettings = { openAppDetailsSettings() },
                             onOpenBatteryOptimization = { openBatteryOptimizationSettings() },
                             onCopyAdbCommand = { copyAdbCommand() }
                         )
+
+                        if (showPreFlightGuide) {
+                            PreFlightGuideBottomSheet(
+                                vendor = DeviceVendorDetector.currentVendor,
+                                onDismissRequest = { showPreFlightGuide = false },
+                                onConfirm = {
+                                    showPreFlightGuide = false
+                                    openAccessibilitySettings()
+                                }
+                            )
+                        }
                     }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val blocked = RestrictedSettingsHelper.isRestrictedBlocked(this)
+        isRestrictedBlockedState.value = blocked
+        if (blocked && hasAttemptedEnable) {
+            hasEncounteredRestriction = true
         }
     }
 
@@ -120,10 +174,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openAccessibilitySettings() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        hasAttemptedEnable = true
+        val intent = DeviceVendorDetector.createAccessibilityIntent(this)
+        try {
+            startActivity(intent)
+        } catch (_: Exception) {
+            val fallback = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(fallback)
         }
-        startActivity(intent)
     }
 
     private fun openAppDetailsSettings() {
@@ -140,7 +200,7 @@ class MainActivity : ComponentActivity() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             startActivity(intent)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             val intent = Intent(Settings.ACTION_SETTINGS).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }

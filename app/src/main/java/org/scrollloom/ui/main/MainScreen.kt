@@ -1,7 +1,9 @@
 package org.scrollloom.ui.main
 
 import android.content.res.Configuration
-import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,65 +17,60 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.scrollloom.domain.model.WeavingState
+import org.scrollloom.R
 import org.scrollloom.ui.common.theme.ScrollLoomTheme
 import org.scrollloom.ui.main.components.AboutBottomSheet
 import org.scrollloom.ui.main.components.MainTopBar
 import org.scrollloom.ui.main.components.MasterHeroControl
 import org.scrollloom.ui.main.components.MediaProjectionStatusCard
-
-/**
- * 纯粹 UI 状态模型，集中计算系统版本逻辑，彻底隔离平台依赖与 Compose 渲染。
- */
-data class MainUiState(
-    val isServiceConnected: Boolean,
-    val isProjectionGranted: Boolean,
-    val showMediaProjectionCard: Boolean,
-    val showRestrictedSettingsCard: Boolean
-) {
-    companion object {
-        fun create(
-            weavingState: WeavingState,
-            isProjectionGranted: Boolean
-        ): MainUiState {
-            val isConnected = (weavingState as? WeavingState.Idle)?.isServiceConnected ?: false
-            return MainUiState(
-                isServiceConnected = isConnected,
-                isProjectionGranted = isProjectionGranted,
-                showMediaProjectionCard = Build.VERSION.SDK_INT < Build.VERSION_CODES.R,
-                showRestrictedSettingsCard = !isConnected && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-            )
-        }
-    }
-}
+import org.scrollloom.ui.main.components.RestrictedTroubleshootingCard
 
 /**
  * 零冗余极简主控屏 (Zero-Redundancy Primary Console)。
  *
  * 1. 顶部：规范 TopAppBar，唯一正规二级入口 (ⓘ)；
  * 2. 居中：单一决定性触控核心 (MasterHeroControl)，绝无打架并存控件；
- * 3. 二级：受限排障与关于信息收敛于清晰的 AboutBottomSheet。
+ *    - 未就绪态：轻触开启服务；
+ *    - 已就绪态：轻触就地主动注销服务 (disableSelf())，0ms 应用内生效，不跳设置；
+ * 3. 辅助：双向穿梭受限排障卡片 (RestrictedTroubleshootingCard) 仅在受阻时渐进展现；
+ * 4. 二级：关于与运行说明收敛于清晰的 AboutBottomSheet。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     uiState: MainUiState,
     onRequestMediaProjection: () -> Unit,
-    onOpenAccessibilitySettings: () -> Unit,
+    onStartService: () -> Unit,
+    onStopService: () -> Unit,
     onOpenAppDetailsSettings: () -> Unit,
     onOpenBatteryOptimization: () -> Unit,
     onCopyAdbCommand: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showAboutSheet by remember { mutableStateOf(false) }
+
+    // 触觉正反馈上升沿监听：从未连接跃迁至连接时触发机械触感震动
+    var wasConnected by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(uiState.isServiceConnected) {
+        if (wasConnected == false && uiState.isServiceConnected) {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        }
+        wasConnected = uiState.isServiceConnected
+    }
 
     Scaffold(
         modifier = modifier,
@@ -97,34 +94,47 @@ fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Android 10 屏幕捕获授权卡片 (仅在 Android 10 且未授权时展示)
-                if (uiState.showMediaProjectionCard) {
-                    MediaProjectionStatusCard(
-                        isGranted = uiState.isProjectionGranted,
-                        onRequestPermission = onRequestMediaProjection
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                // Android 10 屏幕捕获授权卡片 (授权成功后平滑淡出与收起，绝不常驻污染主界面)
+                AnimatedVisibility(
+                    visible = uiState.showMediaProjectionCard,
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    Column {
+                        MediaProjectionStatusCard(
+                            isGranted = uiState.isProjectionGranted,
+                            onRequestPermission = onRequestMediaProjection
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
 
                 // 核心交互：单一决定性触控核心仪 (MasterHeroControl)
+                // 就绪态时点击就地停用服务 (disableSelf())，未就绪态时开启服务
                 MasterHeroControl(
                     isConnected = uiState.isServiceConnected,
-                    isRestricted = uiState.showRestrictedSettingsCard,
                     onPrimaryAction = {
-                        if (uiState.showRestrictedSettingsCard) {
-                            onOpenAppDetailsSettings()
+                        if (uiState.isServiceConnected) {
+                            onStopService()
                         } else {
-                            onOpenAccessibilitySettings()
+                            onStartService()
                         }
-                    },
-                    onShowAbout = {
-                        showAboutSheet = true
                     }
                 )
+
+                // 渐进式排障：双向穿梭受限制排障卡片 (仅受阻时平滑展现)
+                if (uiState.restrictedCardPhase != RestrictedCardPhase.HIDDEN) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    RestrictedTroubleshootingCard(
+                        phase = uiState.restrictedCardPhase,
+                        onOpenAppDetailsSettings = onOpenAppDetailsSettings,
+                        onOpenAccessibilitySettings = onStartService,
+                        onCopyAdbCommand = onCopyAdbCommand
+                    )
+                }
             }
         }
 
-        // 二级关于与说明底板 (承载必要结构化说明与受限解锁排障)
+        // 二级关于与说明底板
         if (showAboutSheet) {
             AboutBottomSheet(
                 onDismissRequest = { showAboutSheet = false },
@@ -148,10 +158,12 @@ private fun PreviewMainScreenInactive() {
                 isServiceConnected = false,
                 isProjectionGranted = true,
                 showMediaProjectionCard = false,
-                showRestrictedSettingsCard = false
+                restrictedCardPhase = RestrictedCardPhase.HIDDEN,
+                preFlightHintRes = R.string.vendor_hint_aosp
             ),
             onRequestMediaProjection = {},
-            onOpenAccessibilitySettings = {},
+            onStartService = {},
+            onStopService = {},
             onOpenAppDetailsSettings = {},
             onOpenBatteryOptimization = {},
             onCopyAdbCommand = {}
@@ -169,10 +181,12 @@ private fun PreviewMainScreenActive() {
                 isServiceConnected = true,
                 isProjectionGranted = true,
                 showMediaProjectionCard = false,
-                showRestrictedSettingsCard = false
+                restrictedCardPhase = RestrictedCardPhase.HIDDEN,
+                preFlightHintRes = R.string.vendor_hint_aosp
             ),
             onRequestMediaProjection = {},
-            onOpenAccessibilitySettings = {},
+            onStartService = {},
+            onStopService = {},
             onOpenAppDetailsSettings = {},
             onOpenBatteryOptimization = {},
             onCopyAdbCommand = {}
@@ -180,20 +194,22 @@ private fun PreviewMainScreenActive() {
     }
 }
 
-@Preview(name = "3. 主屏 - Android 14 首次受限制设置 (Light)", group = "MainScreen", showBackground = true)
-@Preview(name = "3. 主屏 - Android 14 首次受限制设置 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "3. 主屏 - 遭遇受限排障态 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "3. 主屏 - 遭遇受限排障态 (Dark)", group = "MainScreen", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun PreviewMainScreenRestrictedSettings() {
+private fun PreviewMainScreenRestrictedBlocked() {
     ScrollLoomTheme(dynamicColor = false) {
         MainScreen(
             uiState = MainUiState(
                 isServiceConnected = false,
                 isProjectionGranted = true,
                 showMediaProjectionCard = false,
-                showRestrictedSettingsCard = true
+                restrictedCardPhase = RestrictedCardPhase.BLOCKED_GUIDE,
+                preFlightHintRes = R.string.vendor_hint_xiaomi
             ),
             onRequestMediaProjection = {},
-            onOpenAccessibilitySettings = {},
+            onStartService = {},
+            onStopService = {},
             onOpenAppDetailsSettings = {},
             onOpenBatteryOptimization = {},
             onCopyAdbCommand = {}
@@ -201,19 +217,21 @@ private fun PreviewMainScreenRestrictedSettings() {
     }
 }
 
-@Preview(name = "4. 主屏 - Android 10 未授权录屏 (Light)", group = "MainScreen", showBackground = true)
+@Preview(name = "4. 主屏 - 受限已解除准备返回态 (Light)", group = "MainScreen", showBackground = true)
 @Composable
-private fun PreviewMainScreenAndroid10Unauthenticated() {
+private fun PreviewMainScreenRestrictedAllowed() {
     ScrollLoomTheme(dynamicColor = false) {
         MainScreen(
             uiState = MainUiState(
                 isServiceConnected = false,
-                isProjectionGranted = false,
-                showMediaProjectionCard = true,
-                showRestrictedSettingsCard = false
+                isProjectionGranted = true,
+                showMediaProjectionCard = false,
+                restrictedCardPhase = RestrictedCardPhase.ALLOWED_READY_RETURN,
+                preFlightHintRes = R.string.vendor_hint_oppo
             ),
             onRequestMediaProjection = {},
-            onOpenAccessibilitySettings = {},
+            onStartService = {},
+            onStopService = {},
             onOpenAppDetailsSettings = {},
             onOpenBatteryOptimization = {},
             onCopyAdbCommand = {}

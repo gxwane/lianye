@@ -20,14 +20,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,17 +50,11 @@ import org.scrollloom.ui.common.theme.ScrollLoomTheme
 @Composable
 fun MasterHeroControl(
     isConnected: Boolean,
-    isRestricted: Boolean,
     onPrimaryAction: () -> Unit,
-    onShowAbout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val stateColor by animateColorAsState(
-        targetValue = when {
-            isRestricted -> Color(0xFFF59E0B) // 琥珀警示黄
-            isConnected -> LoomGreen          // 就绪翡翠绿
-            else -> MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
-        },
+        targetValue = if (isConnected) LoomGreen else MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
         label = "stateColorAnimation"
     )
 
@@ -78,18 +70,14 @@ fun MasterHeroControl(
         label = "pulseGlowAlpha"
     )
 
-    val (titleRes, descRes, hintRes) = when {
-        isRestricted -> Triple(
-            R.string.status_service_restricted,
-            R.string.status_service_desc_restricted,
-            R.string.action_hint_restricted
-        )
-        isConnected -> Triple(
+    val (titleRes, descRes, hintRes) = if (isConnected) {
+        Triple(
             R.string.status_service_active,
             R.string.status_service_desc_active,
             R.string.action_hint_disable
         )
-        else -> Triple(
+    } else {
+        Triple(
             R.string.status_service_inactive,
             R.string.status_service_desc_inactive,
             R.string.action_hint_enable
@@ -108,8 +96,8 @@ fun MasterHeroControl(
             modifier = Modifier.size(164.dp),
             contentAlignment = Alignment.Center
         ) {
-            // 外围微光光晕 (不抢眼，克制优雅)
-            if (isConnected || isRestricted) {
+            // 外围微光光晕 (就绪时呈现翡翠绿呼吸光晕)
+            if (isConnected) {
                 Box(
                     modifier = Modifier
                         .size(164.dp)
@@ -129,7 +117,7 @@ fun MasterHeroControl(
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.surface,
                 border = BorderStroke(
-                    width = if (isConnected || isRestricted) 2.5.dp else 1.5.dp,
+                    width = if (isConnected) 2.5.dp else 1.5.dp,
                     color = stateColor
                 ),
                 shadowElevation = if (isConnected) 8.dp else 3.dp
@@ -153,7 +141,7 @@ fun MasterHeroControl(
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp,
-                        color = if (isConnected || isRestricted) stateColor else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (isConnected) stateColor else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -191,25 +179,6 @@ fun MasterHeroControl(
             modifier = Modifier.padding(horizontal = 32.dp),
             lineHeight = 20.sp
         )
-
-        // 4. 受限状态下的排障小药丸 (仅受限时展现，平时 0 噪音)
-        if (isRestricted) {
-            Spacer(modifier = Modifier.height(14.dp))
-            Surface(
-                onClick = onShowAbout,
-                shape = RoundedCornerShape(999.dp),
-                color = Color(0xFFF59E0B).copy(alpha = 0.12f),
-                border = BorderStroke(1.dp, Color(0xFFF59E0B).copy(alpha = 0.35f))
-            ) {
-                Text(
-                    text = stringResource(id = R.string.btn_restricted_guide_pill),
-                    color = Color(0xFFD97706),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
-                )
-            }
-        }
     }
 }
 
@@ -222,9 +191,7 @@ private fun PreviewMasterHeroControlInactive() {
     ScrollLoomTheme(dynamicColor = false) {
         MasterHeroControl(
             isConnected = false,
-            isRestricted = false,
-            onPrimaryAction = {},
-            onShowAbout = {}
+            onPrimaryAction = {}
         )
     }
 }
@@ -236,23 +203,7 @@ private fun PreviewMasterHeroControlActive() {
     ScrollLoomTheme(dynamicColor = false) {
         MasterHeroControl(
             isConnected = true,
-            isRestricted = false,
-            onPrimaryAction = {},
-            onShowAbout = {}
-        )
-    }
-}
-
-@Preview(name = "3. 受限态 (Light)", group = "MasterHeroControl", showBackground = true)
-@Preview(name = "3. 受限态 (Dark)", group = "MasterHeroControl", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun PreviewMasterHeroControlRestricted() {
-    ScrollLoomTheme(dynamicColor = false) {
-        MasterHeroControl(
-            isConnected = false,
-            isRestricted = true,
-            onPrimaryAction = {},
-            onShowAbout = {}
+            onPrimaryAction = {}
         )
     }
 }

@@ -33,6 +33,7 @@ class LoomAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        instance = java.lang.ref.WeakReference(this)
         Log.i(TAG, "LoomAccessibilityService connected")
         val repository = App.instance.appComponent.loomRepository
         repository.updateServiceConnected(true)
@@ -121,6 +122,7 @@ class LoomAccessibilityService : AccessibilityService() {
 
     override fun onUnbind(intent: Intent?): Boolean {
         Log.i(TAG, "LoomAccessibilityService unbind")
+        instance = null
         App.instance.appComponent.loomRepository.updateServiceConnected(false)
         overlayManager?.hide()
         frameCapturer?.release()
@@ -132,6 +134,7 @@ class LoomAccessibilityService : AccessibilityService() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "LoomAccessibilityService destroyed")
+        instance = null
         App.instance.appComponent.loomRepository.updateServiceConnected(false)
         overlayManager?.hide()
         frameCapturer?.release()
@@ -141,5 +144,26 @@ class LoomAccessibilityService : AccessibilityService() {
 
     companion object {
         private const val TAG = "LoomAccessibility"
+        private var instance: java.lang.ref.WeakReference<LoomAccessibilityService>? = null
+
+        /**
+         * 允许应用就地主动注销并停用系统无障碍服务 (API 24+)
+         * 调用后系统将关闭服务开关并触发 onUnbind，无需跳转系统设置手动关闭。
+         */
+        fun disableCurrentService(): Boolean {
+            val service = instance?.get()
+            return if (service != null) {
+                try {
+                    service.disableSelf()
+                    instance = null
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to call disableSelf()", e)
+                    false
+                }
+            } else {
+                false
+            }
+        }
     }
 }
