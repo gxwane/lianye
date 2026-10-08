@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="720" viewBox="0 0 1120 720" role="img" aria-labelledby="title desc">
+  <title id="title">连页 · Gamma 03 · 生长拍</title>
+  <desc id="desc">从连续向下增长的动态节奏出发的原创黑白探索。三枚独立宽面由上到下变宽、变厚，斜切起端与圆弧末端形成不对称的逐级展开轮廓。包含大图、96、64、32、24 像素和反白图标对照。</desc>
+  <defs>
+    <symbol id="mark" viewBox="0 0 320 320">
+      <g fill="currentColor">
+        <path d="M196 40H238Q254 40 254 56V64Q254 80 238 80H174Z"/>
+        <path d="M144 108H244Q264 108 264 128V148Q264 168 244 168H108Z"/>
+        <path d="M72 204H230Q254 204 254 228V256Q254 280 230 280H22Z"/>
+      </g>
+    </symbol>
+  </defs>
+  <rect width="1120" height="720" fill="#fff"/>
+  <g fill="#000" font-family="Arial, sans-serif">
+    <text x="56" y="61" font-size="14" font-weight="700" letter-spacing="2">GAMMA / 03</text>
+    <text x="56" y="96" font-size="28" font-weight="700" letter-spacing=".3">GROWTH BEATS</text>
+    <text x="56" y="651" font-size="14" letter-spacing="1">THREE BEATS / INCREASING WEIGHT</text>
+  </g>
+  <use href="#mark" x="92" y="160" width="400" height="400" color="#000"/>
+  <path d="M568 144V592" fill="none" stroke="#000" stroke-width="1"/>
+  <g fill="#000" font-family="Arial, sans-serif" font-size="12" letter-spacing="1">
+    <text x="652" y="162">SIZE CHECK / ACTUAL PIXELS</text>
+    <text x="694" y="301" text-anchor="middle">96</text>
+    <text x="860" y="301" text-anchor="middle">64</text>
+    <text x="674" y="421" text-anchor="middle">32</text>
+    <text x="854" y="421" text-anchor="middle">24</text>
+    <text x="652" y="484">REVERSED / ICON CONTAINER</text>
+    <text x="872" y="577" font-size="12">96 PX MARK</text>
+  </g>
+  <use href="#mark" x="646" y="184" width="96" height="96" color="#000"/>
+  <use href="#mark" x="828" y="216" width="64" height="64" color="#000"/>
+  <use href="#mark" x="658" y="361" width="32" height="32" color="#000"/>
+  <use href="#mark" x="842" y="369" width="24" height="24" color="#000"/>
+  <rect x="652" y="506" width="136" height="136" rx="32" fill="#000"/>
+  <use href="#mark" x="672" y="526" width="96" height="96" color="#fff"/>
+</svg>

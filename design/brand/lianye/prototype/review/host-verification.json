@@ -1,0 +1,78 @@
+{
+  "version": 5,
+  "checkedAt": "2026-10-07T07:21:10.949Z",
+  "checks": [
+    "宿主 iframe 内主界面与图标出现",
+    "宿主环境下首个主动作生效",
+    "宿主环境下截取与裁剪闭环可用",
+    "宿主环境下保存不弹二次确认",
+    "结果页操作目标至少 44×44 px",
+    "宿主手动等待开始，不自动滚动",
+    "宿主手动滑动后明确结束进入共同结果",
+    "宿主手动完成后捕获状态消失",
+    "宿主运行无 JavaScript 异常",
+    "浅深主题的正文与次级文字对比度达标"
+  ],
+  "errors": [],
+  "targets": [
+    {
+      "label": "返回首页，保留草稿",
+      "width": 44,
+      "height": 44
+    },
+    {
+      "label": "查看",
+      "width": 76,
+      "height": 44
+    },
+    {
+      "label": "裁剪",
+      "width": 64,
+      "height": 60
+    },
+    {
+      "label": "分享",
+      "width": 64,
+      "height": 60
+    }
+  ],
+  "colors": [
+    {
+      "name": "light text",
+      "fg": "#252B2A",
+      "bg": "#F7F4EE",
+      "ratio": 13.12
+    },
+    {
+      "name": "light secondary",
+      "fg": "#646C67",
+      "bg": "#F7F4EE",
+      "ratio": 4.93
+    },
+    {
+      "name": "light accent text",
+      "fg": "#A54023",
+      "bg": "#F7F4EE",
+      "ratio": 5.7
+    },
+    {
+      "name": "dark text",
+      "fg": "#F7F4EE",
+      "bg": "#1D2422",
+      "ratio": 14.41
+    },
+    {
+      "name": "dark secondary",
+      "fg": "#ADB7B0",
+      "bg": "#1D2422",
+      "ratio": 7.67
+    },
+    {
+      "name": "dark accent text",
+      "fg": "#F4A584",
+      "bg": "#1D2422",
+      "ratio": 7.96
+    }
+  ],
+  "offlineRuntime": "Host Lucide supplied from installed package; optional tooltip libraries omitted"
+}

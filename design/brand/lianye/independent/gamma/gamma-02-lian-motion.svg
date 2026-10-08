@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="720" viewBox="0 0 1120 720" role="img" aria-labelledby="title desc">
+  <title id="title">连页 · Gamma 02 · 连势</title>
+  <desc id="desc">原创黑白标识探索。以重新绘制的连字构成标识，包含大图、96、64、32、24 像素尺寸以及反白应用图标对照。字形全部由矢量路径构成，不依赖字体。</desc>
+  <defs>
+    <symbol id="mark" viewBox="0 0 320 320">
+      <g fill="currentColor">
+        <path d="M42 48L90 84L68 112L20 76Z"/>
+        <path d="M120 60H292V92H120Z"/>
+        <path d="M168 88H208L168 124H292V156H120V134Z"/>
+        <path d="M120 176H292V208H120Z"/>
+        <path d="M204 44H236V236H204Z"/>
+        <path d="M24 128H94Q110 128 110 144V196Q110 206 101 211L98 214C128 239 164 248 218 248H292V280H214C158 280 124 264 92 243L58 268L30 243L78 198V160H24Z"/>
+      </g>
+    </symbol>
+  </defs>
+  <rect width="1120" height="720" fill="#fff"/>
+  <g fill="#000" font-family="Arial, sans-serif">
+    <text x="56" y="61" font-size="14" font-weight="700" letter-spacing="2">GAMMA / 02</text>
+    <text x="56" y="96" font-size="28" font-weight="700" letter-spacing=".3">LIAN IN MOTION</text>
+    <text x="56" y="651" font-size="14" letter-spacing="1">NAME AS A DRAWN MARK</text>
+  </g>
+  <use href="#mark" x="92" y="160" width="400" height="400" color="#000"/>
+  <path d="M568 144V592" fill="none" stroke="#000" stroke-width="1"/>
+  <g fill="#000" font-family="Arial, sans-serif" font-size="12" letter-spacing="1">
+    <text x="652" y="162">SIZE CHECK / ACTUAL PIXELS</text>
+    <text x="694" y="301" text-anchor="middle">96</text>
+    <text x="860" y="301" text-anchor="middle">64</text>
+    <text x="674" y="421" text-anchor="middle">32</text>
+    <text x="854" y="421" text-anchor="middle">24</text>
+    <text x="652" y="484">REVERSED / ICON CONTAINER</text>
+    <text x="872" y="577" font-size="12">96 PX MARK</text>
+  </g>
+  <use href="#mark" x="646" y="184" width="96" height="96" color="#000"/>
+  <use href="#mark" x="828" y="216" width="64" height="64" color="#000"/>
+  <use href="#mark" x="658" y="361" width="32" height="32" color="#000"/>
+  <use href="#mark" x="842" y="369" width="24" height="24" color="#000"/>
+  <rect x="652" y="506" width="136" height="136" rx="32" fill="#000"/>
+  <use href="#mark" x="672" y="526" width="96" height="96" color="#fff"/>
+</svg>

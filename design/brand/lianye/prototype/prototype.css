@@ -1,0 +1,211 @@
+#ly-interaction-prototype { --ly-paper:light-dark(#F7F4EE,#1D2422); --ly-ink:light-dark(#252B2A,#F7F4EE); --ly-muted:light-dark(#646C67,#ADB7B0); --ly-surface:light-dark(#FFFFFF,#29322F); --ly-line:light-dark(#D7DCD5,#45514B); --ly-soft:light-dark(#ECEEE6,#303B35); --ly-accent:#DB653D; --ly-accent-text:light-dark(#A54023,#F4A584); --ly-radius:22px; width:100%; }
+#ly-interaction-prototype .ly-review-controls { max-width:390px; margin:0 auto 14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+#ly-interaction-prototype .ly-review-controls>div { min-width:0; }
+#ly-interaction-prototype .ly-review-caption { text-align:center; margin-top:12px; }
+#ly-interaction-prototype .ly-phone { position:relative; box-sizing:border-box; width:100%; max-width:390px; height:748px; margin:auto; overflow:hidden; border:1px solid var(--ly-line); border-radius:30px; background:var(--ly-paper); color:var(--ly-ink); box-shadow:0 8px 28px #00000010; font:400 15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; text-align:left; }
+#ly-interaction-prototype .ly-phone * { box-sizing:border-box; }
+#ly-interaction-prototype .ly-phone button,#ly-interaction-prototype .ly-phone input { font:inherit; }
+#ly-interaction-prototype .ly-phone button { cursor:pointer; color:inherit; -webkit-tap-highlight-color:transparent; }
+#ly-interaction-prototype .ly-phone button:disabled { opacity:.45; cursor:default; }
+#ly-interaction-prototype .ly-phone h1,#ly-interaction-prototype .ly-phone h2,#ly-interaction-prototype .ly-phone h3,#ly-interaction-prototype .ly-phone p { margin:0; }
+#ly-interaction-prototype .ly-phone h1 { font-size:32px; line-height:1.3; letter-spacing:-.8px; font-weight:650; }
+#ly-interaction-prototype .ly-phone h2 { font-size:24px; line-height:1.4; font-weight:650; }
+#ly-interaction-prototype .ly-phone h3 { font-size:18px; font-weight:600; }
+#ly-interaction-prototype .ly-statusbar { height:34px; padding:8px 24px 0; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; }
+#ly-interaction-prototype .ly-status-icons { display:flex; gap:5px; }
+#ly-interaction-prototype .ly-status-icons svg { width:14px; height:14px; }
+#ly-interaction-prototype .ly-projection-indicator { display:inline-flex; vertical-align:middle; align-items:center; padding:2px 8px; margin-left:8px; border-radius:20px; background:light-dark(#DCE5EF,#314054); color:light-dark(#274FAB,#B8CCFF); }
+#ly-interaction-prototype .ly-projection-indicator svg { width:14px; height:14px; }
+#ly-interaction-prototype #ly-screen { height:calc(100% - 58px); position:relative; }
+#ly-interaction-prototype .ly-navigation { height:24px; display:grid; place-items:center; }
+#ly-interaction-prototype .ly-navigation span { width:108px; height:4px; background:var(--ly-ink); border-radius:4px; opacity:.8; }
+#ly-interaction-prototype .ly-page { display:flex; flex-direction:column; height:100%; position:relative; }
+#ly-interaction-prototype .ly-header { padding:10px 20px; min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+#ly-interaction-prototype .ly-brand { display:flex; align-items:center; gap:11px; font-size:23px; font-weight:650; letter-spacing:1px; }
+#ly-interaction-prototype .ly-logo { display:block; width:42px; height:42px; border-radius:12px; background:#F7F4EE url("__LOGO__") center/38px no-repeat; flex-shrink:0; }
+#ly-interaction-prototype .ly-logo-app { width:58px; height:58px; border-radius:17px; background:#F7F4EE url("__LOGO__") center/49px no-repeat; }
+#ly-interaction-prototype .ly-icon-button { min-width:44px; height:44px; border:0; background:transparent; display:inline-flex; align-items:center; justify-content:center; border-radius:12px; padding:10px; }
+#ly-interaction-prototype .ly-icon-button svg { width:21px; height:21px; }
+#ly-interaction-prototype .ly-icon-button:hover { background:var(--ly-soft); }
+#ly-interaction-prototype .ly-content { flex:1; min-height:0; overflow:auto; padding:16px 24px 22px; }
+#ly-interaction-prototype .ly-home-content { padding-top:30px; }
+#ly-interaction-prototype .ly-description { color:var(--ly-muted); font-size:15px; margin-top:14px !important; line-height:1.75; }
+#ly-interaction-prototype .ly-footer { padding:16px 24px 24px; flex-shrink:0; }
+#ly-interaction-prototype .ly-primary { display:flex; align-items:center; justify-content:center; gap:9px; border:0; background:var(--ly-ink); color:var(--ly-paper) !important; width:100%; padding:14px 16px; min-height:54px; border-radius:calc(var(--ly-radius) - 6px); font-weight:600 !important; }
+#ly-interaction-prototype .ly-secondary { display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; width:100%; padding:10px 14px; background:var(--ly-soft); border:1px solid transparent; border-radius:14px; }
+#ly-interaction-prototype .ly-manual-choice { flex-direction:column; gap:2px; }
+#ly-interaction-prototype .ly-manual-choice small { font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-text-button { display:flex; align-items:center; justify-content:center; gap:6px; border:0; background:transparent; min-height:44px; padding:8px 12px; color:var(--ly-muted) !important; }
+#ly-interaction-prototype .ly-primary svg,#ly-interaction-prototype .ly-secondary svg { width:19px; height:19px; flex-shrink:0; }
+#ly-interaction-prototype .ly-illustration { position:relative; margin:36px 0 0; height:270px; }
+#ly-interaction-prototype .ly-mini-page { position:absolute; width:154px; height:236px; left:calc(50% - 77px); top:11px; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:7px; overflow:hidden; padding:17px; box-shadow:0 10px 24px #252B2A12; }
+#ly-interaction-prototype .ly-mini-visual { height:74px; background:var(--ly-soft); border-radius:3px; margin:12px 0; position:relative; overflow:hidden; }
+#ly-interaction-prototype .ly-mini-visual::before { content:""; position:absolute; width:86px; height:86px; border-radius:50%; background:var(--ly-accent); right:-12px; top:20px; opacity:.5; }
+#ly-interaction-prototype .ly-mini-visual::after { content:""; position:absolute; background:var(--ly-ink); opacity:.2; width:75px; height:75px; transform:rotate(30deg); left:-12px; top:35px; border-radius:14px; }
+#ly-interaction-prototype .ly-mini-page b { font-size:11px; letter-spacing:.2px; }
+#ly-interaction-prototype .ly-mini-lines { height:5px; width:100%; background:var(--ly-line); border-radius:2px; margin:7px 0; }
+#ly-interaction-prototype .ly-mini-lines.short { width:68%; }
+#ly-interaction-prototype .ly-frame { position:absolute; width:210px; height:170px; left:calc(50% - 105px); top:0; }
+#ly-interaction-prototype .ly-corner { position:absolute; width:23px; height:23px; border-color:var(--ly-ink); border-style:solid; border-width:0; border-radius:4px; }
+#ly-interaction-prototype .ly-corner.a { top:0; left:0; border-left-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.b { top:0; right:0; border-right-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.c { bottom:0; left:0; border-left-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-corner.d { bottom:0; right:0; border-right-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-denied { color:var(--ly-accent-text); font-size:14px; margin-top:12px !important; }
+#ly-interaction-prototype .ly-home-draft .ly-content { flex:0 0 auto; padding-top:38px; }
+#ly-interaction-prototype .ly-home-draft h1 { font-size:28px; }
+#ly-interaction-prototype .ly-draft-card { background:var(--ly-surface); border:1px solid var(--ly-line); padding:18px; border-radius:var(--ly-radius); margin-top:26px; display:flex; align-items:center; gap:18px; }
+#ly-interaction-prototype .ly-draft-thumb { width:86px; height:126px; overflow:hidden; flex-shrink:0; display:flex; justify-content:center; align-items:center; }
+#ly-interaction-prototype .ly-thumb-image { position:relative; box-shadow:0 1px 6px #00000022; }
+#ly-interaction-prototype .ly-draft-meta { font-size:14px; color:var(--ly-muted); margin-top:9px !important; white-space:nowrap; }
+#ly-interaction-prototype #ly-overlay { position:absolute; inset:34px 0 24px; pointer-events:none; z-index:10; }
+#ly-interaction-prototype .ly-scrim { position:absolute; inset:0; background:#151A1966; display:flex; align-items:flex-end; pointer-events:auto; }
+#ly-interaction-prototype .ly-sheet { padding:8px 24px 24px; width:100%; background:var(--ly-paper); border-radius:calc(var(--ly-radius) + 4px) calc(var(--ly-radius) + 4px) 0 0; max-height:94%; overflow:auto; box-shadow:0 -8px 30px #00000012; }
+#ly-interaction-prototype .ly-sheet-handle { width:36px; height:4px; border-radius:4px; background:var(--ly-line); margin:3px auto 14px; }
+#ly-interaction-prototype .ly-sheet-title { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:9px; }
+#ly-interaction-prototype .ly-sheet-title h2 { font-size:22px; }
+#ly-interaction-prototype .ly-sheet .ly-primary { margin-top:22px; }
+#ly-interaction-prototype .ly-sheet .ly-secondary { margin-top:10px; }
+#ly-interaction-prototype .ly-sheet .ly-description { margin-top:8px !important; font-size:14px; }
+#ly-interaction-prototype .ly-device-path { border-left:2px solid var(--ly-accent); padding:2px 0 2px 14px; margin:24px 0; }
+#ly-interaction-prototype .ly-device-path span { font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-device-path p { font-size:14px; line-height:1.8; margin-top:5px; }
+#ly-interaction-prototype .ly-details { border-bottom:1px solid var(--ly-line); margin:12px 0; }
+#ly-interaction-prototype .ly-details summary { min-height:48px; padding:12px 0; cursor:pointer; font-size:14px; }
+#ly-interaction-prototype .ly-details p { font-size:14px; color:var(--ly-muted); line-height:1.8; padding-bottom:14px; }
+#ly-interaction-prototype .ly-advanced { margin-top:16px; }
+#ly-interaction-prototype .ly-command { white-space:pre-wrap; word-break:break-all; padding:16px; background:var(--ly-soft); color:var(--ly-ink); border-radius:12px; font-size:12px; }
+#ly-interaction-prototype .ly-system { background:light-dark(#FBFCFF,#20232A); }
+#ly-interaction-prototype .ly-system .ly-header { padding-left:10px; }
+#ly-interaction-prototype .ly-system .ly-header h3 { flex:1; }
+#ly-interaction-prototype .ly-system-row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:22px 16px; background:light-dark(#EEF1FA,#2F3440); border-radius:22px; margin:24px 0; }
+#ly-interaction-prototype .ly-system input[type="checkbox"] { width:24px; height:24px; flex-shrink:0; accent-color:light-dark(#365EC7,#ACC3FF); }
+#ly-interaction-prototype .ly-system-dialog { background:light-dark(#F1F3FC,#303541); border-radius:24px; padding:24px; width:calc(100% - 40px); margin:auto; box-shadow:0 16px 35px #00000022; }
+#ly-interaction-prototype .ly-system-dialog h2 { font-size:22px; }
+#ly-interaction-prototype .ly-system-dialog p { font-size:14px; margin:14px 0 22px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-system-actions { display:flex; justify-content:flex-end; gap:8px; }
+#ly-interaction-prototype .ly-system-action { background:transparent; border:0; color:light-dark(#274FAB,#B8CCFF) !important; min-height:44px; padding:8px 14px; font-weight:600; }
+#ly-interaction-prototype .ly-desktop { background:var(--ly-soft); justify-content:space-between; padding:38px 24px 28px; }
+#ly-interaction-prototype .ly-desktop-time { font-size:52px; line-height:1.15; font-weight:400; letter-spacing:-2px; }
+#ly-interaction-prototype .ly-app-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 8px; margin-top:34px; }
+#ly-interaction-prototype .ly-app { border:0; background:transparent; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px !important; padding:8px 0; }
+#ly-interaction-prototype .ly-app-square { width:58px; height:58px; display:grid; place-items:center; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:17px; }
+#ly-interaction-prototype .ly-app-square svg { width:27px; height:27px; }
+#ly-interaction-prototype .ly-desktop-hint { background:var(--ly-paper); padding:17px 19px; border-radius:18px; font-size:14px; }
+#ly-interaction-prototype .ly-browser-header { padding:10px 12px; display:flex; gap:6px; align-items:center; background:var(--ly-surface); min-height:62px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-address { display:flex; align-items:center; gap:6px; background:var(--ly-soft); flex:1; min-width:0; padding:9px 10px; border-radius:22px; font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-address svg { width:13px; height:13px; flex-shrink:0; }
+#ly-interaction-prototype .ly-target-scroll { flex:1; min-height:0; overflow:auto; background:#F5F1E5; }
+#ly-interaction-prototype .ly-article { width:320px; height:1620px; padding:26px 25px; background:#F5F1E5; color:#252B2A; overflow:hidden; font:400 15px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+#ly-interaction-prototype .ly-target-scroll .ly-article { width:100%; }
+#ly-interaction-prototype .ly-article .ly-article-kicker { font-size:11px; letter-spacing:2px; color:#616C60; margin-bottom:16px; }
+#ly-interaction-prototype .ly-article h2 { font-size:29px; line-height:1.4; letter-spacing:-.6px; }
+#ly-interaction-prototype .ly-article .ly-article-intro { color:#5D665F; font-size:14px; margin:15px 0 21px; }
+#ly-interaction-prototype .ly-landscape { height:174px; background:#D8DFC9; position:relative; overflow:hidden; border-radius:3px; }
+#ly-interaction-prototype .ly-sun { position:absolute; width:60px; height:60px; border-radius:50%; background:#D97C53; top:26px; right:37px; }
+#ly-interaction-prototype .ly-hill { position:absolute; border-radius:50%; width:270px; height:160px; background:#86977E; bottom:-56px; left:-63px; transform:rotate(-19deg); }
+#ly-interaction-prototype .ly-hill.second { background:#5A7365; left:128px; bottom:-87px; height:190px; }
+#ly-interaction-prototype .ly-path { position:absolute; background:#F5E3BE; width:18px; height:210px; border-radius:50%; transform:rotate(30deg); bottom:-130px; left:55%; }
+#ly-interaction-prototype .ly-article .ly-article-section { padding-top:24px; border-bottom:1px solid #D6DACA; padding-bottom:23px; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 { font-size:18px; margin-bottom:12px; display:flex; gap:10px; align-items:center; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 span { font-size:11px; color:#7A6651; }
+#ly-interaction-prototype .ly-article .ly-article-section p { font-size:14px; margin-top:10px; color:#5D665F; }
+#ly-interaction-prototype .ly-article-note { margin-top:17px; border-left:2px solid #D97C53; padding-left:12px; font-size:13px; color:#616C60; }
+#ly-interaction-prototype .ly-article-end { padding-top:24px; font-size:13px; color:#616C60; }
+#ly-interaction-prototype .ly-bubble { position:absolute; right:8px; z-index:5; display:flex; align-items:center; justify-content:center; gap:7px; min-height:52px; border:1px solid var(--ly-line); border-radius:18px; padding:10px 13px; background:var(--ly-paper); box-shadow:0 4px 16px #00000018; font-size:13px !important; touch-action:none; }
+#ly-interaction-prototype .ly-bubble svg { width:19px; height:19px; }
+#ly-interaction-prototype .ly-bubble.recording { background:var(--ly-ink); color:var(--ly-paper); border-color:var(--ly-ink); }
+#ly-interaction-prototype .ly-live-dot { width:6px; height:6px; border-radius:50%; background:var(--ly-accent); }
+#ly-interaction-prototype .ly-manual-float { position:absolute; z-index:5; width:max-content; }
+#ly-interaction-prototype .ly-manual-cluster { display:flex; gap:6px; align-items:center; }
+#ly-interaction-prototype .ly-manual-button { position:static; min-height:52px; white-space:nowrap; gap:11px; padding:10px 14px; }
+#ly-interaction-prototype .ly-manual-status { font-size:12px; font-variant-numeric:tabular-nums; }
+#ly-interaction-prototype .ly-manual-status.updated { color:light-dark(#F4B293,#A54023); }
+#ly-interaction-prototype .ly-manual-divider { height:16px; width:1px; background:currentColor; opacity:.24; }
+#ly-interaction-prototype .ly-manual-button:disabled { opacity:1; }
+#ly-interaction-prototype .ly-manual-cancel { background:var(--ly-paper); border:1px solid var(--ly-line); box-shadow:0 4px 16px #00000012; }
+#ly-interaction-prototype .ly-float-tip { position:absolute; top:calc(100% + 9px); width:242px; max-width:calc(100vw - 54px); padding:13px 15px; border-radius:16px; background:var(--ly-paper); color:var(--ly-ink); border:1px solid var(--ly-line); box-shadow:0 4px 16px #00000012; font-size:13px; line-height:1.7; pointer-events:none; }
+#ly-interaction-prototype .ly-manual-float.right .ly-float-tip { right:0; }
+#ly-interaction-prototype .ly-manual-float.left .ly-float-tip { left:0; }
+#ly-interaction-prototype .ly-float-tip.above { top:auto; bottom:calc(100% + 9px); }
+#ly-interaction-prototype .ly-float-tip.error { border-color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-float-tip strong { display:block; font-size:14px; font-weight:600; color:var(--ly-accent-text); margin-bottom:2px; }
+#ly-interaction-prototype .ly-float-tip span { display:block; }
+#ly-interaction-prototype .ly-swipe-guide { --ly-guide-x:max(30%,100px); position:absolute; top:52px; bottom:0; left:0; right:0; z-index:4; color:var(--ly-accent-text); pointer-events:none; }
+#ly-interaction-prototype .ly-swipe-guide.right { --ly-guide-x:calc(100% - max(30%,100px)); }
+#ly-interaction-prototype .ly-swipe-route { position:absolute; inset:0; }
+#ly-interaction-prototype .ly-swipe-guide.compact .ly-swipe-route { opacity:.55; }
+#ly-interaction-prototype .ly-swipe-rail { position:absolute; left:var(--ly-guide-x); top:23%; height:44%; border-left:2px dashed currentColor; }
+#ly-interaction-prototype .ly-swipe-dot { position:absolute; left:var(--ly-guide-x); width:18px; height:18px; border:2px solid currentColor; border-radius:50%; background:var(--ly-paper); transform:translate(-8px,-50%); box-shadow:0 0 0 4px light-dark(#F7F4EEB8,#1D2422B8); }
+#ly-interaction-prototype .ly-swipe-dot.end,#ly-interaction-prototype .ly-swipe-caption.end { top:23%; }
+#ly-interaction-prototype .ly-swipe-dot.start,#ly-interaction-prototype .ly-swipe-caption.start { top:67%; }
+#ly-interaction-prototype .ly-swipe-dot.start { background:currentColor; }
+#ly-interaction-prototype .ly-swipe-arrow { position:absolute; left:var(--ly-guide-x); top:43%; transform:translateX(-11px); width:24px; height:26px; background:var(--ly-paper); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+#ly-interaction-prototype .ly-swipe-arrow svg { width:19px; height:19px; }
+#ly-interaction-prototype .ly-swipe-caption { position:absolute; right:calc(100% - var(--ly-guide-x) + 20px); transform:translateY(-50%); white-space:nowrap; padding:7px 9px; border:1px solid var(--ly-accent-text); border-radius:9px; background:var(--ly-paper); color:var(--ly-ink); box-shadow:0 2px 9px #00000012; font-size:13px; line-height:1.6; }
+#ly-interaction-prototype .ly-swipe-guide.right .ly-swipe-caption { right:auto; left:calc(var(--ly-guide-x) + 20px); }
+#ly-interaction-prototype .ly-swipe-guide.compact .ly-swipe-caption { display:none; }
+#ly-interaction-prototype .ly-guide-close { position:absolute; bottom:8px; left:8px; pointer-events:auto; min-height:44px; min-width:72px; padding:9px 12px; background:var(--ly-paper); color:var(--ly-muted); border:1px solid var(--ly-line); border-radius:12px; font-size:12px!important; }
+#ly-interaction-prototype .ly-swipe-guide.right .ly-guide-close { left:auto; right:8px; }
+#ly-interaction-prototype .ly-notification-toggle { position:absolute; top:0; left:0; z-index:6; width:100%; height:44px; border:0; background:transparent; padding:0; }
+#ly-interaction-prototype .ly-system-settings { pointer-events:auto; position:absolute; inset:0; display:flex; flex-direction:column; }
+#ly-interaction-prototype .ly-system-settings .ly-content h2 { margin-top:16px; }
+#ly-interaction-prototype .ly-notification-shade { pointer-events:auto; position:absolute; inset:0; z-index:20; padding:8px 18px 24px; background:var(--ly-soft); }
+#ly-interaction-prototype .ly-notification-header { display:flex; justify-content:space-between; align-items:center; min-height:52px; margin-bottom:8px; font-size:18px; }
+#ly-interaction-prototype .ly-capture-notification { background:var(--ly-paper); border-radius:22px; padding:18px; }
+#ly-interaction-prototype .ly-notification-brand { display:flex; gap:8px; align-items:center; font-size:12px; color:var(--ly-muted); margin-bottom:13px; }
+#ly-interaction-prototype .ly-notification-brand .ly-logo { width:24px; height:24px; border-radius:7px; background-size:22px; }
+#ly-interaction-prototype .ly-capture-notification h3 { font-size:19px; }
+#ly-interaction-prototype .ly-capture-notification p { font-size:14px; line-height:1.7; margin-top:8px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-notification-actions { display:flex; gap:4px; justify-content:flex-start; margin-top:12px; margin-left:-12px; }
+#ly-interaction-prototype .ly-notification-guide { padding:20px 10px; color:var(--ly-muted); font-size:13px; }
+#ly-interaction-prototype .ly-system-toast { position:absolute; left:20px; right:20px; bottom:24px; display:flex; align-items:center; gap:10px; padding:13px 16px; border-radius:24px; background:var(--ly-paper); color:var(--ly-ink); border:1px solid var(--ly-line); box-shadow:0 4px 18px #00000018; font-size:13px; pointer-events:none; }
+#ly-interaction-prototype .ly-system-toast .ly-logo { width:24px; height:24px; background-size:22px; border-radius:7px; }
+#ly-interaction-prototype .ly-hidden-button { position:absolute; right:12px; bottom:16px; }
+#ly-interaction-prototype .ly-result-header { min-height:60px; padding:8px 10px; }
+#ly-interaction-prototype .ly-result-header h3 { flex:1; }
+#ly-interaction-prototype .ly-result-meta { padding:0 20px 12px; font-size:13px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-result-meta[role="alert"] { color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-result-area { position:relative; flex:1; min-height:0; background:var(--ly-soft); }
+#ly-interaction-prototype .ly-result-scroll { overflow:auto; height:100%; padding:16px; }
+#ly-interaction-prototype .ly-preview-space { position:relative; flex-shrink:0; margin:0 auto; box-shadow:0 2px 9px #00000016; }
+#ly-interaction-prototype .ly-preview-clip { position:absolute; inset:0; overflow:hidden; background:#F5F1E5; }
+#ly-interaction-prototype .ly-preview-source { position:absolute; top:0; left:0; transform-origin:0 0; }
+#ly-interaction-prototype .ly-view-menu { position:absolute; z-index:6; right:12px; top:56px; width:150px; padding:6px; border:1px solid var(--ly-line); border-radius:16px; background:var(--ly-paper); box-shadow:0 6px 24px #00000020; }
+#ly-interaction-prototype .ly-menu-item { display:flex; align-items:center; gap:10px; width:100%; min-height:46px; border:0; border-radius:10px; background:transparent; padding:10px; text-align:left; font-size:14px !important; }
+#ly-interaction-prototype .ly-menu-item:hover { background:var(--ly-soft); }
+#ly-interaction-prototype .ly-result-notice { padding:8px 20px 12px; font-size:13px; display:flex; gap:7px; align-items:center; }
+#ly-interaction-prototype .ly-result-notice svg { width:16px; height:16px; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-result-actions { display:grid; grid-template-columns:64px minmax(0,1fr) 64px; gap:8px; padding:16px; border-top:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-result-actions .ly-secondary { flex-direction:column; gap:4px; font-size:12px; min-height:60px; padding:6px; }
+#ly-interaction-prototype .ly-result-actions .ly-primary { padding:12px 8px; font-size:14px; }
+#ly-interaction-prototype .ly-result-actions .ly-primary:disabled { opacity:1; background:var(--ly-soft); color:var(--ly-muted) !important; }
+#ly-interaction-prototype .ly-editor-header { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; min-height:60px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-apply { border:0; border-radius:13px; background:var(--ly-ink); color:var(--ly-paper) !important; padding:9px 15px; min-height:44px; }
+#ly-interaction-prototype .ly-editor-stage { flex:1; min-height:0; background:var(--ly-soft); padding:22px 29px; overflow:auto; position:relative; }
+#ly-interaction-prototype .ly-editor-stage.ly-overview { display:flex; justify-content:center; align-items:center; }
+#ly-interaction-prototype .ly-edit-image { position:relative; flex-shrink:0; margin:0 auto; touch-action:auto; }
+#ly-interaction-prototype .ly-crop-shade { position:absolute; border:2px solid var(--ly-accent); box-shadow:0 0 0 800px #15211C55; pointer-events:none; }
+#ly-interaction-prototype .ly-crop-handle { width:44px; height:44px; position:absolute; border:0; background:transparent; transform:translate(-50%,-50%); padding:0; touch-action:none; pointer-events:auto; }
+#ly-interaction-prototype .ly-crop-handle::after { content:""; display:block; width:11px; height:11px; background:var(--ly-accent); border:2px solid #F7F4EE; border-radius:2px; margin:auto; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tl"] { left:0;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tr"] { left:100%;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="bl"] { left:0;top:100%; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="br"] { left:100%;top:100%; }
+#ly-interaction-prototype .ly-editor-controls { padding:12px 16px 16px; border-top:1px solid var(--ly-line); background:var(--ly-paper); }
+#ly-interaction-prototype .ly-editor-hint { text-align:center; font-size:13px; color:var(--ly-muted); margin-bottom:8px; }
+#ly-interaction-prototype .ly-control-row { display:flex; gap:4px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+#ly-interaction-prototype .ly-crop-history { display:flex; align-items:center; gap:0; }
+#ly-interaction-prototype .ly-crop-history .ly-text-button { padding:8px; }
+#ly-interaction-prototype .ly-control-row>.ly-text-button { padding:8px; font-size:13px; }
+#ly-interaction-prototype .ly-setting-row { display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; background:transparent; border:0; min-height:62px; padding:14px 0; border-bottom:1px solid var(--ly-line); text-align:left; }
+#ly-interaction-prototype .ly-setting-row input { width:22px; height:22px; accent-color:var(--ly-ink); }
+#ly-interaction-prototype .ly-inline-hint { font-size:13px; color:var(--ly-muted); padding-top:10px; padding-bottom:20px; }
+#ly-interaction-prototype .ly-share-apps { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:17px 0 7px; }
+#ly-interaction-prototype .ly-share-apps button { border:0; background:transparent; display:flex; align-items:center; flex-direction:column; gap:9px; font-size:12px; padding:9px 0; }
+#ly-interaction-prototype .ly-share-apps button span { width:52px; height:52px; background:var(--ly-soft); display:grid; place-items:center; border-radius:16px; }
+#ly-interaction-prototype .ly-share-apps svg { width:23px; height:23px; }
+#ly-interaction-prototype .ly-steps { display:grid; gap:18px; padding-left:22px; margin:8px 0 32px; }
+#ly-interaction-prototype .ly-steps li { font-size:15px; padding-left:6px; }
+@media(max-width:350px) { #ly-interaction-prototype .ly-phone { border-radius:24px; } #ly-interaction-prototype .ly-content { padding-left:20px; padding-right:20px; } #ly-interaction-prototype .ly-phone h1 { font-size:29px; } #ly-interaction-prototype .ly-footer { padding:14px 20px 20px; } #ly-interaction-prototype .ly-illustration { height:250px; } #ly-interaction-prototype .ly-sheet { padding-left:20px;padding-right:20px; } }
+@media(prefers-reduced-motion:reduce) { #ly-interaction-prototype * { scroll-behavior:auto !important; } }

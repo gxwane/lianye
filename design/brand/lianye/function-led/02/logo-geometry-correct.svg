@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1536" height="1024" viewBox="0 0 1536 1024">
+  <rect width="1536" height="1024" fill="#F4F0E8"/>
+  <!-- Equal source bounds: A=(0,0,10,12), B=(2,8,10,12).
+       External union: 0,0 10,0 10,8 12,8 12,20 2,20 2,12 0,12.
+       Internal duplicate edges are removed. One connected aperture remains.
+       The source attribution is retained through flat color, not extra rails. -->
+  <g transform="translate(564 172) scale(34)">
+    <g fill="#2F2452">
+      <rect x="0" y="0" width="10" height="1.5"/>
+      <rect x="0" y="0" width="1.5" height="12"/>
+      <rect x="8.5" y="0" width="1.5" height="9.5"/>
+      <rect x="0" y="10.5" width="3.5" height="1.5"/>
+    </g>
+    <g fill="#F16B3D">
+      <rect x="10" y="8" width="2" height="1.5"/>
+      <rect x="10.5" y="8" width="1.5" height="12"/>
+      <rect x="2" y="12" width="1.5" height="8"/>
+      <rect x="2" y="18.5" width="10" height="1.5"/>
+    </g>
+    <rect x="4" y="9.25" width="4" height="1.5" fill="#2F2452"/>
+  </g>
+</svg>

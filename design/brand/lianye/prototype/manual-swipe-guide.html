@@ -1,0 +1,139 @@
+<div id="ly-swipe-guide-concept" aria-label="连页手动截图：滑动位置指导示意">
+  <style>
+    #ly-swipe-guide-concept { --sg-paper:light-dark(#F7F4EE,#1D2422); --sg-ink:light-dark(#252B2A,#F7F4EE); --sg-muted:light-dark(#646C67,#ADB7B0); --sg-line:light-dark(#DCDDD4,#414A44); --sg-accent:light-dark(#A54023,#F4A584); --sg-button:light-dark(#252B2A,#F7F4EE); --sg-button-ink:light-dark(#F7F4EE,#252B2A); color:var(--sg-ink); font-family:"Microsoft YaHei",system-ui,sans-serif; }
+    #ly-swipe-guide-concept * { box-sizing:border-box; }
+    #ly-swipe-guide-concept .sg-phone { width:100%; max-width:390px; height:748px; margin:0 auto; background:var(--sg-paper); border:1px solid var(--sg-line); border-radius:28px; overflow:hidden; position:relative; }
+    #ly-swipe-guide-concept .sg-status { height:34px; padding:0 22px; display:flex; align-items:center; justify-content:space-between; font-size:12px; font-weight:500; }
+    #ly-swipe-guide-concept .sg-status-icons { display:flex; gap:5px; }
+    #ly-swipe-guide-concept svg { width:16px; height:16px; }
+    #ly-swipe-guide-concept .sg-browser { height:52px; display:flex; align-items:center; gap:10px; padding:8px 15px; border-bottom:1px solid var(--sg-line); }
+    #ly-swipe-guide-concept .sg-address { min-width:0; flex:1; display:flex; align-items:center; justify-content:center; gap:7px; font-size:13px; padding:8px; border-radius:10px; background:light-dark(#EFEEE8,#303934); }
+    #ly-swipe-guide-concept .sg-canvas { height:calc(100% - 110px); position:relative; }
+    #ly-swipe-guide-concept .sg-content { height:100%; overflow:auto; overscroll-behavior:contain; touch-action:pan-y; scrollbar-width:none; color:#252B2A; background:#FAF8F2; }
+    #ly-swipe-guide-concept .sg-content::-webkit-scrollbar { display:none; }
+    #ly-swipe-guide-concept article { padding:30px 26px 70px; font-size:14px; line-height:1.9; }
+    #ly-swipe-guide-concept .sg-kicker { font-size:12px; color:#787C70; letter-spacing:2px; }
+    #ly-swipe-guide-concept h2 { font-size:28px; line-height:1.5; font-weight:500; margin:16px 0; }
+    #ly-swipe-guide-concept article p { color:#5C665C; margin:16px 0; }
+    #ly-swipe-guide-concept h3 { font-size:18px; font-weight:500; margin:0 0 16px; }
+    #ly-swipe-guide-concept h3 span { font-size:12px; color:#969984; margin-right:10px; }
+    #ly-swipe-guide-concept .sg-section { margin-top:34px; }
+    #ly-swipe-guide-concept .sg-landscape { height:192px; position:relative; overflow:hidden; border-radius:16px; margin:26px 0; background:#E8EAD9; }
+    #ly-swipe-guide-concept .sg-sun { width:54px; height:54px; position:absolute; right:40px; top:24px; border-radius:50%; background:#E3B88C; }
+    #ly-swipe-guide-concept .sg-hill { position:absolute; width:330px; height:150px; border-radius:50%; left:-40px; bottom:-42px; background:#B3BDA0; transform:rotate(-14deg); }
+    #ly-swipe-guide-concept .sg-hill.second { left:90px; bottom:-75px; background:#788D72; transform:rotate(18deg); }
+    #ly-swipe-guide-concept .sg-note { border-left:2px solid #B3BDA0; padding:8px 15px; color:#66725F; }
+    #ly-swipe-guide-concept .sg-control { position:absolute; right:8px; top:16px; display:flex; align-items:center; gap:12px; min-height:52px; border:0; border-radius:18px; padding:12px 16px; background:var(--sg-button); color:var(--sg-button-ink); font:500 14px "Microsoft YaHei",system-ui,sans-serif; cursor:pointer; box-shadow:0 3px 16px #0002; }
+    #ly-swipe-guide-concept .sg-count { font-size:12px; font-weight:400; font-variant-numeric:tabular-nums; }
+    #ly-swipe-guide-concept .sg-divider { height:18px; width:1px; background:currentColor; opacity:.35; }
+    #ly-swipe-guide-concept .sg-guidance { position:absolute; inset:0; pointer-events:none; color:var(--sg-accent); }
+    #ly-swipe-guide-concept .sg-guidance.compact .sg-position-guide { opacity:.55; }
+    #ly-swipe-guide-concept .sg-guidance.compact .sg-label { display:none; }
+    #ly-swipe-guide-concept .sg-guide-rail { position:absolute; left:42%; top:30%; height:44%; width:2px; border-left:2px dashed currentColor; filter:drop-shadow(0 1px 2px #F7F4EE); }
+    #ly-swipe-guide-concept .sg-endpoint { position:absolute; left:42%; display:flex; align-items:center; gap:13px; transform:translate(-8px,-50%); }
+    #ly-swipe-guide-concept .sg-endpoint.end { top:30%; }
+    #ly-swipe-guide-concept .sg-endpoint.start { top:74%; }
+    #ly-swipe-guide-concept .sg-dot { display:block; flex-shrink:0; width:18px; height:18px; border:2px solid currentColor; border-radius:50%; background:var(--sg-paper); box-shadow:0 0 0 5px light-dark(#F7F4EEB8,#1D2422B8); }
+    #ly-swipe-guide-concept .start .sg-dot { background:currentColor; }
+    #ly-swipe-guide-concept .sg-label { white-space:nowrap; padding:7px 10px; border:1px solid var(--sg-accent); border-radius:9px; color:var(--sg-ink); background:var(--sg-paper); box-shadow:0 2px 9px #0002; font-size:13px; }
+    #ly-swipe-guide-concept .sg-label small { display:block; font-size:12px; color:var(--sg-muted); margin-top:3px; }
+    #ly-swipe-guide-concept .sg-arrow { position:absolute; left:42%; top:46%; transform:translateX(-10px); width:22px; height:25px; background:var(--sg-paper); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+    #ly-swipe-guide-concept .sg-arrow svg { width:20px; height:20px; }
+    #ly-swipe-guide-concept .sg-guide-close { position:absolute; top:calc(74% + 50px); left:calc(42% + 26px); min-height:44px; min-width:72px; padding:9px 12px; border:1px solid var(--sg-line); border-radius:12px; background:var(--sg-paper); color:var(--sg-muted); font:400 12px "Microsoft YaHei",system-ui,sans-serif; cursor:pointer; }
+    #ly-swipe-guide-concept .sg-nav { height:24px; display:flex; align-items:center; justify-content:center; }
+    #ly-swipe-guide-concept .sg-nav span { width:112px; height:4px; border-radius:3px; background:var(--sg-ink); opacity:.7; }
+    #ly-swipe-guide-concept [hidden] { display:none!important; }
+    #ly-swipe-guide-concept .sg-finished { position:absolute; inset:0; background:var(--sg-paper); padding:26px; display:flex; flex-direction:column; gap:18px; }
+    #ly-swipe-guide-concept .sg-finished header { font-size:18px; font-weight:500; display:flex; justify-content:space-between; align-items:center; }
+    #ly-swipe-guide-concept .sg-finished p { font-size:14px; color:var(--sg-muted); margin:0; }
+    #ly-swipe-guide-concept .sg-mini { flex:1; overflow:hidden; background:#FAF8F2; border:1px solid var(--sg-line); border-radius:10px; }
+    #ly-swipe-guide-concept .sg-replay { color:var(--sg-ink); background:transparent; border:0; min-height:44px; font:400 14px "Microsoft YaHei",system-ui,sans-serif; padding:8px 10px; cursor:pointer; }
+    #ly-swipe-guide-concept .sg-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+  <div class="sg-phone">
+    <div class="sg-status"><span>9:41</span><span class="sg-status-icons"><i data-lucide="signal" aria-hidden="true"></i><i data-lucide="wifi" aria-hidden="true"></i><i data-lucide="battery-full" aria-hidden="true"></i></span></div>
+    <div class="sg-browser"><i data-lucide="arrow-left" aria-hidden="true"></i><div class="sg-address"><i data-lucide="lock-keyhole" aria-hidden="true"></i>周末散步指南</div><i data-lucide="house" aria-hidden="true"></i></div>
+    <div class="sg-canvas">
+      <div class="sg-content" role="region" aria-label="示例文章，可向上滑动；桌面可用鼠标滚轮">
+        <article>
+          <div class="sg-kicker">慢一点 · 周末提案</div>
+          <h2>留一个下午，<br>沿着河边走走。</h2>
+          <p>不用安排很满。带一瓶水，穿一双舒服的鞋，把时间留给路边的风景。</p>
+          <div class="sg-landscape" role="img" aria-label="河畔丘陵与落日插画"><span class="sg-sun"></span><span class="sg-hill"></span><span class="sg-hill second"></span></div>
+          <div class="sg-section"><h3><span>01</span>从旧桥出发</h3><p>穿过桥头的小广场，沿河向东走。树荫下的石板路很平缓，适合边走边看。</p><p>第一段不必赶路。听听水声，看一看桥下的倒影，在想停下的地方停一会儿。</p></div>
+          <div class="sg-section"><h3><span>02</span>找一处树荫</h3><p>经过第三张长椅，路边会出现一片低矮的树林。带来的水和小点心，刚好可以在这里派上用场。</p><div class="sg-note">随手记：走走停停，比一路赶到终点更适合这个下午。</div></div>
+          <div class="sg-section"><h3><span>03</span>等一束傍晚的光</h3><p>河湾开阔处没有遮挡。太阳低下来时，水面上会出现一条长长的光带。</p><p>可以拍一张照片，也可以把手机收起来。让这一刻只是一个安静的傍晚。</p></div>
+          <div class="sg-section"><h3><span>04</span>慢慢走回去</h3><p>回程沿原路走，熟悉的风景换了光线，又像一条新的路。趁天色还亮，回家吃一顿简单的晚饭。</p></div>
+          <p>一个下午，一段不急着走完的路。</p>
+        </article>
+      </div>
+      <button class="sg-control" type="button" aria-label="结束截取，已截 1 屏"><span class="sg-count" aria-live="polite">已截 1 屏</span><span class="sg-divider" aria-hidden="true"></span><span>结束</span></button>
+      <div class="sg-guidance" role="img" aria-label="参考滑动路线：从内容区中下方向上滑至中上方，松手稍停。无需精确沿线。">
+        <div class="sg-position-guide">
+          <span class="sg-guide-rail"></span>
+          <span class="sg-arrow"><i data-lucide="arrow-up" aria-hidden="true"></i></span>
+          <div class="sg-endpoint end"><span class="sg-dot"></span><span class="sg-label">到这里松手<small>稍停一下</small></span></div>
+          <div class="sg-endpoint start"><span class="sg-dot"></span><span class="sg-label">从这里向上滑<small>位置不必精确</small></span></div>
+        </div>
+      </div>
+      <button class="sg-guide-close" type="button" aria-label="关闭滑动提示，本次不再显示">关闭提示</button>
+      <section class="sg-finished" hidden aria-label="示意截图完成">
+        <header><span>长图</span><button class="sg-replay" type="button">再体验一次</button></header>
+        <p class="sg-result-count" role="status">2 屏 · 未保存（示意）</p>
+        <div class="sg-mini" aria-label="示意长图内容"></div>
+      </section>
+    </div>
+    <div class="sg-nav" aria-hidden="true"><span></span></div>
+  </div>
+  <span class="sg-sr sg-announcement" aria-live="polite"></span>
+  <script>
+    (function () {
+      'use strict';
+      const root=document.getElementById('ly-swipe-guide-concept');
+      if(!root)return;
+      const content=root.querySelector('.sg-content'), guide=root.querySelector('.sg-guidance');
+      const count=root.querySelector('.sg-count'), control=root.querySelector('.sg-control'), finished=root.querySelector('.sg-finished');
+      const close=root.querySelector('.sg-guide-close');
+      const design={appearance:'system'};
+      let accepted=0,frames=1,stage='recording',hintDismissed=false,timer=null,lastStamp=null,seq=0;
+      const instance=Math.random().toString(36).slice(2);
+      function render(){
+        root.style.colorScheme=design.appearance==='system'?'inherit':design.appearance;
+        guide.hidden=stage!=='recording'||hintDismissed;
+        guide.classList.toggle('compact',frames>1);
+        close.hidden=guide.hidden;
+        control.hidden=stage!=='recording';finished.hidden=stage!=='finished';
+        count.textContent='已截 '+frames+' 屏';control.setAttribute('aria-label','结束截取，已截 '+frames+' 屏');
+        root.querySelector('.sg-result-count').textContent=frames+' 屏 · 未保存（示意）';
+        if(stage==='finished'&&!root.querySelector('.sg-mini article'))root.querySelector('.sg-mini').append(content.querySelector('article').cloneNode(true));
+      }
+      function remember(){
+        const value={modelContent:{product:'连页',proposal:'渐进式滑动位置指导',stage,hintDismissed},privateContent:{proposal:'manual-swipe-guide',version:2,appearance:design.appearance,stage,accepted,frames,hintDismissed,stamp:instance+':'+(++seq)}};
+        lastStamp=value.privateContent.stamp;
+        try{window.openai?.setWidgetState(value)?.catch?.(()=>{});}catch{}
+      }
+      function acceptScroll(){
+        clearTimeout(timer);timer=null;if(stage!=='recording')return;
+        const position=content.scrollTop;
+        if(position-accepted<content.clientHeight*.35)return;
+        accepted=position;const first=frames===1;frames++;render();
+        root.querySelector('.sg-announcement').textContent='示意：接上新内容，已截 '+frames+' 屏。'+(first&&!hintDismissed?'文字已收起，参考路线保留。':'');remember();
+      }
+      content.addEventListener('scroll',()=>{if(stage!=='recording')return;clearTimeout(timer);timer=setTimeout(acceptScroll,220);},{passive:true});
+      control.addEventListener('click',()=>{acceptScroll();stage='finished';render();remember();});
+      close.addEventListener('click',()=>{hintDismissed=true;render();control.focus();root.querySelector('.sg-announcement').textContent='滑动提示已关闭，截图继续。';remember();});
+      root.querySelector('.sg-replay').addEventListener('click',()=>{clearTimeout(timer);accepted=0;frames=1;stage='recording';hintDismissed=false;content.scrollTop=0;render();remember();});
+      function restore(value){
+        const saved=value?.privateContent;
+        if(saved?.proposal!=='manual-swipe-guide'||![1,2].includes(saved.version)||saved.stamp===lastStamp||saved.stamp?.startsWith(instance+':'))return;
+        clearTimeout(timer);
+        design.appearance=['system','light','dark'].includes(saved.appearance)?saved.appearance:'system';hintDismissed=!!saved.hintDismissed;
+        stage=saved.stage==='finished'?'finished':'recording';accepted=Math.max(0,Math.min(content.scrollHeight-content.clientHeight,Number(saved.accepted)||0));
+        frames=Number.isFinite(saved.frames)?Math.max(1,Math.min(20,Math.floor(saved.frames))):1;content.scrollTop=accepted;lastStamp=saved.stamp;render();
+      }
+      render();restore(window.openai?.widgetState);
+      window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
+      if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:()=>{render();remember();}});tweak.addSelect(design,'appearance',{label:'外观',options:[{label:'跟随环境',value:'system'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});}
+    })();
+  </script>
+</div>

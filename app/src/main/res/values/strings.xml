@@ -1,103 +1,156 @@
 <resources>
-    <string name="app_name">ScrollLoom</string>
-    <string name="app_name_zh">长卷</string>
-    <string name="app_subtitle">离线纯粹长截屏</string>
-    <string name="accessibility_service_label">ScrollLoom 长截屏服务</string>
-    <string name="accessibility_service_description">用于触发屏幕匀速滚动与长图拼接。不读取屏幕文字，无联网权限。</string>
-
-    <!-- 主控面板状态文案 (字字珠玑，绝无同义反复) -->
-    <string name="status_service_inactive">未启用</string>
-    <string name="status_service_desc_inactive">开启后悬浮窗停靠侧边，随时截取长图</string>
-    <string name="status_service_active">已就绪</string>
-    <string name="status_service_desc_active">切换至目标页面，轻触侧边悬浮窗即可</string>
-    <string name="status_service_restricted">系统权限受限</string>
-    <string name="status_service_desc_restricted">需在系统设置中允许此应用的无障碍功能</string>
-
-    <!-- 触控核心微提示与动作 -->
-    <string name="action_hint_enable">轻触开启</string>
-    <string name="action_hint_disable">轻触停用</string>
-    <string name="action_hint_restricted">轻触解锁</string>
-    <string name="btn_restricted_guide_pill">查看解锁指南 ›</string>
-    <string name="btn_enable_service">前往系统开启服务</string>
-
-    <!-- 开启引导微底板 (Pre-Flight Guide) -->
-    <string name="preflight_guide_title">开启长截屏服务</string>
-    <string name="preflight_guide_desc">系统设置中层级较深，请按以下路径找到并开启：</string>
-    <string name="preflight_btn_confirm">记住路径，前往系统开启</string>
-    <string name="preflight_privacy_note">100% 离线 · 零网络权限 · 随时可停用</string>
-
-    <!-- 悬浮球描述 -->
-    <string name="bubble_desc_idle">开始编织长卷</string>
-    <string name="bubble_desc_weaving">正在编织长卷</string>
-    <string name="bubble_desc_finished">长卷编织完成</string>
-    <string name="bubble_desc_error">编织异常重试</string>
-
-    <!-- 机型静默感知行前微提示 -->
-    <string name="vendor_hint_xiaomi">请切至【通用】>【已下载的服务】开启 ScrollLoom</string>
-    <string name="vendor_hint_oppo">请切至【通用】>【已下载的应用】开启 ScrollLoom</string>
-    <string name="vendor_hint_vivo">请在无障碍中点击【已下载的服务】开启</string>
-    <string name="vendor_hint_huawei">请在无障碍中点击【已安装的服务】开启</string>
-    <string name="vendor_hint_samsung">请滑至下方点击【已安装的应用程序】开启</string>
-    <string name="vendor_hint_aosp">请在列表中选择【已下载的应用】开启</string>
-
-    <!-- 受限设置双向穿梭排障卡片文案 -->
-    <string name="troubleshoot_title_blocked">开关置灰无法开启？</string>
-    <string name="troubleshoot_desc_blocked">系统对非商店安装的应用默认限制，按以下 3 步即可放行：</string>
-    <string name="troubleshoot_step_1">1. 点击下方按钮，直达「应用信息」页</string>
-    <string name="troubleshoot_step_2">2. 点击右上角「⋮」更多，选择「允许受限制的设置」</string>
-    <string name="troubleshoot_step_3">3. 验证锁屏指纹或密码后返回本应用</string>
-    <string name="troubleshoot_btn_grant">⚡ 直达应用信息放行</string>
-
-    <string name="troubleshoot_title_allowed">🎉 限制已成功解除！</string>
-    <string name="troubleshoot_desc_allowed">系统安全限制已放行，请返回无障碍设置正式开启服务。</string>
-    <string name="troubleshoot_btn_return_a11y">🚀 重返无障碍开启服务</string>
-    <string name="troubleshoot_return_hint">重要提示：开关不在应用信息页中，必须返回无障碍设置开启。</string>
-
-    <!-- 二级说明页 (About & Guide) 结构化卡片文案 -->
-    <string name="about_title">关于与说明</string>
-    <string name="about_section_work">运作方式</string>
-    <string name="about_section_work_tag">本地拼接</string>
-    <string name="about_section_work_body">悬浮窗触发后，系统自动匀速滚动页面并逐帧截取，在手机本地高速拼接为高清长图，即截即走。</string>
-
-    <string name="about_section_privacy">隐私与权限</string>
-    <string name="about_privacy_offline_title">纯离线运行</string>
-    <string name="about_privacy_offline_desc">未申请任何网络权限，100% 本地运算。</string>
-    <string name="about_privacy_gesture_title">手势无障碍</string>
-    <string name="about_privacy_gesture_desc">仅用于模拟匀速滑动手势，不读取界面文本或按键。</string>
-
-    <string name="about_section_restricted">开关置灰无法开启？</string>
-    <string name="about_restricted_intro">针对非应用商店安装的软件，Android 默认锁定无障碍权限：</string>
-    <string name="about_restricted_step1">1. 在无障碍设置中轻触 ScrollLoom 触发系统受限提示</string>
-    <string name="about_restricted_step2">2. 进入应用信息页，点击右上角「⋮」更多</string>
-    <string name="about_restricted_step3">3. 选择「允许受限制的设置」验证密码，并重新返回无障碍开启</string>
-    <string name="btn_open_app_details">直达系统应用详情页 ›</string>
-    <string name="btn_copy_adb_command">复制 ADB 解锁命令</string>
-    <string name="toast_adb_copied">ADB 命令已复制至剪贴板！</string>
-    <string name="btn_battery_optimization">配置电池优化白名单</string>
-
-    <string name="about_section_meta">关于项目</string>
-    <string name="about_meta_desc">自由开源，无广告，无后台驻留。\n遵循 MIT 协议 · v0.1.0 (Build 2026.09)</string>
-
-    <!-- Android 10 录屏授权 -->
-    <string name="media_projection_title">Android 10 屏幕捕获授权</string>
-    <string name="media_projection_desc">检测到当前处于 Android 10 系统。需要额外授予一次屏幕捕获权限以启动底层 VirtualDisplay 流式合成。</string>
-    <string name="btn_grant_media_projection">授权屏幕捕获</string>
-    <string name="toast_media_projection_granted">屏幕捕获已授权，服务已就绪</string>
-    <string name="toast_media_projection_denied">未授予截屏权限，长截屏无法启动</string>
-
-    <!-- 兼容保留历史字段 -->
-    <string name="privacy_section_title">架构级安全承诺</string>
-    <string name="privacy_badge_zero_net">纯离线运行</string>
-    <string name="privacy_badge_zero_net_sub">无网络权限</string>
-    <string name="privacy_badge_blind">手势无障碍</string>
-    <string name="privacy_badge_blind_sub">不读取文本</string>
-    <string name="privacy_badge_local">本地合成</string>
-    <string name="privacy_badge_local_sub">纯本地运行</string>
-    <string name="guide_title">使用说明</string>
-    <string name="guide_step_1">1. 开启无障碍服务，屏幕侧边显现悬浮窗；</string>
-    <string name="guide_step_2">2. 切换至需要截图的目标页面；</string>
-    <string name="guide_step_3">3. 轻触悬浮窗开始自动滚动截图；</string>
-    <string name="guide_step_4">4. 再次轻触或触底自动结束并保存。</string>
-    <string name="btn_restricted_settings_guide">受限制设置解锁指南</string>
-    <string name="restricted_settings_desc">针对 Android 13+ 侧载应用，系统默认限制无障碍开关开启。\n1. 直达「应用信息」；\n2. 点击右上角「⋮ 更多」；\n3. 选择「允许受限制的设置」并验证解锁凭据。</string>
+    <string name="app_name">Lianye</string>
+    <string name="app_name_zh">连页</string>
+    <string name="app_subtitle">Offline long screenshots</string>
+    <string name="accessibility_service_label">Lianye screenshot service</string>
+    <string name="accessibility_service_description">Captures screen images and scrolls pages to join screenshots locally. Does not read the view hierarchy or record keystrokes. Screen images may contain sensitive content. No network permission.</string>
+    <string name="status_service_inactive">Ready to set up</string>
+    <string name="status_service_desc_inactive">Enable the screenshot service to show the side button.</string>
+    <string name="status_service_active">Ready</string>
+    <string name="status_service_desc_active">Open the page you want to capture, then tap the side button.</string>
+    <string name="status_service_restricted">Check system permissions</string>
+    <string name="status_service_desc_restricted">Allow restricted settings in the app information screen, then check the accessibility switch.</string>
+    <string name="action_hint_enable">Enable long screenshots</string>
+    <string name="action_hint_disable">Disable service</string>
+    <string name="action_hint_restricted">Open settings</string>
+    <string name="btn_restricted_guide_pill">Permission help</string>
+    <string name="btn_enable_service">Open settings</string>
+    <string name="preflight_guide_title">Enable long screenshots</string>
+    <string name="preflight_guide_desc">In system settings, find Lianye and enable its accessibility service.</string>
+    <string name="preflight_btn_confirm">Open settings</string>
+    <string name="preflight_privacy_note">All processing stays on this device. No network permission.</string>
+    <string name="preflight_permission_use">Lianye uses accessibility to capture screen images and scroll the page. On Android 10, screen capture needs a separate system authorization.</string>
+    <string name="preflight_path_note">Setting names vary by system version. Return here after enabling the service to check the next step.</string>
+    <string name="bubble_desc_idle">Start screenshot</string>
+    <string name="bubble_desc_weaving">Screenshot in progress</string>
+    <string name="bubble_desc_finished">Screenshot ready</string>
+    <string name="bubble_desc_error">Screenshot interrupted</string>
+    <string name="vendor_hint_xiaomi">In Accessibility, find Lianye under General → Downloaded apps and enable it.</string>
+    <string name="vendor_hint_oppo">In Accessibility, find Lianye under Downloaded apps and enable it. Some versions place this under General.</string>
+    <string name="vendor_hint_vivo">In Accessibility, find Lianye under Downloaded apps or services and enable it.</string>
+    <string name="vendor_hint_huawei">In Accessibility, open Installed services and enable Lianye.</string>
+    <string name="vendor_hint_honor">In Accessibility, open Installed services and enable Lianye.</string>
+    <string name="vendor_hint_samsung">In Accessibility, open Installed apps and enable Lianye.</string>
+    <string name="vendor_hint_aosp">In Accessibility, open Downloaded apps and enable Lianye.</string>
+    <string name="vendor_path_xiaomi">Accessibility → General → Downloaded apps → %1$s</string>
+    <string name="vendor_path_oppo">Accessibility → Downloaded apps → %1$s (under General on some versions)</string>
+    <string name="vendor_path_vivo">Accessibility → Downloaded apps or services → %1$s</string>
+    <string name="vendor_path_huawei">Accessibility → Installed services → %1$s</string>
+    <string name="vendor_path_honor">Accessibility → Installed services → %1$s</string>
+    <string name="vendor_path_samsung">Accessibility → Installed apps → %1$s</string>
+    <string name="vendor_path_aosp">Accessibility → Downloaded apps → %1$s</string>
+    <string name="vendor_name_xiaomi">Xiaomi / Redmi / POCO</string>
+    <string name="vendor_name_oppo">OPPO</string>
+    <string name="vendor_name_oneplus">OnePlus</string>
+    <string name="vendor_name_realme">realme</string>
+    <string name="vendor_name_vivo">vivo / iQOO</string>
+    <string name="vendor_name_huawei">Huawei</string>
+    <string name="vendor_name_honor">HONOR</string>
+    <string name="vendor_name_samsung">Samsung</string>
+    <string name="vendor_name_android">Android device</string>
+    <string name="accessibility_list_xiaomi">General → Downloaded apps</string>
+    <string name="accessibility_list_oppo">Downloaded apps</string>
+    <string name="accessibility_list_vivo">Downloaded apps</string>
+    <string name="accessibility_list_huawei">Installed services</string>
+    <string name="accessibility_list_samsung">Installed apps</string>
+    <string name="accessibility_list_android">Downloaded apps</string>
+    <string name="accessibility_alias_services">Some versions call this Downloaded services. If the names differ, search Settings for Accessibility.</string>
+    <string name="accessibility_alias_general">Some versions place Downloaded apps under General. If the names differ, search Settings for Accessibility.</string>
+    <string name="accessibility_alias_installed_services">Older versions may call this Installed services. If the names differ, search Settings for Accessibility.</string>
+    <string name="accessibility_alias_search">If the names differ, search Settings for Accessibility and find Lianye.</string>
+    <string name="troubleshoot_title_blocked">Is the service switch unavailable?</string>
+    <string name="troubleshoot_desc_blocked">Some systems restrict apps installed outside an app store. Try these steps:</string>
+    <string name="troubleshoot_step_1">1. Open the app information screen below.</string>
+    <string name="troubleshoot_step_2">2. Open the top-right menu and select Allow restricted settings, if available.</string>
+    <string name="troubleshoot_step_3">3. Verify your identity, then return and check the accessibility switch.</string>
+    <string name="troubleshoot_btn_grant">Open app information</string>
+    <string name="troubleshoot_title_allowed">Check the service switch again</string>
+    <string name="troubleshoot_desc_allowed">The restriction status cannot be confirmed. Return to accessibility settings and check whether the service can be enabled.</string>
+    <string name="troubleshoot_btn_return_a11y">Return to settings</string>
+    <string name="troubleshoot_return_hint">The service switch is in accessibility settings, not app information.</string>
+    <string name="about_title">Help and settings</string>
+    <string name="about_session_title">Screenshot controls</string>
+    <string name="about_session_desc">Hiding the side button keeps the service enabled. Disabling the service stops screenshot access.</string>
+    <string name="about_section_work">How it works</string>
+    <string name="about_section_work_tag">Processed locally</string>
+    <string name="about_section_work_body">Capture a page and join it on your phone. Review, optionally crop, then save or share.</string>
+    <string name="about_section_privacy">Privacy and permissions</string>
+    <string name="about_privacy_offline_title">Offline processing</string>
+    <string name="about_privacy_offline_desc">Screen images are processed on this device. The app has no network permission, advertising or tracking.</string>
+    <string name="about_privacy_gesture_title">Screen capture and scrolling</string>
+    <string name="about_privacy_gesture_desc">Accessibility captures screen images and scrolls pages. It does not read the view hierarchy or record keystrokes. Screenshots may contain sensitive content. Android 10 also asks for screen capture authorization.</string>
+    <string name="about_privacy_draft_desc">Going back keeps the current draft. A new capture replaces it; saving writes to your gallery and sharing sends temporary images to the app you choose.</string>
+    <string name="about_section_restricted">When the service switch is unavailable</string>
+    <string name="about_restricted_intro">Some Android versions restrict apps installed outside an app store. The setting may differ by device.</string>
+    <string name="about_restricted_step1">1. Try the Lianye switch in accessibility settings and read the system prompt.</string>
+    <string name="about_restricted_step2">2. Open app information and check the top-right menu for Allow restricted settings.</string>
+    <string name="about_restricted_step3">3. After verification, return to accessibility settings and enable the service.</string>
+    <string name="btn_open_app_details">Open app information</string>
+    <string name="btn_copy_adb_command">Copy ADB command</string>
+    <string name="toast_adb_copied">ADB command copied</string>
+    <string name="btn_battery_optimization">Battery settings</string>
+    <string name="about_advanced">Advanced troubleshooting</string>
+    <string name="about_advanced_hide">Hide advanced troubleshooting</string>
+    <string name="about_advanced_desc">If the system repeatedly stops the service, review battery settings. The ADB command is for experienced users with a connected computer.</string>
+    <string name="about_section_meta">About Lianye</string>
+    <string name="about_meta_desc">Open source · No ads · MIT license\nVersion %1$s</string>
+    <string name="media_projection_title">Screen capture authorization</string>
+    <string name="media_projection_desc">Android 10 requires a separate system authorization to capture screen images. If access expires, authorize again.</string>
+    <string name="btn_grant_media_projection">Authorize screen capture</string>
+    <string name="toast_media_projection_granted">Screen capture authorized. Checking screenshot readiness.</string>
+    <string name="toast_media_projection_denied">Screen capture was not authorized. You can try again.</string>
+    <string name="privacy_section_title">Privacy</string>
+    <string name="privacy_badge_zero_net">Offline</string>
+    <string name="privacy_badge_zero_net_sub">No network permission</string>
+    <string name="privacy_badge_blind">Screen capture</string>
+    <string name="privacy_badge_blind_sub">No view hierarchy</string>
+    <string name="privacy_badge_local">Local stitching</string>
+    <string name="privacy_badge_local_sub">On this device</string>
+    <string name="guide_title">Getting started</string>
+    <string name="guide_step_1">1. Enable the screenshot service and show the side button.</string>
+    <string name="guide_step_2">1. Open the page you want to capture.</string>
+    <string name="guide_step_3">2. Tap the side button to start; tap Finish to stop.</string>
+    <string name="guide_step_4">3. Review the result, then save or share.</string>
+    <string name="btn_restricted_settings_guide">Restricted settings help</string>
+    <string name="restricted_settings_desc">Open app information → More → Allow restricted settings, if available. Verify your identity, then return to accessibility settings and enable Lianye.</string>
+    <string name="home_title">Beyond one screen.\nKeep it all.</string>
+    <string name="home_subtitle">Scroll automatically. Join it into one image.</string>
+    <string name="home_enable">Start capture</string>
+    <string name="home_show_overlay">Show screenshot button</string>
+    <string name="home_go_capture">Go capture</string>
+    <string name="home_continue_draft">Continue editing</string>
+    <string name="home_new_capture">New capture</string>
+    <string name="home_hide_overlay">Hide side button</string>
+    <string name="home_disable_service">Disable screenshot service</string>
+    <string name="home_enable_hint">Enable screen capture and scrolling first. Then open the page you want to capture.</string>
+    <string name="home_projection_hint">One more step: Android 10 needs screen capture authorization.</string>
+    <string name="home_overlay_hidden_hint">Show the side button, then open the page you want to capture.</string>
+    <string name="home_overlay_visible_hint">Open the page you want to capture. Tap the side button to start, then Finish when you have enough.</string>
+    <string name="home_draft_ready">A screenshot is waiting</string>
+    <string name="home_draft_saved">Screenshot saved</string>
+    <string name="home_draft_hint">Your current screenshot is kept here. Continue reviewing and editing, or start a new one.</string>
+    <string name="home_draft_saved_hint">The result is in your gallery. You can keep editing or start a new screenshot.</string>
+    <string name="home_capturing">Screenshot in progress</string>
+    <string name="home_capturing_hint">Return to the page being captured. The side button shows progress and lets you finish.</string>
+    <string name="home_privacy">On this device · No network permission</string>
+    <string name="action_back">Back</string>
+    <string name="action_save">Save</string>
+    <string name="action_share">Share</string>
+    <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_keep_draft">Keep draft</string>
+    <string name="draft_new_title">Start a new screenshot?</string>
+    <string name="draft_new_message">The current screenshot has not been saved. Save it before starting, or discard it.</string>
+    <string name="draft_save_and_new">Save and start new</string>
+    <string name="draft_discard_and_new">Discard and start new</string>
+    <string name="draft_return">Return to screenshot</string>
+    <string name="toast_saved">Saved to gallery</string>
+    <string name="toast_save_failed">Could not save. Try again.</string>
+    <string name="toast_share_failed">Could not share. Try again.</string>
+    <string name="share_title">Share screenshot</string>
 </resources>

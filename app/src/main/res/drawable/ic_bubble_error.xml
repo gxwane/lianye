@@ -1,26 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <!-- Geometric Rounded Warning Triangle -->
-    <path
-        android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="2.0"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M12,4.8 L20,19.2 C20.3,19.8 19.8,20.5 19.1,20.5 L4.9,20.5 C4.2,20.5 3.7,19.8 4.0,19.2 L12,4.8 Z" />
-
-    <!-- Warning Exclamation Bar -->
-    <path
-        android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="2.0"
-        android:strokeLineCap="round"
-        android:pathData="M12,10.2 L12,14.2" />
-
-    <!-- Warning Exclamation Dot -->
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M12,16.5 A1.1,1.1 0 1,1 11.99,16.5 Z" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M12,4 L21,20 H3 Z M12,10 V14 M12,17 H12.01"/>
 </vector>

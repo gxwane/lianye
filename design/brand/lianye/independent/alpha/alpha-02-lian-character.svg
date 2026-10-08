@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">连页：方向 B，连字</title>
+  <desc id="desc">原创黑白汉字标识探索。将连字重绘成粗笔画几何结构，辶的下方笔画接成一条宽阔的承接曲线。画面展示一个大标识、48、32、24 像素的尺寸对照和黑色圆角容器中的反白标识。</desc>
+  <defs>
+    <symbol id="mark" viewBox="22 38 224 219">
+      <g fill="currentColor">
+        <path d="M38 48L67 38L82 68L53 78Z"/>
+        <path d="M112 38H236V65H112Z"/>
+        <path d="M151 60H181L154 102H238V129H111Z"/>
+        <path d="M108 154H238V181H108Z"/>
+        <path d="M170 84H198V215H170Z"/>
+        <path d="M31 104H82V143L63 172L46 190C86 225 122 230 160 230H246V257H160C109 257 70 241 38 215L22 202L52 166L57 155V131H31Z"/>
+      </g>
+    </symbol>
+  </defs>
+  <rect width="1200" height="760" fill="#fff"/>
+  <g fill="#000" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <text x="60" y="70" font-size="34" font-weight="700">连页 ／ B　连字</text>
+    <text x="60" y="110" font-size="17">把名字里的「连」直接变成标识；下方的一笔承接上面的分段结构。</text>
+    <path d="M60 150H1140" fill="none" stroke="#000" stroke-width="1"/>
+    <text x="60" y="191" font-size="14">主标识 / 全部笔画重新绘制</text>
+    <use href="#mark" x="134" y="246" width="315" height="308" color="#000"/>
+    <text x="640" y="191" font-size="14">原生尺寸检验</text>
+    <use href="#mark" x="645" y="252" width="48" height="48" color="#000"/>
+    <use href="#mark" x="815" y="260" width="32" height="32" color="#000"/>
+    <use href="#mark" x="983" y="264" width="24" height="24" color="#000"/>
+    <text x="645" y="337" font-size="14">48 px</text>
+    <text x="810" y="337" font-size="14">32 px</text>
+    <text x="975" y="337" font-size="14">24 px</text>
+    <text x="640" y="402" font-size="14">图标容器 / 反白</text>
+    <rect x="640" y="431" width="160" height="160" rx="38"/>
+    <use href="#mark" x="676" y="467" width="89" height="87" color="#fff"/>
+    <text x="836" y="476" font-size="17" font-weight="700">名字就是记忆线索。</text>
+    <text x="836" y="511" font-size="15">水平笔画保持宽而平直，</text>
+    <text x="836" y="539" font-size="15">底部的弧线让整体向前延续。</text>
+    <path d="M60 649H1140" fill="none" stroke="#000" stroke-width="1"/>
+    <text x="60" y="690" font-size="15">观察重点：24 px 中的「车」是否过强；左侧转折和底部承接能否保持清楚。</text>
+    <text x="60" y="722" font-size="13">Alpha 独立探索 · 黑白结构稿 · 2026-10-03</text>
+  </g>
+</svg>

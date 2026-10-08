@@ -1,0 +1,187 @@
+{
+  "Version": "01-refinement-r1",
+  "RasterChecks": [
+    {
+      "File": "symbol-primary-24.png",
+      "Size": 24,
+      "Components": 5,
+      "Areas": [
+        7,
+        7,
+        85,
+        4,
+        4
+      ],
+      "OpaqueInkPixels": 107,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-small-24.png",
+      "Size": 24,
+      "Components": 5,
+      "Areas": [
+        9,
+        8,
+        86,
+        6,
+        6
+      ],
+      "OpaqueInkPixels": 115,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-primary-32.png",
+      "Size": 32,
+      "Components": 5,
+      "Areas": [
+        13,
+        13,
+        123,
+        11,
+        11
+      ],
+      "OpaqueInkPixels": 171,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-small-32.png",
+      "Size": 32,
+      "Components": 5,
+      "Areas": [
+        17,
+        16,
+        128,
+        12,
+        12
+      ],
+      "OpaqueInkPixels": 185,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-primary-48.png",
+      "Size": 48,
+      "Components": 5,
+      "Areas": [
+        31,
+        31,
+        280,
+        27,
+        28
+      ],
+      "OpaqueInkPixels": 397,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-small-48.png",
+      "Size": 48,
+      "Components": 5,
+      "Areas": [
+        38,
+        39,
+        297,
+        29,
+        29
+      ],
+      "OpaqueInkPixels": 432,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-primary-64.png",
+      "Size": 64,
+      "Components": 5,
+      "Areas": [
+        50,
+        55,
+        410,
+        41,
+        45
+      ],
+      "OpaqueInkPixels": 601,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "symbol-small-64.png",
+      "Size": 64,
+      "Components": 5,
+      "Areas": [
+        72,
+        72,
+        604,
+        54,
+        55
+      ],
+      "OpaqueInkPixels": 857,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": null
+    },
+    {
+      "File": "adaptive-monochrome-108.png",
+      "Size": 108,
+      "Components": 5,
+      "Areas": [
+        50,
+        53,
+        449,
+        41,
+        45
+      ],
+      "OpaqueInkPixels": 638,
+      "ClippedEdges": 0,
+      "InteriorAlpha": 0,
+      "MaxRadius": 31.313
+    }
+  ],
+  "SvgChecks": [
+    {
+      "File": "adaptive-background.svg",
+      "ViewBox": "0 0 108 108",
+      "Paths": 1
+    },
+    {
+      "File": "adaptive-foreground.svg",
+      "ViewBox": "0 0 108 108",
+      "Paths": 5
+    },
+    {
+      "File": "adaptive-monochrome.svg",
+      "ViewBox": "0 0 108 108",
+      "Paths": 5
+    },
+    {
+      "File": "symbol-mono.svg",
+      "ViewBox": "0 0 100 100",
+      "Paths": 5
+    },
+    {
+      "File": "symbol-reverse.svg",
+      "ViewBox": "0 0 100 100",
+      "Paths": 5
+    },
+    {
+      "File": "symbol-small.svg",
+      "ViewBox": "0 0 100 100",
+      "Paths": 5
+    },
+    {
+      "File": "symbol.svg",
+      "ViewBox": "0 0 100 100",
+      "Paths": 5
+    }
+  ],
+  "CheckBoundary": "Alpha >= 128, four-neighbor ink connectivity; artifact checks do not establish human recognition or physical-device rendering."
+}

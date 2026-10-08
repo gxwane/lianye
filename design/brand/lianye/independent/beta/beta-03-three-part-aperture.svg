@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="720" viewBox="0 0 1200 720">
+  <title>连页 — Beta 03：三片合围</title>
+  <desc>三个不重复的宽面模块，以两条配合的斜接口和一条直接口围成一个完整长视口。黑白探索稿，含大标识及实际 48、32、24、16 像素对照。</desc>
+  <defs>
+    <symbol id="mark" viewBox="0 0 128 128" fill="currentColor">
+      <path d="M44 8H84L108 32V40L80 56V36L74 30H54L48 36V38L20 54V32Z"/>
+      <path d="M20 62L48 46V92L54 98H62V120H44L20 96Z"/>
+      <path d="M108 48V96L84 120H70V98H74L80 92V64Z"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="720" fill="#fff"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif">
+    <text x="64" y="64" font-size="15" letter-spacing="2">BETA / 03</text>
+    <text x="64" y="104" font-size="26" font-weight="600">THREE-PART APERTURE</text>
+    <text x="64" y="144" font-size="13" letter-spacing="1">THREE FITTED PIECES, ONE UNINTERRUPTED VIEW</text>
+  </g>
+  <use xlink:href="#mark" x="180" y="190" width="288" height="288" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">
+    <text x="280" y="548">LARGE MARK</text>
+    <text x="756" y="144">SMALL-SIZE COMPARISON</text>
+  </g>
+  <use xlink:href="#mark" x="768" y="204" width="48" height="48" color="#000"/>
+  <use xlink:href="#mark" x="878" y="212" width="32" height="32" color="#000"/>
+  <use xlink:href="#mark" x="972" y="216" width="24" height="24" color="#000"/>
+  <use xlink:href="#mark" x="1056" y="220" width="16" height="16" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle">
+    <text x="792" y="286">48 px</text>
+    <text x="894" y="286">32 px</text>
+    <text x="984" y="286">24 px</text>
+    <text x="1064" y="286">16 px</text>
+  </g>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">
+    <text x="756" y="352">ICON CONTAINER STUDIES</text>
+  </g>
+  <rect x="766" y="384" width="128" height="128" rx="32" fill="#000"/>
+  <use xlink:href="#mark" x="782" y="400" width="96" height="96" color="#fff"/>
+  <rect x="960" y="384" width="128" height="128" rx="32" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <use xlink:href="#mark" x="976" y="400" width="96" height="96" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle">
+    <text x="830" y="548">REVERSED</text>
+    <text x="1024" y="548">POSITIVE</text>
+  </g>
+  <path d="M64 620H1136" stroke="#000" stroke-width="1"/>
+  <text x="64" y="654" fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">LIANYE / INDEPENDENT MODULAR EXPLORATION / MONOCHROME</text>
+</svg>

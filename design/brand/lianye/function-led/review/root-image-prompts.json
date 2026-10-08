@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-05",
+  "tool": "built-in image_gen.imagegen",
+  "entries": [
+    {
+      "id": "05",
+      "mode": "edit",
+      "input_working_copy": [
+        "E:/Documents/scroll-loom/design/brand/lianye/function-led/05/logo-initial.png"
+      ],
+      "transparent_background": false,
+      "prompt": "Use case: precise-object-edit / logo-brand. Image 1 is the edit target, a 1536 by 1024 single film-strip logo study. Preserve the exact one-piece elongated film silhouette, its slight tilt, both four-hole margins, thin material edges, dark petrol color, neutral backdrop, and original framing. Change only the content inside the one continuous long image area. Remove the orange sun, mountains and scenic imagery entirely. Replace the two scenic panels with two simple solid rectangular page-content blocks, one burnt orange and one muted petrol, with generous blank space. Reduce text-like horizontal bars to no more than four total across the entire strip, arranged as two pairs at different heights, while keeping the small screen status cues at the top. The result must read as one continuous captured screen page held in one long exposure area, never multiple photo frames, a video strip, or a photography filter. No actual words, letters, titles, numbers or explanatory text; no app-icon container or duplicate logo. Keep all physical structure and material unchanged; no added parts. Refine only the page-content shapes. This is a raster direction study, not a production asset.",
+      "final_path": "E:/Documents/scroll-loom/design/brand/lianye/function-led/05/logo-board.png"
+    },
+    {
+      "id": "07",
+      "mode": "generate",
+      "transparent_background": false,
+      "prompt": "Use case: logo-brand. Create a single dominant graphic brand mark centered on a 1536 by 1024 landscape warm ivory background, with no text, no words, no app tile and no alternate logo copies. The original independent concept is 'captured content continues': use editorial content itself as an irregular silhouette, never an enclosing page, screen, card or rectangular frame. On a normalized 40 wide by 78 high composition: a short title block 31 wide by 6 high at top; below it a bold image-content mass 20 wide by 43 high at left and a text-content mass 12 wide by 57 high at right, their top edges aligned; a short final block 25 wide by 6 high at the bottom. Text mass has only two shallow right-edge notches, no tiny lines. At the same height around 40 percent down the whole mark, cut a narrow white horizontal slit into the LEFT edge of the image mass and the RIGHT edge of the text mass. Each slit stops after roughly 30 percent of its own mass width: neither cuts through. Both contents remain visibly continuous below this common capture boundary. This is the core functional relationship: the image and text of the same captured page both continue past one screen ending, retaining their layout. No screenshot-corner frames, no outside boundary lines, no three growing bars, no newspaper icon in a square, no typography, no paper corners, no arrows, no separate capture-stage diagram. Style: sophisticated editorial identity with bold flat ink shapes, purposeful asymmetric whitespace, clear primary and secondary masses; graphite black for title/text/tail, deep printing vermilion for the image mass. Crisp flat surfaces, optical balance, no texture, no gradients, no 3D, no shadows. The content silhouette itself must feel like one deliberate brand emblem, not a miniature website wireframe. Ample quiet margin; mark approximately 700 pixels tall.",
+      "generated_path": "E:/Documents/scroll-loom/design/brand/lianye/function-led/07/logo-generated-study.png",
+      "final_method": "native vector geometry and deterministic PNG preview"
+    },
+    {
+      "id": "08",
+      "mode": "generate",
+      "transparent_background": false,
+      "prompt": "Use case: logo-brand. Create exactly one high-contrast black-and-white graphic logo study on a pure white 1536 by 1024 landscape backdrop. No letters, words, titles, captions, app icon container, alternate copies or extra parts. Original concept is one continuous long captured page changing figure and ground as it passes through two short local viewing fields. Normalized geometry: page width 1, total height 4.8. Two flat solid black viewing fields are 2.8 wide and 1.5 high, centered on the same axis, positioned from y=0.5 to 2.0 and from y=2.8 to 4.3. The long page is the same width, perfectly aligned and unbroken. Within each black field the page is white negative space; outside those two fields its exposed sections are black positive space: a short top segment 0 to 0.5, a middle segment 2.0 to 2.8, and a bottom segment 4.3 to 4.8. Thus the exact same long image boundary visibly persists across two local viewing ranges and the gap. This optical black-white reversal, not a divided surrounding frame, is the identity. Maintain all vertical page edges perfectly aligned. The viewing fields are filled masses, not outlined rectangles, not open brackets, not pieces surrounding a long slot; never turn the total silhouette into one ordinary long rectangular frame or segmented zero. No film sprocket holes, no scenery, no arrows, no letter I lettering, no speed stripes. Style: rigorous single-color figure-ground brand identity, generous negative space, square cut edges and carefully balanced substantial masses. Flat absolute black and white, no gray, shadows, texture, gradients or perspective. Center this one full mark at about 720 pixels high. It should be an intentional optical brand symbol rather than a diagram.",
+      "generated_path": "E:/Documents/scroll-loom/design/brand/lianye/function-led/08/logo-board.png",
+      "final_method": "generated raster study"
+    },
+    {
+      "id": "09",
+      "mode": "generate",
+      "transparent_background": false,
+      "prompt": "Use case: logo-brand. Design one centered contemporary printed-emblem logo study on a warm ivory 1536 by 1024 landscape background. No words, characters, labels, numerals, app-icon tile or alternate copies. The original independent concept is a single solid two-lobed print that records two captured ranges as one continuous image. Its upright external silhouette has a compact slightly square upper lobe and a somewhat longer lower lobe, overall width to height about 1 to 1.8. Both lobes are genuinely joined by a broad central ink bridge about half the total width. At their common boundary, one shallow rectangular cut enters from each outside side at exactly the same height: these cuts show a former screen edge without separating the ink print. No outer rectangular frame, no hollow long slot, no film holes, no decorative wax seal, badge, checkmark, shield, ribbons or authentication imagery. Inside, carve a single simple continuous white image figure: a wider landscape-like white area within the upper lobe and a taller white area in the lower lobe, connected by a broad gently sloping common coastline that crosses the former screen boundary. It is one uninterrupted image, not two closed holes: the white image and red ink must BOTH remain connected through the center. No mountain/solar gallery pictogram, no letters, chain link, bandage dots, S or Z folding, zigzag or arrow. Main meaning is two captured image ranges preserved in one complete record. Style: modern compact emblem and precise ink imprint, confident substantial body, tiny controlled corner softening, deep oxidized cinnabar red #A63D2C, flat clean fill with no distressed texture, no bevel, no 3D, no shadows. Keep the continuous picture relationship legible and the outline distinctive. One large mark approximately 700 pixels high, generous quiet margins.",
+      "generated_path": "E:/Documents/scroll-loom/design/brand/lianye/function-led/09/logo-generated-study.png",
+      "final_method": "native vector geometry and deterministic PNG preview"
+    }
+  ]
+}

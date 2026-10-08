@@ -1,12 +1,12 @@
-# ScrollLoom ProGuard & R8 Optimization Rules
+# Lianye ProGuard & R8 Optimization Rules
 
 # 1. Keep Accessibility Service & Foreground Capture Service
--keep public class org.scrollloom.service.LoomAccessibilityService { *; }
--keep public class org.scrollloom.service.capture.LoomMediaProjectionService { *; }
+-keep public class org.lianye.service.LianyeAccessibilityService { *; }
+-keep public class org.lianye.service.capture.LianyeMediaProjectionService { *; }
 
 # 2. Keep Domain and Storage Models
--keep class org.scrollloom.domain.model.** { *; }
--keep class org.scrollloom.engine.model.** { *; }
+-keep class org.lianye.domain.model.** { *; }
+-keep class org.lianye.engine.model.** { *; }
 
 # 3. Kotlin Coroutines Internal Mechanics
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
@@ -15,4 +15,4 @@
     volatile <fields>;
 }
 # 4. Keep Floating Overlay UI & Lifecycles
--keep class org.scrollloom.ui.floating.** { *; }
+-keep class org.lianye.ui.floating.** { *; }

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 
+    <!--
       STRICT INVARIANT: ZERO NETWORK PERMISSION
       android.permission.INTERNET is intentionally and permanently omitted.
     -->
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".App"
@@ -18,13 +20,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ScrollLoom">
+        android:theme="@style/Theme.Lianye">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/share_paths" />
+        </provider>
 
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.ScrollLoom">
+            android:theme="@style/Theme.Lianye">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,7 +42,7 @@
         </activity>
 
         <service
-            android:name=".service.LoomAccessibilityService"
+            android:name=".service.LianyeAccessibilityService"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -44,7 +54,7 @@
         </service>
 
         <service
-            android:name=".service.capture.LoomMediaProjectionService"
+            android:name=".service.capture.LianyeMediaProjectionService"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
 

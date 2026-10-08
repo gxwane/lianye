@@ -4,4 +4,4 @@
     android:canTakeScreenshot="true"
     android:canPerformGestures="true"
     android:notificationTimeout="100"
-    android:settingsActivity="org.scrollloom.ui.main.MainActivity" />
+    android:settingsActivity="org.lianye.ui.main.MainActivity" />

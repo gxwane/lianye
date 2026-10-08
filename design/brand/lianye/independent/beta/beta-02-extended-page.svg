@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="720" viewBox="0 0 1200 720">
+  <title>连页 — Beta 02：延伸的页</title>
+  <desc>黑白品牌探索稿。由“页”的笔画骨架重新构成连成一体的标识，以两条宽负形保留字形识别，底部笔画向外展开。包含大标识、48、32、24、16 像素对照及两种图标容器。</desc>
+  <defs>
+    <symbol id="extended-page" viewBox="0 0 128 128" fill="currentColor">
+      <path fill-rule="evenodd" d="M24 10H106Q114 10 114 18Q114 26 106 26H74L67 38H87Q100 38 100 51V88Q100 94 96 98L116 111Q122 116 116 121Q111 125 105 121L80 103H53L29 121Q23 125 18 120Q13 115 19 110L36 98Q32 94 32 88V51Q32 38 45 38H48L55 26H24Q16 26 16 18Q16 10 24 10ZM51 53H81Q86 53 86 58Q86 64 81 64H51Q46 64 46 58Q46 53 51 53ZM51 76H81Q86 76 86 81Q86 87 81 87H51Q46 87 46 81Q46 76 51 76Z"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="720" fill="#fff"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif">
+    <text x="64" y="64" font-size="15" letter-spacing="2">BETA / 02</text>
+    <text x="64" y="104" font-size="26" font-weight="600">EXTENDED PAGE</text>
+    <text x="64" y="144" font-size="13" letter-spacing="1">A CUSTOM GLYPH BUILT FROM THE NAME</text>
+  </g>
+  <use xlink:href="#extended-page" x="180" y="190" width="288" height="288" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">
+    <text x="280" y="548">LARGE MARK</text>
+    <text x="756" y="144">SMALL-SIZE COMPARISON</text>
+  </g>
+  <use xlink:href="#extended-page" x="768" y="204" width="48" height="48" color="#000"/>
+  <use xlink:href="#extended-page" x="878" y="212" width="32" height="32" color="#000"/>
+  <use xlink:href="#extended-page" x="972" y="216" width="24" height="24" color="#000"/>
+  <use xlink:href="#extended-page" x="1056" y="220" width="16" height="16" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle">
+    <text x="792" y="286">48 px</text>
+    <text x="894" y="286">32 px</text>
+    <text x="984" y="286">24 px</text>
+    <text x="1064" y="286">16 px</text>
+  </g>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">
+    <text x="756" y="352">ICON CONTAINER STUDIES</text>
+  </g>
+  <rect x="766" y="384" width="128" height="128" rx="32" fill="#000"/>
+  <use xlink:href="#extended-page" x="782" y="400" width="96" height="96" color="#fff"/>
+  <rect x="960" y="384" width="128" height="128" rx="32" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <use xlink:href="#extended-page" x="976" y="400" width="96" height="96" color="#000"/>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle">
+    <text x="830" y="548">REVERSED</text>
+    <text x="1024" y="548">POSITIVE</text>
+  </g>
+  <path d="M64 620H1136" stroke="#000" stroke-width="1"/>
+  <text x="64" y="654" fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="1">LIANYE / INDEPENDENT LOGO EXPLORATION / MONOCHROME</text>
+</svg>

@@ -1,0 +1,53 @@
+<style>
+#ly-function-options { --ly-image-01: url('__BOARD01__'); --ly-image-02: url('__BOARD02__'); --ly-image-03: url('__BOARD03__'); --ly-image-04: url('__BOARD04__'); --ly-image-05: url('__BOARD05__'); --ly-image-06: url('__BOARD06__'); --ly-image-07: url('__BOARD07__'); --ly-image-08: url('__BOARD08__'); --ly-image-09: url('__BOARD09__'); }
+#ly-function-options figure { margin: 0; padding: 12px 0; }
+#ly-function-options .ly-board { width: 100%; aspect-ratio: 3 / 2; background-repeat: no-repeat; background-position: center; background-size: contain; }
+#ly-function-options .ly-overview .ly-board { aspect-ratio: 1 / 1; background-size: cover; }
+#ly-function-options .ly-overview .ly-01 { background-position: left center; }
+#ly-function-options figcaption { padding-top: 8px; }
+#ly-function-options .ly-01 { background-image: var(--ly-image-01); }
+#ly-function-options .ly-02 { background-image: var(--ly-image-02); }
+#ly-function-options .ly-03 { background-image: var(--ly-image-03); }
+#ly-function-options .ly-04 { background-image: var(--ly-image-04); }
+#ly-function-options .ly-05 { background-image: var(--ly-image-05); }
+#ly-function-options .ly-06 { background-image: var(--ly-image-06); }
+#ly-function-options .ly-07 { background-image: var(--ly-image-07); }
+#ly-function-options .ly-08 { background-image: var(--ly-image-08); }
+#ly-function-options .ly-09 { background-image: var(--ly-image-09); }
+</style>
+<div id="ly-function-options">
+  <div class="nav nav-pills" role="tablist" aria-label="连页 Logo 方向">
+    <button class="nav-link active" id="ly-f-all-tab" type="button" role="tab" aria-controls="ly-f-all-panel" aria-selected="true">全部</button>
+    <button class="nav-link" id="ly-f-01-tab" type="button" role="tab" aria-controls="ly-f-01-panel" aria-selected="false">01 取景</button>
+    <button class="nav-link" id="ly-f-02-tab" type="button" role="tab" aria-controls="ly-f-02-panel" aria-selected="false">02 拼接</button>
+    <button class="nav-link" id="ly-f-03-tab" type="button" role="tab" aria-controls="ly-f-03-panel" aria-selected="false">03 滚动</button>
+    <button class="nav-link" id="ly-f-04-tab" type="button" role="tab" aria-controls="ly-f-04-panel" aria-selected="false">04 字形</button>
+    <button class="nav-link" id="ly-f-05-tab" type="button" role="tab" aria-controls="ly-f-05-panel" aria-selected="false">05 物件</button>
+    <button class="nav-link" id="ly-f-06-tab" type="button" role="tab" aria-controls="ly-f-06-panel" aria-selected="false">06 像素</button>
+    <button class="nav-link" id="ly-f-07-tab" type="button" role="tab" aria-controls="ly-f-07-panel" aria-selected="false">07 内容</button>
+    <button class="nav-link" id="ly-f-08-tab" type="button" role="tab" aria-controls="ly-f-08-panel" aria-selected="false">08 负形</button>
+    <button class="nav-link" id="ly-f-09-tab" type="button" role="tab" aria-controls="ly-f-09-panel" aria-selected="false">09 印记</button>
+  </div>
+  <div id="ly-f-all-panel" role="tabpanel" aria-labelledby="ly-f-all-tab">
+    <div class="viz-grid ly-overview">
+      <figure><div class="ly-board ly-01" role="img" aria-label="01 四个取景角外，一张长图继续向下延伸"></div><figcaption>01 · 精密取景<div class="text-small text-muted">取景范围 → 向下延长</div></figcaption></figure>
+      <figure><div class="ly-board ly-02" role="img" aria-label="02 两个错位捕获框合成贯通内窗，重叠处只有一份内容"></div><figcaption>02 · 模块接合<div class="text-small text-muted">相邻画面 → 去掉重复边</div></figcaption></figure>
+      <figure><div class="ly-board ly-03" role="img" aria-label="03 弯曲滑痕中有上下接续的内容负形，容易误认绘画工具"></div><figcaption>03 · 动态滑痕<div class="text-small text-muted">上滑轨迹 → 内容留存</div></figcaption></figure>
+      <figure><div class="ly-board ly-04" role="img" aria-label="04 连与页上下排列，连的末笔与页的首笔共享同一横笔"></div><figcaption>04 · 汉字共笔<div class="text-small text-muted">连的末笔 → 页的起笔</div></figcaption></figure>
+      <figure><div class="ly-board ly-05" role="img" aria-label="05 有穿孔的底片中央为一个连续页面画格，容易误认影视工具"></div><figcaption>05 · 拟物底片<div class="text-small text-muted">连续页面 → 一格完整图</div></figcaption></figure>
+      <figure><div class="ly-board ly-06" role="img" aria-label="06 像素图片底部的新行已在左侧接入，图片轮廓继续进入下带"></div><figcaption>06 · 粗像素图像<div class="text-small text-muted">新增像素 → 接入完整图</div></figcaption></figure>
+      <figure><div class="ly-board ly-07" role="img" aria-label="07 图片和正文跨过同高浅切缝，继续维持原来版式"></div><figcaption>07 · 内容版式<div class="text-small text-muted">图文跨屏 → 原样接续</div></figcaption></figure>
+      <figure><div class="ly-board ly-08" role="img" aria-label="08 同宽长页在两个黑色局部视口内外切换正负形，容易误认字母"></div><figcaption>08 · 黑白图底<div class="text-small text-muted">局部视口 → 同一整幅</div></figcaption></figure>
+      <figure><div class="ly-board ly-09" role="img" aria-label="09 双瓣印面与内部图像均在中央连接，容易误认数字8或沙漏"></div><figcaption>09 · 实印凭记<div class="text-small text-muted">两段画面 → 完整记录</div></figcaption></figure>
+    </div>
+  </div>
+  <div id="ly-f-01-panel" role="tabpanel" aria-labelledby="ly-f-01-tab" hidden><figure><div class="ly-board ly-01" role="img" aria-label="取景边界方向大图，展示同一标识的三种应用"></div><figcaption>01 · 精密取景<div class="text-small text-muted">取景范围 → 向下延长</div></figcaption></figure></div>
+  <div id="ly-f-02-panel" role="tabpanel" aria-labelledby="ly-f-02-tab" hidden><figure><div class="ly-board ly-02" role="img" aria-label="对位接合方向大图"></div><figcaption>02 · 模块接合<div class="text-small text-muted">相邻画面 → 去掉重复边</div></figcaption></figure></div>
+  <div id="ly-f-03-panel" role="tabpanel" aria-labelledby="ly-f-03-tab" hidden><figure><div class="ly-board ly-03" role="img" aria-label="滑痕存页方向大图"></div><figcaption>03 · 动态滑痕<div class="text-small text-muted">上滑轨迹 → 内容留存</div></figcaption></figure></div>
+  <div id="ly-f-04-panel" role="tabpanel" aria-labelledby="ly-f-04-tab" hidden><figure><div class="ly-board ly-04" role="img" aria-label="连页共笔中文字形大图"></div><figcaption>04 · 汉字共笔<div class="text-small text-muted">连的末笔 → 页的起笔</div></figcaption></figure></div>
+  <div id="ly-f-05-panel" role="tabpanel" aria-labelledby="ly-f-05-tab" hidden><figure><div class="ly-board ly-05" role="img" aria-label="一格长底片方向大图"></div><figcaption>05 · 拟物底片<div class="text-small text-muted">连续页面 → 一格完整图</div></figcaption></figure></div>
+  <div id="ly-f-06-panel" role="tabpanel" aria-labelledby="ly-f-06-tab" hidden><figure><div class="ly-board ly-06" role="img" aria-label="补行成图方向大图"></div><figcaption>06 · 粗像素图像<div class="text-small text-muted">新增像素 → 接入完整图</div></figcaption></figure></div>
+  <div id="ly-f-07-panel" role="tabpanel" aria-labelledby="ly-f-07-tab" hidden><figure><div class="ly-board ly-07" role="img" aria-label="续上的图文方向大图"></div><figcaption>07 · 内容版式<div class="text-small text-muted">图文跨屏 → 原样接续</div></figcaption></figure></div>
+  <div id="ly-f-08-panel" role="tabpanel" aria-labelledby="ly-f-08-tab" hidden><figure><div class="ly-board ly-08" role="img" aria-label="同页翻转方向大图"></div><figcaption>08 · 黑白图底<div class="text-small text-muted">局部视口 → 同一整幅</div></figcaption></figure></div>
+  <div id="ly-f-09-panel" role="tabpanel" aria-labelledby="ly-f-09-tab" hidden><figure><div class="ly-board ly-09" role="img" aria-label="贯缝实印方向大图"></div><figcaption>09 · 实印凭记<div class="text-small text-muted">两段画面 → 完整记录</div></figcaption></figure></div>
+</div>

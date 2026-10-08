@@ -1,0 +1,48 @@
+<section id="ly-interaction-prototype" aria-label="连页交互原型">
+  <div class="ly-review-controls">
+    <div>
+    <label class="form-label" for="ly-scenario">体验情境</label>
+    <select class="form-select" id="ly-scenario">
+      <option value="first">首次使用</option>
+      <option value="ready">已准备好</option>
+      <option value="draft">未保存草稿</option>
+      <option value="denied">权限被拒</option>
+      <option value="manual" selected>手动截图</option>
+      <option value="manual-notification">手动 · 通知栏兜底</option>
+      <option value="manual-blocked">手动 · 控制未开启</option>
+      <option value="manual-first-failure">手动 · 首屏失败</option>
+      <option value="manual-interrupt">手动 · 系统中断</option>
+      <option value="interrupt">截取中断</option>
+      <option value="savefail">保存失败</option>
+      <option value="android10">Android 10 授权</option>
+    </select>
+    </div>
+    <div>
+      <label class="form-label" for="ly-vendor">模拟手机</label>
+      <select class="form-select" id="ly-vendor">
+        <option value="xiaomi">小米 / Redmi</option>
+        <option value="oppo">OPPO / 一加 / realme</option>
+        <option value="vivo">vivo / iQOO</option>
+        <option value="huawei">华为 / 荣耀</option>
+        <option value="samsung">三星</option>
+        <option value="aosp">原生 / 其他安卓</option>
+      </select>
+    </div>
+  </div>
+  <div class="ly-phone" aria-label="连页 Android 应用">
+    <div class="ly-statusbar"><span>9:41</span><span class="ly-status-icons"><i data-lucide="signal" aria-hidden="true"></i><i data-lucide="wifi" aria-hidden="true"></i><i data-lucide="battery-full" aria-hidden="true"></i></span></div>
+    <div id="ly-screen"></div>
+    <div id="ly-overlay"></div>
+    <div class="ly-navigation"><span></span></div>
+  </div>
+  <div class="text-small text-muted ly-review-caption">交互原型 · 系统操作、截图与导出为模拟</div>
+  <div class="sr-only" id="ly-announcement" aria-live="polite"></div>
+</section>
+<style>
+/* LY_STYLES */
+</style>
+<script>
+/* LY_MODEL */
+/* LY_DEVICE_HELP */
+/* LY_RUNTIME */
+</script>

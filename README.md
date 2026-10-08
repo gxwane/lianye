@@ -1,147 +1,73 @@
-# ScrollLoom (长卷)
+# 连页 · Lianye
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Zero Network](https://img.shields.io/badge/Network-0%20Permission-success.svg)](app/src/main/AndroidManifest.xml)
-[![Platform](https://img.shields.io/badge/Android-11%2B%20(API%2030%2B)-brightgreen.svg)](#-项目简介-overview)
-[![Build Guard](https://img.shields.io/badge/Guard-verifyZeroNetworkDependencies-teal.svg)](app/build.gradle.kts)
+[![Android 10+](https://img.shields.io/badge/Android-10%2B-green.svg)](app/build.gradle.kts)
+[![No network permission](https://img.shields.io/badge/Network-No%20permission-blue.svg)](app/src/main/AndroidManifest.xml)
 
-> **Stitch any scrollable screen, entirely offline.**  
-> 私密、纯粹、离线。把任意可滚动的屏幕，织成长卷。
+**连接每一屏，留下一张长图。**
 
----
+连页是一款 Android 开源长截图工具。支持自动滚动和自己滑动，图片在本机拼接；完成后可以检查、裁剪、保存或分享。无需账号，应用没有网络权限、广告或追踪。
 
-## 📖 项目简介 (Overview)
+从[正式发布页](https://github.com/gxwane/lianye/releases/latest)下载 `Lianye-v版本号.apk` 安装，版本内容见[更新记录](CHANGELOG.md)。Android 10 及以上可用。当前包名为 `org.lianye`，可与旧测试版分别安装。
 
-**ScrollLoom（长卷）** 是一款面向 Android 平台的现代开源长截屏工具。它专注于解决原生系统与传统长截图工具的核心痛点：无需繁琐的录屏授权弹窗，不声明任何联网权限，纯依靠本地轻量视觉算法，像织布机（Loom）穿引经纬线一样，将连续滚动的屏幕条带（FrameStrip）严丝合缝地编织为一幅完整长卷。
+## 使用
 
-* **平台**：Android 11+ (API Level 30+)
-* **技术栈**：100% 纯 Kotlin 2.x (K2) + Jetpack Compose BOM + Material 3 Expressive + `kotlin-inject`
-* **协议**：[MIT License](LICENSE)
-* **开源分发**：GitHub Releases / F-Droid / 酷安 (Coolapk)
+1. 首页直接选择 **自动滚动** 或 **自己滑动**，点击 **开始长截图**，按系统提示授权。
+2. 打开目标页面，点悬浮球上的 **开始截图**。自动模式会滚动页面；手动模式按屏幕指引向上滑，松手稍停。截够后点 **结束**。
+3. 在结果页检查、缩放或裁剪图片；裁剪支持撤销与重做。
+4. 点击 **保存** 写入系统相册，或点击 **分享** 将图片交给所选应用。导出中显示进度，完成后显示结果。
 
----
+准备好后，**去截图** 返回桌面，随后打开目标应用。截图过程中悬浮控件只保留 **结束**，滑动指引持续显示，不进入输出图片。帮助内容随当前模式变化，保留常见厂商的权限设置路径。
 
-## 🚀 快速上手与操作指南 (Quick Start)
+未保存的当前草稿会保留，包括编辑历史和查看位置。开始新截图前可以先保存、放弃或返回。已经保存的截图不再占据首页的「继续编辑」入口；再次进入应用可直接开始新截图，后续编辑交给相册或用户选择的编辑工具。异常中断时，保留已经提交的有效内容。
 
-### 1. 首次开启无障碍服务
-1. 打开 ScrollLoom，点击中央触控核心 **“轻触开启”**；
-2. 系统将根据您的手机品牌弹出精准行前提示（例如小米/OPPO 请切换至顶部的 **【通用】** 分类），并自动直达系统无障碍设置；
-3. 找到并开启 **ScrollLoom 长截屏服务**；
-4. 开启后，屏幕边缘将优雅停靠半透明织梭悬浮窗。
+动态视频、重复排版、固定控件或禁止截屏的页面可能影响截图结果，请在导出前检查。
 
-### 2. 编织长卷
-1. 切换至想要截取的任意目标应用（微信长聊天、浏览器长文章、社交长动态、自绘 Flutter 容器等）；
-2. 轻触悬浮窗的 **“开始”** 按钮；
-3. ScrollLoom 将全自动模拟匀速滚动、计算重叠位移并流式增量落盘；
-4. 再次轻触，或页面滚动触底时，应用将自动停止编织并直接进入 **长卷预览与导出界面**；
-5. 在预览页支持 120Hz 视口瓦片按需缩放，支持一键**存入系统相册**或**唤起系统分享**。
+## 导出与隐私
 
----
+- 默认导出 **PNG**。裁剪后的高度超过 **30,000px** 时，默认按精确像素行分图，也可选择整张长图；这是固定高度分段，不是按内容留白分页。
+- 保存目标为系统相册的 `Pictures/Lianye`。多图全部写入后发布；失败时撤回本次创建的图片。
+- 分享使用应用私有缓存和 FileProvider 临时读取授权，**不会自动写入相册**。多图分享包含所有图片 URI，并按内容顺序排列。
+- 分享文件为接收应用保留；下次分享时清理超过 24 小时的旧缓存。系统也可能清理缓存目录。
+- 应用未声明网络权限，未引入广告或追踪功能。图片处理在本机完成；用户主动分享后，接收应用按照其自身行为处理图片。
+- 无障碍服务用于自动模式的屏幕捕获和滚动，不读取控件树文本或记录按键。手动模式只使用本次屏幕捕获和普通悬浮窗，无需无障碍服务。
 
-## 🛡️ Android 13+ 受限制设置与后台保活 (Restricted Settings)
+自动模式在 Android 10 使用屏幕捕获前台服务；Android 11 及以上使用 `AccessibilityService.takeScreenshot()`。手动模式在 Android 10 及以上使用 MediaProjection，授权失效后重新授权。手动悬浮球需要「显示在其他应用上层」权限，自动悬浮球使用无障碍悬浮窗。
 
-### 1. 解除 Android 13+ 侧载无障碍灰显限制（闭环 4 步法）
-针对 Android 13+（API 33+）侧载应用，系统安全机制默认将无障碍开关置灰（开关不可点击并弹窗提示“受限制的设置”）：
-1. **触发拦截**：首次进入系统无障碍设置，轻触 ScrollLoom 开关触发系统弹窗，点击“确定”（让系统生成解锁记录）；
-2. **直达详情**：返回 ScrollLoom 主屏，在自动展开的排障卡片中点击 **“⚡ 直达应用信息放行”**；
-3. **放行权限**：在系统应用信息页点击右上角 **「⋮」更多选项**，选择 **「允许受限制的设置」** 并验证指纹或锁屏密码；
-4. **重返开启**：切回 ScrollLoom 点击 **“🚀 重返无障碍开启服务”** 即可正式打开开关（*注：无障碍开关不在应用信息页中，必须返回无障碍开启*）。
+## 系统设置帮助
 
-* **极客一键 ADB 解锁**：
-  在电脑终端运行以下命令，即可直接免确认解锁：
-  ```bash
-  adb shell appops set org.scrollloom ACCESS_RESTRICTED_SETTINGS allow
-  ```
-  *(注：ScrollLoom 主页排障卡片已提供一键复制命令)*
+部分系统会限制从应用商店之外安装的应用。如果无障碍开关无法开启，在 **帮助与设置** 中打开应用信息，查找「允许受限制的设置」，验证后返回无障碍设置。入口名称可能随厂商和系统版本变化，应用不会在状态未知时宣称限制已解除。
 
-### 2. OEM 厂商后台保活建议
-为避免 MIUI/HyperOS、ColorOS、OriginOS 等定制系统在后台激进冻结无障碍服务，建议在主页点击 **“配置电池白名单”**，将 ScrollLoom 加入系统“无限制”电池策略白名单。
+帮助中的 **关于 → 查看更新** 会用浏览器打开[项目发布页](https://github.com/gxwane/lianye/releases)；应用不在后台联网检查、下载或强制更新。升级版本需要递增 `versionCode` 并保持包名和签名一致。
 
----
+## 实现
 
-## 🌟 核心特性 (Key Features)
+Kotlin 2.1、Jetpack Compose、Material 3、AndroidX 和协程；依赖及版本以 [版本目录](gradle/libs.versions.toml) 为准。AppComponent 使用手写依赖容器。
 
-### 1. 结构性隐私安全 (Structurally Private)
-* **绝对零网络权限**：`AndroidManifest.xml` 中**彻底不声明 `android.permission.INTERNET`**，并在 Gradle 构建期设置 `verifyZeroNetworkDependencies` 熔断检查任务。这不是一句道德誓言，而是系统底层施加的物理硬约束——应用在能力上根本无法将捕获的屏幕内容发送至任何服务器。
-* **“失明”的无障碍服务 (Blind Accessibility Service)**：完全不申请 `canRetrieveWindowContent` 与 `accessibilityEventTypes`。应用**不能、也绝不去读取**界面上的任何控件树和私密文本（如密码、银行账号、聊天记录），纯粹仅行使“静默截图 + 手势滚动”两项视觉能力。
+捕获引擎匹配相邻画面的重叠区域，将新增条带落盘为瓦片。草稿以检查点持久化；预览按视口加载瓦片，缓存预算为 32MiB；导出逐行读取、裁剪并压缩成 PNG，不创建整张超长 Bitmap。性能和设备兼容性以测量为准，不承诺固定帧率、耗时或总内存峰值。
 
-### 2. 免弹窗原生级体验 (No MediaProjection Friction)
-* 告别 Android 14+ 录屏框架（MediaProjection）烦人的“每次截屏都要全屏系统弹窗确认”的致命折磨；
-* 基于 Android 11 原生 `AccessibilityService.takeScreenshot()`，直接读取 GPU 硬件缓冲（HardwareBuffer），启动即截，用完即走；
-* 利用 `TYPE_ACCESSIBILITY_OVERLAY` 特权悬浮窗，免除用户在系统设置手动授权“显示在其他应用上层”的高门槛弹窗；
-* 双 VSYNC 脉冲时序保护（40ms 物理下限），截图期间胶囊瞬时隐形，彻底杜绝自污染。
+- [架构说明](docs/ARCHITECTURE.md)
+- [品牌与产品原则](docs/BRAND_AND_STRATEGY.md)
+- [当前进展与验收](docs/ROADMAP.md)
+- [设计母稿与规范](design/README.md)
 
-### 3. 专治各种“系统截不了” (Works Where Native Fails)
-* Android 12+ 原生的 `Capture more` 极度依赖 App 主动实现 View 层的 `ScrollCaptureCallback` 接口；
-* 在面对 **Flutter 跨平台应用、动态 WebView 网页、复杂自定义 Compose 容器、微信长图文** 时，原生长截图按钮经常神秘失踪；
-* ScrollLoom 纯靠外挂式“手势驱动 + 纯视觉逐行亮度匹配”，只要屏幕内容在垂直滚动，就能无死角编织长图。
+## 构建与检查
 
-### 4. 极致轻量与边缘攻防 (Lightweight & Edge-Case Defenses)
-* **拒绝几十兆臃肿库**：不依赖 OpenCV，核心对齐采用纯 Kotlin 实现的 **3 栏分带 1D 亮度投影（Left 25%, Mid, Right）+ 水平方差指纹**，单次计算仅需 0.8~1.5ms；
-* **3 帧时域方差掩码 (Temporal Variance Mask)**：滚动中自动识别并剔除 App 内部静态吸顶导航栏（AppBar）与悬浮按钮（FAB），彻底杜绝悬浮重影；
-* **Continuation Hold 手势硬停 + 协程看门狗**：滑动终点注入 150ms 零位移滞留手势化解 Fling 惯性滑行，配合 1500ms 协程看门狗防止触摸队列卡死。
+需要 JDK 17、Android SDK 35。仓库自带 Gradle 8.11.1 Wrapper。
 
-### 5. 极限防爆内存与流式直写 (Anti-OOM & Streaming MediaStore)
-* **双区域局部切片提取 (ROI Sub-region Extraction)**：坚决禁止整帧全尺寸 Bitmap 软拷贝，仅切取用于匹配的特征带与新增条带，2K/4K/折叠屏实测图形常驻峰值严格压制在 **8MB ~ 12MB**；
-* **坚决禁用 WebP 超长图**：受 WebP 格式规范 16,383px 物理上限限制，项目确立 **PNG 为唯一通用导出格式**（最高支持 20 亿像素）；
-* **流式 Deflater 直写 MediaStore**：导出过程无全量大图实例化，通过 `DeflaterOutputStream(level=1)` 逐块直写系统相册，导出堆内存峰值 $< 1\text{MB}$；
-* **30,000px 智能分卷阈值 (Smart Pagination)**：超长图自动在空白间隙分页导出为 Part 1 / Part 2，彻底解决微信发送截断（25,000px 限制）与系统相册崩溃问题。
+Windows PowerShell：
 
----
-
-## 🏛️ 核心架构隐喻 (Loom Metaphor)
-
-整个项目代码库的概念设计严格同构于传统**织布机（Loom）**的工业意象：
-
-```
-[Screen Display]
-       │
-       ▼  (takeScreenshot)
- [Dual-ROI Extraction] ──► 仅提取局部特征带，立即释放 HardwareBuffer (显存峰值 < 12MB)
-       │
-       ▼  (OverlapMatcher)
- [3-Column Luma & Mask] ──► 3 栏投影 + 3 帧时域方差掩码消除吸顶栏，计算重叠位移 Δy
-       │
-       ▼  (LoomEngine.weave)
- [Weaving & Trim] ──► 剔除重叠冗余，将纯新增条带灌入
-       │
-       ▼  (TileStore)
- [1024px Disk Chunks] ──► 增量瓦片磁盘落盘，内存零常驻
-       │
-       ▼  (Streaming Deflater Assembler)
- [Finished Long Scroll] ──► 流式直写 MediaStore，支持 30k 智能分卷或无损单图
+```powershell
+.\gradlew.bat :app:testDebugUnitTest
+.\gradlew.bat :app:lintDebug
+.\gradlew.bat :app:verifyZeroNetworkDependencies
+.\gradlew.bat :app:assembleDebug
 ```
 
----
+macOS/Linux 使用 `./gradlew` 替代 `.\gradlew.bat`。网络依赖检查是按已配置关键字检查运行时依赖，不等同于完整安全审计。
 
-## 🛠️ 本地构建与测试 (Building & Verification)
+工程名称为 `Lianye`，仓库为 [`gxwane/lianye`](https://github.com/gxwane/lianye)。正式包使用 `org.lianye`，Debug 包使用 `org.lianye.debug`。构建 Release 需要配置本地签名凭据，再运行 `:app:assembleRelease`；签名材料和密码不得提交仓库。发布安装包命名为 `Lianye-v版本号.apk`。
 
-### 环境要求
-* JDK 17 或 JDK 21 LTS
-* Android SDK 35
-* Gradle 8.13+ (自带 Gradle Wrapper)
+## 许可证
 
-### 常用命令
-```bash
-# 1. 运行全量 JVM 纯净单元测试 (36/36 项)
-./gradlew testDebugUnitTest
-
-# 2. 运行物理零网络构建守卫检测
-./gradlew verifyZeroNetworkDependencies
-
-# 3. 编译 Debug 调试包
-./gradlew assembleDebug
-
-# 4. 编译 Release 正式发行包 (已启用 ProGuard 混淆保护)
-./gradlew assembleRelease
-```
-
----
-
-## 📄 开源许可证 (License)
-
-本项目遵循 [MIT License](LICENSE) 开源协议。
-
-## 🙏 致谢 (Acknowledgments)
-
-本项目深度致敬并参考了由 **garregusev** 开源的 [android-scroll-capture](https://github.com/garregusev/android-scroll-capture)（MIT License）。该项目提纯自已上架商用 App 的宝贵生产实战经验，为 ScrollLoom 攻克手势防甩动、GPU 缓冲释放与纯 Kotlin 逐行亮度轻量对位提供了至关重要的工程基石。
+[MIT License](LICENSE)。项目参考了 [android-scroll-capture](https://github.com/garregusev/android-scroll-capture) 的手势与屏幕捕获实现思路。

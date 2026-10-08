@@ -25,7 +25,7 @@
         android:fillColor="#FFFFFFFF"
         android:pathData="M11,10 h2.5 a1,1 0 0 1 1,1 v2.5 a1,1 0 0 1 -1,1 h-2.5 a1,1 0 0 1 -1,-1 v-2.5 a1,1 0 0 1 1,-1 z" />
 
-    <!-- Vertical Loom Stitch Threads -->
+    <!-- Vertical Lianye Stitch Threads -->
     <path
         android:strokeColor="#FFFFFFFF"
         android:strokeWidth="1.2"

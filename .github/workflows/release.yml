@@ -26,21 +26,41 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > scrollloom-release.jks
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > lianye-release.jks
 
       - name: Build signed Release APK
         env:
-          storeFile: ${{ github.workspace }}/scrollloom-release.jks
+          storeFile: ${{ github.workspace }}/lianye-release.jks
           storePassword: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
           keyAlias: ${{ secrets.KEYSTORE_KEY_ALIAS }}
           keyPassword: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease verifyZeroNetworkDependencies
+        run: ./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleRelease verifyZeroNetworkDependencies
+
+      - name: Verify release identity, signature and lint
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 tool/sync_brand_assets.py --check
+          python3 tool/verify_release.py \
+            --apk app/build/outputs/apk/release/app-release.apk \
+            --tag "$RELEASE_TAG" \
+            --output build/release-verification.json
 
       - name: Rename APK with version tag
         run: |
           VERSION="${{ github.ref_name }}"
           cp app/build/outputs/apk/release/app-release.apk \
-             "ScrollLoom-${VERSION}.apk"
+             "Lianye-${VERSION}.apk"
+          sha256sum "Lianye-${VERSION}.apk" > SHA256SUMS.txt
+
+      - name: Upload verification reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-verification
+          path: |
+            build/release-verification.json
+            app/build/reports/tests/testDebugUnitTest
+            app/build/reports/lint-results-debug.*
 
       - name: Determine pre-release flag
         id: prerelease
@@ -56,8 +76,24 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: 连页 ${{ github.ref_name }}
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
-          generate_release_notes: true
-          files: ScrollLoom-${{ github.ref_name }}.apk
+          body_path: CHANGELOG.md
+          fail_on_unmatched_files: true
+          files: |
+            Lianye-${{ github.ref_name }}.apk
+            SHA256SUMS.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-fdroid-repo:
+    name: Deploy F-Droid Repository
+    needs: build-and-release
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/fdroid-repo.yml
+    with:
+      release_tag: ${{ github.ref_name }}
+    secrets: inherit

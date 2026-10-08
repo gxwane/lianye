@@ -1,0 +1,501 @@
+<section id="ly-interaction-prototype" aria-label="连页交互原型">
+  <div class="ly-review-controls">
+    <div>
+    <label class="form-label" for="ly-scenario">体验情境</label>
+    <select class="form-select" id="ly-scenario">
+      <option value="first">首次使用</option>
+      <option value="ready">已准备好</option>
+      <option value="draft">未保存草稿</option>
+      <option value="denied">权限被拒</option>
+      <option value="interrupt">截取中断</option>
+      <option value="savefail">保存失败</option>
+      <option value="android10">Android 10 授权</option>
+    </select>
+    </div>
+    <div>
+      <label class="form-label" for="ly-vendor">模拟手机</label>
+      <select class="form-select" id="ly-vendor">
+        <option value="xiaomi">小米 / Redmi</option>
+        <option value="oppo">OPPO / 一加 / realme</option>
+        <option value="vivo">vivo / iQOO</option>
+        <option value="huawei">华为 / 荣耀</option>
+        <option value="samsung">三星</option>
+        <option value="aosp">原生 / 其他安卓</option>
+      </select>
+    </div>
+  </div>
+  <div class="ly-phone" aria-label="连页 Android 应用">
+    <div class="ly-statusbar"><span>9:41</span><span class="ly-status-icons"><i data-lucide="signal" aria-hidden="true"></i><i data-lucide="wifi" aria-hidden="true"></i><i data-lucide="battery-full" aria-hidden="true"></i></span></div>
+    <div id="ly-screen"></div>
+    <div id="ly-overlay"></div>
+    <div class="ly-navigation"><span></span></div>
+  </div>
+  <div class="text-small text-muted ly-review-caption">交互原型 · 系统操作、截图与导出为模拟</div>
+  <div class="sr-only" id="ly-announcement" aria-live="polite"></div>
+</section>
+<style>
+#ly-interaction-prototype { --ly-paper:light-dark(#F7F4EE,#1D2422); --ly-ink:light-dark(#252B2A,#F7F4EE); --ly-muted:light-dark(#646C67,#ADB7B0); --ly-surface:light-dark(#FFFFFF,#29322F); --ly-line:light-dark(#D7DCD5,#45514B); --ly-soft:light-dark(#ECEEE6,#303B35); --ly-accent:#DB653D; --ly-accent-text:light-dark(#A54023,#F4A584); --ly-radius:22px; width:100%; }
+#ly-interaction-prototype .ly-review-controls { max-width:390px; margin:0 auto 14px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+#ly-interaction-prototype .ly-review-controls>div { min-width:0; }
+#ly-interaction-prototype .ly-review-caption { text-align:center; margin-top:12px; }
+#ly-interaction-prototype .ly-phone { position:relative; box-sizing:border-box; width:100%; max-width:390px; height:748px; margin:auto; overflow:hidden; border:1px solid var(--ly-line); border-radius:30px; background:var(--ly-paper); color:var(--ly-ink); box-shadow:0 8px 28px #00000010; font:400 15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; text-align:left; }
+#ly-interaction-prototype .ly-phone * { box-sizing:border-box; }
+#ly-interaction-prototype .ly-phone button,#ly-interaction-prototype .ly-phone input { font:inherit; }
+#ly-interaction-prototype .ly-phone button { cursor:pointer; color:inherit; -webkit-tap-highlight-color:transparent; }
+#ly-interaction-prototype .ly-phone button:disabled { opacity:.45; cursor:default; }
+#ly-interaction-prototype .ly-phone h1,#ly-interaction-prototype .ly-phone h2,#ly-interaction-prototype .ly-phone h3,#ly-interaction-prototype .ly-phone p { margin:0; }
+#ly-interaction-prototype .ly-phone h1 { font-size:32px; line-height:1.3; letter-spacing:-.8px; font-weight:650; }
+#ly-interaction-prototype .ly-phone h2 { font-size:24px; line-height:1.4; font-weight:650; }
+#ly-interaction-prototype .ly-phone h3 { font-size:18px; font-weight:600; }
+#ly-interaction-prototype .ly-statusbar { height:34px; padding:8px 24px 0; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; }
+#ly-interaction-prototype .ly-status-icons { display:flex; gap:5px; }
+#ly-interaction-prototype .ly-status-icons svg { width:14px; height:14px; }
+#ly-interaction-prototype #ly-screen { height:690px; position:relative; }
+#ly-interaction-prototype .ly-navigation { height:24px; display:grid; place-items:center; }
+#ly-interaction-prototype .ly-navigation span { width:108px; height:4px; background:var(--ly-ink); border-radius:4px; opacity:.8; }
+#ly-interaction-prototype .ly-page { display:flex; flex-direction:column; height:100%; position:relative; }
+#ly-interaction-prototype .ly-header { padding:10px 20px; min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+#ly-interaction-prototype .ly-brand { display:flex; align-items:center; gap:11px; font-size:23px; font-weight:650; letter-spacing:1px; }
+#ly-interaction-prototype .ly-logo { display:block; width:42px; height:42px; border-radius:12px; background:#F7F4EE url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACSUlEQVR4nOybYU7bMBTH/3Z6DzwJpK7iCEMLJ1knDWm3WLnFPkxabkKQdgTUVRSJcI/GD7sEBKjUJo1Tovd+Xyo1bmr/4/fy/PyswRwN5rAXYBTbcDwem1rrnICDjQ20vry5uirRA4fHxzms/brpmgLuSOsqti9RAhxNJtNa4W/zBxsha2fuo0QfuMErhdlblxXZ6nAyKW7m83MEiDOBZvADwjiBpn7WhhoGBfBPH8PErEYjE2oU7QOGiLLWhNq0EiCr7afFYlFhTzS2/cK+104607d4J/IaREKuz06miugAu3HpbLn6/LuskIAkAqwHjubNoRR2ZVTXWP74cnr051+JjkliAk+D7xBSKsmrODgDMmvLldYzRPL/Z27gnljXOFGNv/c2UyB6FRy5iBDh+3aLm6q5m/YXSAFR52bQTxzQouNJhXyGLIfBHBEAzBEBwBwRAMwRAcAcEQDMEQHAnOByeL0voPDr+XcuK3y6z6zwJpqs8MvlM+F8OZ8X234Xmw8wGAYG70R8AJgjThAtcFnib277udeagLfwzs/3Z4V2Gd5WAjztzVv7HXvGF21sqxUIETQBisitf1Ri+h4UoJniFYZHVJlMlBP0gY/Ts8RwhCge+hwmygc0UV/UDfumifQKtETiADBHBABzRAAwRwQAc0QAMEcEAHNEADBHkqLoA6Uulmcn+Ih0PgN8aTsSMYhqcV/MTAlSZ5QoHZemXJ6oSNDh4BG4NnReLf6IL23P6jrf9cQIKXVXZ1mZ6sRIMgGGgsQBYM49AAAA///1QdwOAAAABklEQVQDAKdeuBQ2OrmlAAAAAElFTkSuQmCC") center/38px no-repeat; flex-shrink:0; }
+#ly-interaction-prototype .ly-logo-app { width:58px; height:58px; border-radius:17px; background:#F7F4EE url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACSUlEQVR4nOybYU7bMBTH/3Z6DzwJpK7iCEMLJ1knDWm3WLnFPkxabkKQdgTUVRSJcI/GD7sEBKjUJo1Tovd+Xyo1bmr/4/fy/PyswRwN5rAXYBTbcDwem1rrnICDjQ20vry5uirRA4fHxzms/brpmgLuSOsqti9RAhxNJtNa4W/zBxsha2fuo0QfuMErhdlblxXZ6nAyKW7m83MEiDOBZvADwjiBpn7WhhoGBfBPH8PErEYjE2oU7QOGiLLWhNq0EiCr7afFYlFhTzS2/cK+104607d4J/IaREKuz06miugAu3HpbLn6/LuskIAkAqwHjubNoRR2ZVTXWP74cnr051+JjkliAk+D7xBSKsmrODgDMmvLldYzRPL/Z27gnljXOFGNv/c2UyB6FRy5iBDh+3aLm6q5m/YXSAFR52bQTxzQouNJhXyGLIfBHBEAzBEBwBwRAMwRAcAcEQDMEQHAnOByeL0voPDr+XcuK3y6z6zwJpqs8MvlM+F8OZ8X234Xmw8wGAYG70R8AJgjThAtcFnib277udeagLfwzs/3Z4V2Gd5WAjztzVv7HXvGF21sqxUIETQBisitf1Ri+h4UoJniFYZHVJlMlBP0gY/Ts8RwhCge+hwmygc0UV/UDfumifQKtETiADBHBABzRAAwRwQAc0QAMEcEAHNEADBHkqLoA6Uulmcn+Ih0PgN8aTsSMYhqcV/MTAlSZ5QoHZemXJ6oSNDh4BG4NnReLf6IL23P6jrf9cQIKXVXZ1mZ6sRIMgGGgsQBYM49AAAA///1QdwOAAAABklEQVQDAKdeuBQ2OrmlAAAAAElFTkSuQmCC") center/49px no-repeat; }
+#ly-interaction-prototype .ly-icon-button { min-width:44px; height:44px; border:0; background:transparent; display:inline-flex; align-items:center; justify-content:center; border-radius:12px; padding:10px; }
+#ly-interaction-prototype .ly-icon-button svg { width:21px; height:21px; }
+#ly-interaction-prototype .ly-icon-button:hover { background:var(--ly-soft); }
+#ly-interaction-prototype .ly-content { flex:1; min-height:0; overflow:auto; padding:16px 24px 22px; }
+#ly-interaction-prototype .ly-home-content { padding-top:30px; }
+#ly-interaction-prototype .ly-description { color:var(--ly-muted); font-size:15px; margin-top:14px !important; line-height:1.75; }
+#ly-interaction-prototype .ly-footer { padding:16px 24px 24px; flex-shrink:0; }
+#ly-interaction-prototype .ly-primary { display:flex; align-items:center; justify-content:center; gap:9px; border:0; background:var(--ly-ink); color:var(--ly-paper) !important; width:100%; padding:14px 16px; min-height:54px; border-radius:calc(var(--ly-radius) - 6px); font-weight:600 !important; }
+#ly-interaction-prototype .ly-secondary { display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; width:100%; padding:10px 14px; background:var(--ly-soft); border:1px solid transparent; border-radius:14px; }
+#ly-interaction-prototype .ly-text-button { display:flex; align-items:center; justify-content:center; gap:6px; border:0; background:transparent; min-height:44px; padding:8px 12px; color:var(--ly-muted) !important; }
+#ly-interaction-prototype .ly-primary svg,#ly-interaction-prototype .ly-secondary svg { width:19px; height:19px; flex-shrink:0; }
+#ly-interaction-prototype .ly-illustration { position:relative; margin:36px 0 0; height:270px; }
+#ly-interaction-prototype .ly-mini-page { position:absolute; width:154px; height:236px; left:calc(50% - 77px); top:11px; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:7px; overflow:hidden; padding:17px; box-shadow:0 10px 24px #252B2A12; }
+#ly-interaction-prototype .ly-mini-visual { height:74px; background:var(--ly-soft); border-radius:3px; margin:12px 0; position:relative; overflow:hidden; }
+#ly-interaction-prototype .ly-mini-visual::before { content:""; position:absolute; width:86px; height:86px; border-radius:50%; background:var(--ly-accent); right:-12px; top:20px; opacity:.5; }
+#ly-interaction-prototype .ly-mini-visual::after { content:""; position:absolute; background:var(--ly-ink); opacity:.2; width:75px; height:75px; transform:rotate(30deg); left:-12px; top:35px; border-radius:14px; }
+#ly-interaction-prototype .ly-mini-page b { font-size:11px; letter-spacing:.2px; }
+#ly-interaction-prototype .ly-mini-lines { height:5px; width:100%; background:var(--ly-line); border-radius:2px; margin:7px 0; }
+#ly-interaction-prototype .ly-mini-lines.short { width:68%; }
+#ly-interaction-prototype .ly-frame { position:absolute; width:210px; height:170px; left:calc(50% - 105px); top:0; }
+#ly-interaction-prototype .ly-corner { position:absolute; width:23px; height:23px; border-color:var(--ly-ink); border-style:solid; border-width:0; border-radius:4px; }
+#ly-interaction-prototype .ly-corner.a { top:0; left:0; border-left-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.b { top:0; right:0; border-right-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.c { bottom:0; left:0; border-left-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-corner.d { bottom:0; right:0; border-right-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-denied { color:var(--ly-accent-text); font-size:14px; margin-top:12px !important; }
+#ly-interaction-prototype .ly-home-draft .ly-content { flex:0 0 auto; padding-top:38px; }
+#ly-interaction-prototype .ly-home-draft h1 { font-size:28px; }
+#ly-interaction-prototype .ly-draft-card { background:var(--ly-surface); border:1px solid var(--ly-line); padding:18px; border-radius:var(--ly-radius); margin-top:26px; display:flex; align-items:center; gap:18px; }
+#ly-interaction-prototype .ly-draft-thumb { width:86px; height:126px; overflow:hidden; flex-shrink:0; display:flex; justify-content:center; align-items:center; }
+#ly-interaction-prototype .ly-thumb-image { position:relative; box-shadow:0 1px 6px #00000022; }
+#ly-interaction-prototype .ly-draft-meta { font-size:14px; color:var(--ly-muted); margin-top:9px !important; white-space:nowrap; }
+#ly-interaction-prototype #ly-overlay { position:absolute; inset:34px 0 24px; pointer-events:none; z-index:10; }
+#ly-interaction-prototype .ly-scrim { position:absolute; inset:0; background:#151A1966; display:flex; align-items:flex-end; pointer-events:auto; }
+#ly-interaction-prototype .ly-sheet { padding:8px 24px 24px; width:100%; background:var(--ly-paper); border-radius:calc(var(--ly-radius) + 4px) calc(var(--ly-radius) + 4px) 0 0; max-height:94%; overflow:auto; box-shadow:0 -8px 30px #00000012; }
+#ly-interaction-prototype .ly-sheet-handle { width:36px; height:4px; border-radius:4px; background:var(--ly-line); margin:3px auto 14px; }
+#ly-interaction-prototype .ly-sheet-title { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:9px; }
+#ly-interaction-prototype .ly-sheet-title h2 { font-size:22px; }
+#ly-interaction-prototype .ly-sheet .ly-primary { margin-top:22px; }
+#ly-interaction-prototype .ly-sheet .ly-secondary { margin-top:10px; }
+#ly-interaction-prototype .ly-sheet .ly-description { margin-top:8px !important; font-size:14px; }
+#ly-interaction-prototype .ly-device-path { border-left:2px solid var(--ly-accent); padding:2px 0 2px 14px; margin:24px 0; }
+#ly-interaction-prototype .ly-device-path span { font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-device-path p { font-size:14px; line-height:1.8; margin-top:5px; }
+#ly-interaction-prototype .ly-details { border-bottom:1px solid var(--ly-line); margin:12px 0; }
+#ly-interaction-prototype .ly-details summary { min-height:48px; padding:12px 0; cursor:pointer; font-size:14px; }
+#ly-interaction-prototype .ly-details p { font-size:14px; color:var(--ly-muted); line-height:1.8; padding-bottom:14px; }
+#ly-interaction-prototype .ly-advanced { margin-top:16px; }
+#ly-interaction-prototype .ly-command { white-space:pre-wrap; word-break:break-all; padding:16px; background:var(--ly-soft); color:var(--ly-ink); border-radius:12px; font-size:12px; }
+#ly-interaction-prototype .ly-system { background:light-dark(#FBFCFF,#20232A); }
+#ly-interaction-prototype .ly-system .ly-header { padding-left:10px; }
+#ly-interaction-prototype .ly-system .ly-header h3 { flex:1; }
+#ly-interaction-prototype .ly-system-row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:22px 16px; background:light-dark(#EEF1FA,#2F3440); border-radius:22px; margin:24px 0; }
+#ly-interaction-prototype .ly-system input[type="checkbox"] { width:24px; height:24px; flex-shrink:0; accent-color:light-dark(#365EC7,#ACC3FF); }
+#ly-interaction-prototype .ly-system-dialog { background:light-dark(#F1F3FC,#303541); border-radius:24px; padding:24px; width:calc(100% - 40px); margin:auto; box-shadow:0 16px 35px #00000022; }
+#ly-interaction-prototype .ly-system-dialog h2 { font-size:22px; }
+#ly-interaction-prototype .ly-system-dialog p { font-size:14px; margin:14px 0 22px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-system-actions { display:flex; justify-content:flex-end; gap:8px; }
+#ly-interaction-prototype .ly-system-action { background:transparent; border:0; color:light-dark(#274FAB,#B8CCFF) !important; min-height:44px; padding:8px 14px; font-weight:600; }
+#ly-interaction-prototype .ly-desktop { background:var(--ly-soft); justify-content:space-between; padding:38px 24px 28px; }
+#ly-interaction-prototype .ly-desktop-time { font-size:52px; line-height:1.15; font-weight:400; letter-spacing:-2px; }
+#ly-interaction-prototype .ly-app-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 8px; margin-top:34px; }
+#ly-interaction-prototype .ly-app { border:0; background:transparent; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px !important; padding:8px 0; }
+#ly-interaction-prototype .ly-app-square { width:58px; height:58px; display:grid; place-items:center; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:17px; }
+#ly-interaction-prototype .ly-app-square svg { width:27px; height:27px; }
+#ly-interaction-prototype .ly-desktop-hint { background:var(--ly-paper); padding:17px 19px; border-radius:18px; font-size:14px; }
+#ly-interaction-prototype .ly-browser-header { padding:10px 12px; display:flex; gap:6px; align-items:center; background:var(--ly-surface); min-height:62px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-address { display:flex; align-items:center; gap:6px; background:var(--ly-soft); flex:1; min-width:0; padding:9px 10px; border-radius:22px; font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-address svg { width:13px; height:13px; flex-shrink:0; }
+#ly-interaction-prototype .ly-target-scroll { flex:1; min-height:0; overflow:auto; background:#F5F1E5; }
+#ly-interaction-prototype .ly-article { width:320px; height:1620px; padding:26px 25px; background:#F5F1E5; color:#252B2A; overflow:hidden; font:400 15px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+#ly-interaction-prototype .ly-target-scroll .ly-article { width:100%; }
+#ly-interaction-prototype .ly-article .ly-article-kicker { font-size:11px; letter-spacing:2px; color:#616C60; margin-bottom:16px; }
+#ly-interaction-prototype .ly-article h2 { font-size:29px; line-height:1.4; letter-spacing:-.6px; }
+#ly-interaction-prototype .ly-article .ly-article-intro { color:#5D665F; font-size:14px; margin:15px 0 21px; }
+#ly-interaction-prototype .ly-landscape { height:174px; background:#D8DFC9; position:relative; overflow:hidden; border-radius:3px; }
+#ly-interaction-prototype .ly-sun { position:absolute; width:60px; height:60px; border-radius:50%; background:#D97C53; top:26px; right:37px; }
+#ly-interaction-prototype .ly-hill { position:absolute; border-radius:50%; width:270px; height:160px; background:#86977E; bottom:-56px; left:-63px; transform:rotate(-19deg); }
+#ly-interaction-prototype .ly-hill.second { background:#5A7365; left:128px; bottom:-87px; height:190px; }
+#ly-interaction-prototype .ly-path { position:absolute; background:#F5E3BE; width:18px; height:210px; border-radius:50%; transform:rotate(30deg); bottom:-130px; left:55%; }
+#ly-interaction-prototype .ly-article .ly-article-section { padding-top:24px; border-bottom:1px solid #D6DACA; padding-bottom:23px; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 { font-size:18px; margin-bottom:12px; display:flex; gap:10px; align-items:center; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 span { font-size:11px; color:#7A6651; }
+#ly-interaction-prototype .ly-article .ly-article-section p { font-size:14px; margin-top:10px; color:#5D665F; }
+#ly-interaction-prototype .ly-article-note { margin-top:17px; border-left:2px solid #D97C53; padding-left:12px; font-size:13px; color:#616C60; }
+#ly-interaction-prototype .ly-article-end { padding-top:24px; font-size:13px; color:#616C60; }
+#ly-interaction-prototype .ly-bubble { position:absolute; right:8px; z-index:5; display:flex; align-items:center; justify-content:center; gap:7px; min-height:52px; border:1px solid var(--ly-line); border-radius:18px; padding:10px 13px; background:var(--ly-paper); box-shadow:0 4px 16px #00000018; font-size:13px !important; touch-action:none; }
+#ly-interaction-prototype .ly-bubble svg { width:19px; height:19px; }
+#ly-interaction-prototype .ly-bubble.recording { background:var(--ly-ink); color:var(--ly-paper); border-color:var(--ly-ink); }
+#ly-interaction-prototype .ly-live-dot { width:6px; height:6px; border-radius:50%; background:var(--ly-accent); }
+#ly-interaction-prototype .ly-hidden-button { position:absolute; right:12px; bottom:16px; }
+#ly-interaction-prototype .ly-result-header { min-height:60px; padding:8px 10px; }
+#ly-interaction-prototype .ly-result-header h3 { flex:1; }
+#ly-interaction-prototype .ly-result-meta { padding:0 20px 12px; font-size:13px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-result-meta[role="alert"] { color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-result-area { position:relative; flex:1; min-height:0; background:var(--ly-soft); }
+#ly-interaction-prototype .ly-result-scroll { overflow:auto; height:100%; padding:16px; }
+#ly-interaction-prototype .ly-preview-space { position:relative; flex-shrink:0; margin:0 auto; box-shadow:0 2px 9px #00000016; }
+#ly-interaction-prototype .ly-preview-clip { position:absolute; inset:0; overflow:hidden; background:#F5F1E5; }
+#ly-interaction-prototype .ly-preview-source { position:absolute; top:0; left:0; transform-origin:0 0; }
+#ly-interaction-prototype .ly-view-menu { position:absolute; z-index:6; right:12px; top:56px; width:150px; padding:6px; border:1px solid var(--ly-line); border-radius:16px; background:var(--ly-paper); box-shadow:0 6px 24px #00000020; }
+#ly-interaction-prototype .ly-menu-item { display:flex; align-items:center; gap:10px; width:100%; min-height:46px; border:0; border-radius:10px; background:transparent; padding:10px; text-align:left; font-size:14px !important; }
+#ly-interaction-prototype .ly-menu-item:hover { background:var(--ly-soft); }
+#ly-interaction-prototype .ly-result-notice { padding:8px 20px 12px; font-size:13px; display:flex; gap:7px; align-items:center; }
+#ly-interaction-prototype .ly-result-notice svg { width:16px; height:16px; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-result-actions { display:grid; grid-template-columns:64px minmax(0,1fr) 64px; gap:8px; padding:16px; border-top:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-result-actions .ly-secondary { flex-direction:column; gap:4px; font-size:12px; min-height:60px; padding:6px; }
+#ly-interaction-prototype .ly-result-actions .ly-primary { padding:12px 8px; font-size:14px; }
+#ly-interaction-prototype .ly-result-actions .ly-primary:disabled { opacity:1; background:var(--ly-soft); color:var(--ly-muted) !important; }
+#ly-interaction-prototype .ly-editor-header { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; min-height:60px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-apply { border:0; border-radius:13px; background:var(--ly-ink); color:var(--ly-paper) !important; padding:9px 15px; min-height:44px; }
+#ly-interaction-prototype .ly-editor-stage { flex:1; min-height:0; background:var(--ly-soft); padding:22px 29px; overflow:auto; position:relative; }
+#ly-interaction-prototype .ly-editor-stage.ly-overview { display:flex; justify-content:center; align-items:center; }
+#ly-interaction-prototype .ly-edit-image { position:relative; flex-shrink:0; margin:0 auto; touch-action:auto; }
+#ly-interaction-prototype .ly-crop-shade { position:absolute; border:2px solid var(--ly-accent); box-shadow:0 0 0 800px #15211C55; pointer-events:none; }
+#ly-interaction-prototype .ly-crop-handle { width:44px; height:44px; position:absolute; border:0; background:transparent; transform:translate(-50%,-50%); padding:0; touch-action:none; pointer-events:auto; }
+#ly-interaction-prototype .ly-crop-handle::after { content:""; display:block; width:11px; height:11px; background:var(--ly-accent); border:2px solid #F7F4EE; border-radius:2px; margin:auto; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tl"] { left:0;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tr"] { left:100%;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="bl"] { left:0;top:100%; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="br"] { left:100%;top:100%; }
+#ly-interaction-prototype .ly-editor-controls { padding:12px 16px 16px; border-top:1px solid var(--ly-line); background:var(--ly-paper); }
+#ly-interaction-prototype .ly-editor-hint { text-align:center; font-size:13px; color:var(--ly-muted); margin-bottom:8px; }
+#ly-interaction-prototype .ly-control-row { display:flex; gap:4px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+#ly-interaction-prototype .ly-crop-history { display:flex; align-items:center; gap:0; }
+#ly-interaction-prototype .ly-crop-history .ly-text-button { padding:8px; }
+#ly-interaction-prototype .ly-control-row>.ly-text-button { padding:8px; font-size:13px; }
+#ly-interaction-prototype .ly-setting-row { display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; background:transparent; border:0; min-height:62px; padding:14px 0; border-bottom:1px solid var(--ly-line); text-align:left; }
+#ly-interaction-prototype .ly-setting-row input { width:22px; height:22px; accent-color:var(--ly-ink); }
+#ly-interaction-prototype .ly-inline-hint { font-size:13px; color:var(--ly-muted); padding-top:10px; padding-bottom:20px; }
+#ly-interaction-prototype .ly-share-apps { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:17px 0 7px; }
+#ly-interaction-prototype .ly-share-apps button { border:0; background:transparent; display:flex; align-items:center; flex-direction:column; gap:9px; font-size:12px; padding:9px 0; }
+#ly-interaction-prototype .ly-share-apps button span { width:52px; height:52px; background:var(--ly-soft); display:grid; place-items:center; border-radius:16px; }
+#ly-interaction-prototype .ly-share-apps svg { width:23px; height:23px; }
+#ly-interaction-prototype .ly-steps { display:grid; gap:18px; padding-left:22px; margin:8px 0 32px; }
+#ly-interaction-prototype .ly-steps li { font-size:15px; padding-left:6px; }
+@media(max-width:350px) { #ly-interaction-prototype .ly-phone { border-radius:24px; } #ly-interaction-prototype .ly-content { padding-left:20px; padding-right:20px; } #ly-interaction-prototype .ly-phone h1 { font-size:29px; } #ly-interaction-prototype .ly-footer { padding:14px 20px 20px; } #ly-interaction-prototype .ly-illustration { height:250px; } #ly-interaction-prototype .ly-sheet { padding-left:20px;padding-right:20px; } }
+@media(prefers-reduced-motion:reduce) { #ly-interaction-prototype * { scroll-behavior:auto !important; } }
+
+</style>
+<script>
+(function (scope) {
+  'use strict';
+  const copy = value => JSON.parse(JSON.stringify(value));
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  function cleanEdit(edit) {
+    const c = edit.crop;
+    const x = clamp(c.x, 0, .9), y = clamp(c.y, 0, .9);
+    return {crop:{x,y,w:clamp(c.w,.1,1-x),h:clamp(c.h,.1,1-y)}};
+  }
+  function draft(frames, interrupted=false) {
+    return {frames,height:540+(frames-1)*360,interrupted,saved:false,savedEdit:null,shared:false,
+      history:[{crop:{x:0,y:0,w:1,h:1}}],index:0};
+  }
+  function create(scenario='first',vendor='xiaomi') {
+    const ready = !['first','denied','android10'].includes(scenario);
+    return {scenario,vendor,screen:'home',permission:ready,bubble:ready,legacy:scenario==='android10',pendingStart:false,
+      projection:false,denied:scenario==='denied',frames:0,draft:['draft','savefail'].includes(scenario)?draft(4):null,
+      failConsumed:false,exportStatus:'idle',sheet:null};
+  }
+  function grant(s, allowed) {
+    s.permission=allowed; s.bubble=allowed; s.denied=!allowed;
+    s.screen='home'; s.sheet=null;
+  }
+  function disable(s) { s.permission=false; s.bubble=false; s.projection=false; }
+  function startCapture(s) {
+    s.frames=1; s.screen='capturing'; s.sheet=null; s.exportStatus='idle';
+  }
+  function stepCapture(s) { if(s.screen==='capturing') s.frames=Math.min(4,s.frames+1); }
+  function finishCapture(s, interrupted=false) {
+    s.draft=draft(Math.max(1,s.frames),interrupted); s.screen='result'; s.sheet=null;
+  }
+  function current(s) { return s.draft?copy(s.draft.history[s.draft.index]):null; }
+  const signature=edit=>JSON.stringify(cleanEdit(edit));
+  function refreshSaved(s){if(s.draft)s.draft.saved=s.draft.savedEdit===signature(current(s));}
+  function commit(s, edit) {
+    if(!s.draft) return;
+    s.draft.history=s.draft.history.slice(0,s.draft.index+1);
+    s.draft.history.push(cleanEdit(edit)); s.draft.index++;
+    refreshSaved(s);s.draft.shared=false;
+  }
+  function undo(s) { if(s.draft&&s.draft.index>0){s.draft.index--;refreshSaved(s);s.draft.shared=false;} }
+  function redo(s) { if(s.draft&&s.draft.index<s.draft.history.length-1){s.draft.index++;refreshSaved(s);s.draft.shared=false;} }
+  function exportResult(s, type, success) {
+    s.exportStatus=success?'success':'failed';
+    if(success&&s.draft){if(type==='save'){s.draft.savedEdit=signature(current(s));s.draft.saved=true;}else s.draft.shared=true;}
+  }
+  function needsProtection(s) { return !!s.draft&&!s.draft.saved; }
+  function clearDraft(s) { s.draft=null;s.screen='home';s.sheet=null;s.exportStatus='idle'; }
+  const api={create,grant,disable,startCapture,stepCapture,finishCapture,current,commit,undo,redo,exportResult,needsProtection,clearDraft,cleanEdit,refreshSaved};
+  if(typeof module!=='undefined'&&module.exports) module.exports=api;
+  else scope.LianyePrototypeModel=api;
+})(globalThis);
+
+(function(scope){
+  'use strict';
+  const devices={
+    xiaomi:{label:'小米 / Redmi',resource:'xiaomi',short:'无障碍 → 通用 → 已下载的服务 → 连页',full:'设置 → 更多设置 → 无障碍 → 通用 → 已下载的服务 → 连页'},
+    oppo:{label:'OPPO / 一加 / realme',resource:'oppo',short:'无障碍 → 通用 → 已下载的应用 → 连页',full:'设置 → 其他设置 → 无障碍 → 通用 → 已下载的应用 → 连页'},
+    vivo:{label:'vivo / iQOO',resource:'vivo',short:'无障碍 → 已下载的服务 → 连页',full:'设置 → 快捷与辅助 → 无障碍 → 已下载的服务 → 连页'},
+    huawei:{label:'华为 / 荣耀',resource:'huawei',short:'无障碍 → 已安装的服务 → 连页',full:'设置 → 辅助功能 → 无障碍 → 已安装的服务 → 连页'},
+    samsung:{label:'三星',resource:'samsung',short:'辅助功能 → 已安装的应用程序 → 连页',full:'设置 → 辅助功能 → 已安装的应用程序 → 连页'},
+    aosp:{label:'原生 / 其他安卓',resource:'aosp',short:'无障碍 → 已下载的应用 → 连页',full:'设置 → 无障碍 → 已下载的应用 → 连页'}
+  };
+  const api={devices,get:vendor=>devices[vendor]||devices.aosp,valid:vendor=>Object.hasOwn(devices,vendor)};
+  if(typeof module!=='undefined'&&module.exports)module.exports=api;else scope.LianyeDeviceHelp=api;
+})(globalThis);
+
+(function () {
+  'use strict';
+  const root=document.getElementById('ly-interaction-prototype');if(!root)return;
+  const screen=root.querySelector('#ly-screen'),overlay=root.querySelector('#ly-overlay');
+  const scenarioSelect=root.querySelector('#ly-scenario'),vendorSelect=root.querySelector('#ly-vendor');
+  const M=globalThis.LianyePrototypeModel,H=globalThis.LianyeDeviceHelp,copy=v=>JSON.parse(JSON.stringify(v));
+  let s=M.create(),editing=false,temp=null,cropOverview=false,cropHistory=[],cropIndex=0;
+  let zoom=1,viewMenu=false,captureTimer=null,exportTimer=null,drag=null,returnFocus=null;
+  let bubbleY=245,bubbleSide='right',lastWidth=0,sequence=0,lastStamp=null;
+  const instance=Math.random().toString(36).slice(2),design={radius:22,appearance:'system'};
+  const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icon=n=>`<i data-lucide="${n}" aria-hidden="true"></i>`;
+  const button=(action,label,cls='ly-primary',extra='')=>`<button type="button" class="${cls}" data-action="${action}" ${extra}>${label}</button>`;
+  const ib=(a,n,label,extra='')=>button(a,icon(n),'ly-icon-button',`aria-label="${label}" ${extra}`);
+  const announce=text=>{root.querySelector('#ly-announcement').textContent=text;};
+  const icons=()=>{globalThis.lucide?.createIcons({attrs:{width:16,height:16}});};
+  function remember(){
+    const api=window.openai;if(!api?.setWidgetState)return;
+    const experience=copy(s);
+    if(experience.draft&&JSON.stringify(experience).length>11000){experience.draft.history=[M.current(s)];experience.draft.index=0;}
+    const privateContent={version:2,stamp:instance+':'+(++sequence),experience,appearance:design.appearance,zoom,bubbleY,bubbleSide};
+    const value={modelContent:{product:'连页',scenario:s.scenario,vendor:s.vendor,screen:s.screen,hasDraft:!!s.draft},privateContent};
+    if(JSON.stringify(value).length>15000)return;lastStamp=privateContent.stamp;
+    try{api.setWidgetState(value)?.catch?.(()=>{});}catch{}
+  }
+  function stopTimers(){clearInterval(captureTimer);clearTimeout(exportTimer);captureTimer=null;exportTimer=null;}
+  function article(){return `<article class="ly-article" aria-label="示例内容：周末散步指南">
+    <div class="ly-article-kicker">慢一点 · 周末提案</div><h2>留一个下午，<br>沿着河边走走。</h2>
+    <p class="ly-article-intro">不用安排很满。带一瓶水，穿一双舒服的鞋，把时间留给路边的风景。</p>
+    <div class="ly-landscape" role="img" aria-label="河畔丘陵与落日插画"><span class="ly-sun"></span><span class="ly-hill"></span><span class="ly-hill second"></span><span class="ly-path"></span></div>
+    <div class="ly-article-section"><h3><span>01</span> 从旧桥出发</h3><p>穿过桥头的小广场，沿河向东走。树荫下的石板路很平缓，适合边走边看。</p><p>第一段不必赶路。听听水声，看一看桥下的倒影，在想停下的地方停一会儿。</p></div>
+    <div class="ly-article-section"><h3><span>02</span> 找一处树荫</h3><p>经过第三张长椅，路边会出现一片低矮的树林。带来的水和小点心，刚好可以在这里派上用场。</p><div class="ly-article-note">随手记：走走停停，比一路赶到终点更适合这个下午。</div></div>
+    <div class="ly-article-section"><h3><span>03</span> 等一束傍晚的光</h3><p>河湾开阔处没有遮挡。太阳低下来时，水面上会出现一条长长的光带。</p><p>可以拍一张照片，也可以把手机收起来。让这一刻只是一个安静的傍晚。</p></div>
+    <div class="ly-article-section"><h3><span>04</span> 慢慢走回去</h3><p>回程沿原路走，熟悉的风景换了光线，又像一条新的路。趁天色还亮，回家吃一顿简单的晚饭。</p></div>
+    <p class="ly-article-end">一个下午，一段不急着走完的路。</p>
+  </article>`;}
+  function mini(){return `<b>周末散步指南</b><div class="ly-mini-visual"></div>${Array.from({length:6},(_,i)=>`<div class="ly-mini-lines ${i===5?'short':''}"></div>`).join('')}`;}
+  function sourceHTML(scale){return `<div class="ly-preview-source" style="width:320px;height:${s.draft.height}px;transform:scale(${scale})">${article()}</div>`;}
+  function draftThumb(){const c=M.current(s).crop,scale=Math.min(86/(320*c.w),126/(s.draft.height*c.h));
+    return `<div class="ly-draft-thumb" aria-label="当前长图缩略图"><div class="ly-thumb-image" style="width:${320*c.w*scale}px;height:${s.draft.height*c.h*scale}px"><div class="ly-preview-clip">${sourceHTML(scale)}</div></div></div>`;}
+  function home(){const d=s.draft;return `<div class="ly-page ${d?'ly-home-draft':''}">
+    <header class="ly-header"><div class="ly-brand"><span class="ly-logo" role="img" aria-label="连页标识"></span>连页</div>${button('settings','帮助','ly-text-button')}</header>
+    <main class="ly-content ly-home-content"><h1>${d?'继续上次截图':'一屏之外，<br>完整留下。'}</h1>
+    ${d?`<div class="ly-draft-card">${draftThumb()}<div><h3>当前长图</h3><p class="ly-draft-meta">${d.frames} 屏 · ${d.saved?'已保存':'未保存'}</p></div></div>`:
+      `<p class="ly-description">自动滚动，接成一张长图。</p><div class="ly-illustration" aria-label="长图越过单屏取景边界的示意" role="img"><div class="ly-mini-page">${mini()}</div><div class="ly-frame"><span class="ly-corner a"></span><span class="ly-corner b"></span><span class="ly-corner c"></span><span class="ly-corner d"></span></div></div>`}
+    ${s.denied?'<p class="ly-denied" role="alert">截图服务未开启</p>':''}</main>
+    <footer class="ly-footer">${button(d?'resume':'start',icon(d?'file-image':'scan-line')+(d?'继续编辑':s.permission?'去截图':'开始长截图'))}
+    ${d?button('new','新建截图','ly-text-button',`style="width:100%;margin-top:6px" ${s.exportStatus==='saving'?'disabled':''}`):''}</footer></div>`;}
+  function system(){return `<div class="ly-page ly-system"><header class="ly-header">${ib('system-back','arrow-left','返回连页')}<h3>无障碍 · 连页</h3></header>
+    <main class="ly-content"><span class="ly-logo-app ly-logo" style="margin:18px 0"></span><h2>使用连页</h2>
+    <label class="ly-system-row"><span>允许连页使用无障碍服务</span><input id="ly-system-enable" type="checkbox" ${s.permission?'checked':''} aria-label="开启连页无障碍服务"></label>
+    <p class="ly-description">此服务可截取屏幕画面并执行滚动。</p></main></div>`;}
+  function desktop(){return `<div class="ly-page ly-desktop"><div><div class="ly-desktop-time">9:41</div><p class="ly-description">10 月 6 日 · 星期二</p><div class="ly-app-grid">
+    ${button('open-browser','<span class="ly-app-square">'+icon('globe-2')+'</span>浏览器','ly-app')}
+    ${button('home','<span class="ly-logo-app"></span>连页','ly-app')}
+    ${button('desktop-settings','<span class="ly-app-square">'+icon('settings')+'</span>系统设置','ly-app')}
+    </div></div><div class="ly-desktop-hint">打开页面，点侧边「截取」。</div></div>`;}
+  function target(){const capturing=s.screen==='capturing';return `<div class="ly-page"><header class="ly-browser-header">${ib('target-back','arrow-left','返回桌面')}<div class="ly-address">${icon('lock-keyhole')}周末散步指南</div>${ib('home','house','返回连页')}</header>
+    <div class="ly-target-scroll">${article()}</div>
+    ${s.bubble?`<button type="button" class="ly-bubble ${capturing?'recording':''}" data-action="${capturing?'stop':'capture'}" aria-label="${capturing?'结束截取':'开始截取，可拖动位置'}" style="top:${bubbleY}px;${bubbleSide==='left'?'left:8px;right:auto':''}">${capturing?'<span class="ly-live-dot"></span><span>'+s.frames+' 屏</span>':icon('scan-line')}${capturing?'结束':'截取'}</button>`:
+      `<div class="ly-hidden-button">${button('show-bubble','显示截图按钮','ly-secondary')}</div>`}</div>`;}
+  function result(){const c=M.current(s).crop,d=s.draft,scale=(screen.clientWidth-32)/(320*c.w)*zoom;
+    const busy=s.exportStatus==='saving',failed=s.exportStatus==='failed';
+    return `<div class="ly-page"><header class="ly-header ly-result-header">${ib('draft-home','arrow-left','返回首页，保留草稿')}<h3>长图</h3>${button('view',icon('scan-search')+'查看','ly-text-button',`aria-expanded="${viewMenu}"`)}</header>
+    <div class="ly-result-meta" role="${failed?'alert':'status'}">${busy?'正在保存…':failed?'保存失败，草稿已保留':d.saved?'已保存至相册':'未保存'}</div>
+    ${d.interrupted?'<div class="ly-result-notice">'+icon('info')+'截取中断，已保留 '+d.frames+' 屏</div>':''}
+    <main class="ly-result-area"><div class="ly-result-scroll" aria-label="长图预览，可滚动查看"><div class="ly-preview-space" style="width:${320*c.w*scale}px;height:${d.height*c.h*scale}px"><div class="ly-preview-clip">${sourceHTML(scale)}</div></div></div></main>
+    ${viewMenu?`<div class="ly-view-menu" aria-label="查看长图">${button('zoom-in',icon('zoom-in')+'放大','ly-menu-item')}${button('fit',icon('maximize')+'适合宽度','ly-menu-item')}${button('top',icon('arrow-up-to-line')+'回到顶部','ly-menu-item')}${button('bottom',icon('arrow-down-to-line')+'跳至底部','ly-menu-item')}</div>`:''}
+    <footer class="ly-result-actions">${button('crop',icon('crop')+'裁剪','ly-secondary',busy?'disabled':'')}${button('save',icon(busy?'loader-circle':d.saved?'check':'download')+(busy?'保存中…':d.saved?'已保存':failed?'重试':'保存图片'),'ly-primary',busy||d.saved?'disabled':'')}${button('share',icon('share-2')+'分享','ly-secondary',busy?'disabled':'')}</footer></div>`;}
+  function editor(){const c=temp.crop,width=(screen.clientWidth-58)/320,scale=cropOverview?Math.min(width,(screen.clientHeight-204)/s.draft.height):width;
+    return `<div class="ly-page"><header class="ly-editor-header">${button('cancel-edit','取消','ly-text-button')}<h3>裁剪</h3>${button('apply-edit','应用','ly-apply')}</header>
+    <div class="ly-editor-stage ${cropOverview?'ly-overview':''}"><div class="ly-edit-image" style="width:${320*scale}px;height:${s.draft.height*scale}px" data-scale="${scale}">${sourceHTML(scale)}
+    <div class="ly-crop-shade" style="left:${c.x*100}%;top:${c.y*100}%;width:${c.w*100}%;height:${c.h*100}%">${['tl','tr','bl','br'].map(corner=>`<button type="button" class="ly-crop-handle" data-corner="${corner}" aria-label="${({tl:'左上',tr:'右上',bl:'左下',br:'右下'})[corner]}裁剪角，方向键调整"></button>`).join('')}</div>
+    </div></div><footer class="ly-editor-controls"><div class="ly-editor-hint">拖动四角裁剪</div><div class="ly-control-row"><div class="ly-crop-history">${cropHistory.length>1?ib('crop-undo','undo-2','撤销裁剪',cropIndex===0?'disabled':'')+ib('crop-redo','redo-2','重做裁剪',cropIndex===cropHistory.length-1?'disabled':''):''}${button('crop-reset','还原','ly-text-button')}</div>${button('crop-zoom',icon(cropOverview?'zoom-in':'maximize')+(cropOverview?'放大调整':'查看全图'),'ly-text-button')}</div></footer></div>`;}
+  function pathBlock(full=false){const device=H.get(s.vendor);return `<div class="ly-device-path"><span>${esc(device.label)}</span><p>${esc(full?device.full:device.short)}</p></div>`;}
+  function fullPath(){return `<details class="ly-details"><summary>完整设置路径</summary><p>${esc(H.get(s.vendor).full)}</p><p>不同系统版本的菜单名称可能略有差异。</p></details>`;}
+  function settings(){return `<div class="ly-page"><header class="ly-header">${ib('home','arrow-left','返回首页')}<h3 style="flex:1">帮助与设置</h3></header><main class="ly-content">
+    <label class="ly-setting-row"><span>侧边截图按钮</span><input type="checkbox" id="ly-bubble-toggle" ${s.bubble?'checked':''} ${s.permission?'':'disabled'} aria-label="显示侧边截图按钮"></label>
+    ${button('disable','停用截图服务'+icon('chevron-right'),'ly-setting-row',s.permission?'':'disabled')}
+    <p class="ly-inline-hint">隐藏按钮后，截图服务仍开启。</p>
+    ${button('help','如何截图 / 开启帮助'+icon('chevron-right'),'ly-setting-row')}
+    <details class="ly-details"><summary>隐私与关于</summary><p>截取时读取画面并滚动页面，图片在本机处理。无需账号，不联网。</p><p>连页 · 开源 · MIT 许可</p></details></main></div>`;}
+  function help(){return `<div class="ly-page"><header class="ly-header">${ib('settings','arrow-left','返回帮助与设置')}<h3 style="flex:1">如何截图</h3></header><main class="ly-content">
+    <ol class="ly-steps"><li>打开要截取的页面。</li><li>点「截取」，随时点「结束」。</li><li>检查长图，保存或分享。</li></ol>
+    ${pathBlock()}${fullPath()}${button('help-system','前往设置','ly-secondary')}${button('restricted','无法开启？','ly-text-button','style="width:100%"')}
+    <details class="ly-details ly-advanced"><summary>仍有问题</summary>${button('app-info','应用信息'+icon('chevron-right'),'ly-setting-row')}${button('battery','电池与后台运行'+icon('chevron-right'),'ly-setting-row')}${button('adb','ADB 排障'+icon('chevron-right'),'ly-setting-row')}</details></main></div>`;}
+  function appInfo(){return `<div class="ly-page ly-system"><header class="ly-header">${ib('help','arrow-left','返回帮助')}<h3>应用信息</h3></header><main class="ly-content"><span class="ly-logo-app ly-logo" style="margin:18px 0"></span><h2>连页</h2><details class="ly-details"><summary>更多</summary>${button('allow-restricted','允许受限制的设置','ly-setting-row')}</details>${button('help-system','返回无障碍设置','ly-secondary','style="margin-top:24px"')}</main></div>`;}
+  function battery(){return `<div class="ly-page ly-system"><header class="ly-header">${ib('help','arrow-left','返回帮助')}<h3>电池设置</h3></header><main class="ly-content"><h2>连页</h2><label class="ly-system-row"><span>允许后台运行</span><input type="checkbox" aria-label="允许连页后台运行"></label><p class="ly-description">${esc(H.get(s.vendor).label)}的选项名称可能随系统版本变化。</p></main></div>`;}
+  function sheetFrame(title,body,actions=''){return `<div class="ly-scrim"><section class="ly-sheet" role="dialog" aria-modal="true" aria-label="${title}"><div class="ly-sheet-handle"></div><div class="ly-sheet-title"><h2>${title}</h2>${ib('close-sheet','x','关闭')}</div>${body}${actions}</section></div>`;}
+  function sheet(){switch(s.sheet){
+    case 'prepare':return sheetFrame('开启长截图','<p class="ly-description">允许截取画面与自动滚动，图片在本机处理。</p>'+pathBlock(),button('to-system','前往设置')+button('restricted','找不到入口？','ly-text-button','style="width:100%"'));
+    case 'consent':return `<div class="ly-scrim"><section class="ly-system-dialog" role="dialog" aria-modal="true" aria-label="系统授权"><h2>允许连页使用此服务？</h2><p>连页将能够截取屏幕画面并执行滚动。请仅为信任的应用开启。</p><div class="ly-system-actions">${button('system-deny','取消','ly-system-action')}${button('system-allow','允许','ly-system-action')}</div></section></div>`;
+    case 'projection':return `<div class="ly-scrim"><section class="ly-system-dialog" role="dialog" aria-modal="true" aria-label="屏幕捕获授权"><h2>开始屏幕捕获？</h2><p>连页可以访问屏幕上显示的内容。</p><div class="ly-system-actions">${button('projection-deny','取消','ly-system-action')}${button('projection-allow','开始','ly-system-action')}</div></section></div>`;
+    case 'restricted':return sheetFrame('开启帮助',pathBlock()+fullPath()+'<p class="ly-description">开关受限时：应用信息 → 更多 → 允许受限制的设置（若有）。</p>',button('app-info','打开应用信息')+button('help-system','返回无障碍设置','ly-secondary'));
+    case 'protect':return sheetFrame('当前长图未保存','<p class="ly-description">新截图会替换当前草稿。</p>',button('save-new','保存并新建')+button('discard-new','放弃并新建','ly-secondary'));
+    case 'share':return sheetFrame('分享图片',`<div class="ly-share-apps">${[['message-circle','聊天'],['mail','邮件'],['folder','文件']].map(([n,name])=>button('share-to','<span>'+icon(n)+'</span>'+name,'',`aria-label="分享到${name}"`)).join('')}</div>`);
+    case 'adb':return sheetFrame('ADB 排障','<p class="ly-description">连接电脑后，可用命令解除受限制设置。具体包名由安装版本提供。</p><pre class="ly-command"><code>adb shell appops set org.scrollloom ACCESS_RESTRICTED_SETTINGS allow</code></pre>',button('copy-adb','复制命令','ly-secondary'));
+    default:return '';
+  }}
+  function render({focus=true}={}){
+    const oldSheet=overlay.querySelector('[role="dialog"]')?.getAttribute('aria-label');
+    const active=document.activeElement,focusKey=active?.dataset.action,corner=active?.dataset.corner;
+    const scroll=screen.querySelector('.ly-result-scroll')?.scrollTop||screen.querySelector('.ly-editor-stage')?.scrollTop||0;
+    const pages={home,system,desktop,target,capturing:target,result,settings,help,'app-info':appInfo,battery};
+    screen.innerHTML=editing?editor():(pages[s.screen]||home)();overlay.innerHTML=sheet();
+    if(s.draft&&!editing){const c=M.current(s).crop;screen.querySelectorAll('.ly-preview-source').forEach(el=>{const scale=Number(el.style.transform.match(/scale\(([^)]+)/)?.[1]||1);el.style.left=-c.x*320*scale+'px';el.style.top=-c.y*s.draft.height*scale+'px';});}
+    const viewport=screen.querySelector(editing?'.ly-editor-stage':'.ly-result-scroll');if(viewport)viewport.scrollTop=scroll;
+    if(s.screen==='capturing'){const el=screen.querySelector('.ly-target-scroll');el.scrollTop=(s.frames-1)*310;}
+    icons();
+    const dialog=overlay.querySelector('[role="dialog"]');
+    if(focus&&dialog&&oldSheet!==dialog.getAttribute('aria-label')){returnFocus=focusKey||returnFocus;dialog.querySelector('button')?.focus();}
+    else if(focus&&corner)screen.querySelector(`[data-corner="${corner}"]`)?.focus();
+    else if(focus&&focusKey)root.querySelector(`[data-action="${focusKey}"]`)?.focus();
+  }
+  function closeSheet(){const was=s.sheet;s.sheet=null;if(['prepare','projection'].includes(was))s.pendingStart=false;render();if(returnFocus)root.querySelector(`[data-action="${returnFocus}"]`)?.focus();returnFocus=null;remember();}
+  function goCapture(){
+    if(!s.permission){s.pendingStart=true;s.sheet='prepare';}
+    else if(s.legacy&&!s.projection){s.pendingStart=true;s.sheet='projection';}
+    else{s.pendingStart=false;s.bubble=true;s.screen='desktop';s.sheet=null;}
+    render();
+  }
+  function finishCapture(interrupted=false){clearInterval(captureTimer);captureTimer=null;M.finishCapture(s,interrupted);zoom=1;viewMenu=false;render();announce(interrupted?'截取中断，已保留有效画面':'长图已生成');remember();}
+  function startCapture(){M.startCapture(s);render();remember();captureTimer=setInterval(()=>{M.stepCapture(s);if(s.scenario==='interrupt'&&s.frames===2)finishCapture(true);else if(s.frames===4)finishCapture();else{render({focus:false});remember();}},850);}
+  function replaceDraft(){if(s.exportStatus==='saving')return;M.clearDraft(s);editing=false;zoom=1;viewMenu=false;goCapture();}
+  function save(nextNew=false){
+    if(!s.draft||s.exportStatus==='saving'||s.draft.saved)return;
+    const exportingState=s,exportingDraft=s.draft;
+    s.sheet=null;s.exportStatus='saving';if(nextNew)s.screen='result';render();remember();
+    exportTimer=setTimeout(()=>{if(s!==exportingState||s.draft!==exportingDraft)return;const success=!(s.scenario==='savefail'&&!s.failConsumed);s.failConsumed=true;M.exportResult(s,'save',success);exportTimer=null;
+      if(success&&nextNew)replaceDraft();else render();announce(success?'已保存至相册':'保存失败，草稿已保留');remember();},700);
+  }
+  function openEdit(){editing=true;temp=M.current(s);cropOverview=false;cropHistory=s.draft.history.map(copy);cropIndex=s.draft.index;viewMenu=false;render();}
+  function pushCrop(){const clean=M.cleanEdit(temp);if(JSON.stringify(clean)!==JSON.stringify(cropHistory[cropIndex])){cropHistory=cropHistory.slice(0,cropIndex+1);cropHistory.push(copy(clean));cropIndex++;}temp=clean;}
+  function finishEdit(apply){if(apply&&JSON.stringify(temp)!==JSON.stringify(M.current(s))){M.commit(s,temp);s.exportStatus='idle';}editing=false;temp=null;render();screen.querySelector('[data-action="crop"]')?.focus();}
+  function updateCrop(){const c=temp.crop,node=screen.querySelector('.ly-crop-shade');if(node)Object.assign(node.style,{left:c.x*100+'%',top:c.y*100+'%',width:c.w*100+'%',height:c.h*100+'%'});}
+  function moveCorner(corner,dx,dy,original){const right=original.x+original.w,bottom=original.y+original.h,c={...original};
+    if(corner.includes('l')){c.x=Math.max(0,Math.min(right-.1,original.x+dx));c.w=right-c.x;}else c.w=Math.max(.1,Math.min(1-c.x,original.w+dx));
+    if(corner.includes('t')){c.y=Math.max(0,Math.min(bottom-.1,original.y+dy));c.h=bottom-c.y;}else c.h=Math.max(.1,Math.min(1-c.y,original.h+dy));
+    temp=M.cleanEdit({crop:c});updateCrop();
+  }
+  root.addEventListener('click',event=>{
+    const el=event.target.closest('[data-action]');if(!el||el.disabled||drag?.moved)return;const a=el.dataset.action;
+    switch(a){
+      case 'start':goCapture();break;
+      case 'resume':s.screen='result';s.sheet=null;render();break;
+      case 'home':if(s.screen==='capturing')finishCapture(true);s.screen='home';s.sheet=null;render();break;
+      case 'draft-home':s.screen='home';viewMenu=false;render();break;
+      case 'new':if(s.exportStatus==='saving')break;if(M.needsProtection(s)){s.sheet='protect';render();}else replaceDraft();break;
+      case 'save-new':save(true);break;
+      case 'discard-new':replaceDraft();break;
+      case 'to-system':s.sheet=null;s.screen='system';render();break;
+      case 'help-system':s.sheet=null;s.screen='system';render();break;
+      case 'system-back':if(s.pendingStart&&s.permission)goCapture();else{s.screen='home';render();}break;
+      case 'system-allow':{const pending=s.pendingStart;M.grant(s,true);s.pendingStart=pending;s.screen='system';render();break;}
+      case 'system-deny':M.grant(s,false);s.pendingStart=false;render();break;
+      case 'projection-allow':s.projection=true;goCapture();break;
+      case 'projection-deny':s.sheet=null;s.pendingStart=false;s.screen='home';render();break;
+      case 'close-sheet':closeSheet();return;
+      case 'restricted':s.sheet='restricted';render();break;
+      case 'desktop-settings':s.screen='system';s.pendingStart=false;render();break;
+      case 'open-browser':s.screen='target';render();break;
+      case 'target-back':if(s.screen==='capturing')finishCapture(true);else{s.screen='desktop';render();}break;
+      case 'show-bubble':s.bubble=true;render();break;
+      case 'capture':startCapture();break;
+      case 'stop':finishCapture();break;
+      case 'crop':openEdit();break;
+      case 'cancel-edit':finishEdit(false);break;
+      case 'apply-edit':finishEdit(true);break;
+      case 'crop-zoom':cropOverview=!cropOverview;render();screen.querySelector('.ly-editor-stage').scrollTop=0;break;
+      case 'crop-reset':temp={crop:{x:0,y:0,w:1,h:1}};pushCrop();render();break;
+      case 'crop-undo':if(cropIndex>0)temp=copy(cropHistory[--cropIndex]);render();break;
+      case 'crop-redo':if(cropIndex<cropHistory.length-1)temp=copy(cropHistory[++cropIndex]);render();break;
+      case 'view':viewMenu=!viewMenu;render();break;
+      case 'zoom-in':zoom=Math.min(2.5,zoom+.5);viewMenu=false;render();break;
+      case 'fit':zoom=1;viewMenu=false;render();break;
+      case 'top':case 'bottom':viewMenu=false;render();{const e=screen.querySelector('.ly-result-scroll');e.scrollTop=a==='top'?0:e.scrollHeight;}break;
+      case 'save':save();break;
+      case 'share':s.sheet='share';render();break;
+      case 'share-to':M.exportResult(s,'share',true);s.sheet=null;render();announce('图片已交给所选应用');break;
+      case 'settings':s.screen='settings';s.sheet=null;render();break;
+      case 'disable':M.disable(s);render();announce('截图服务已停用，草稿已保留');break;
+      case 'help':s.screen='help';s.sheet=null;render();break;
+      case 'app-info':s.screen='app-info';s.sheet=null;render();break;
+      case 'allow-restricted':announce('模拟系统验证；返回无障碍设置检查开关');break;
+      case 'battery':s.screen='battery';s.sheet=null;render();break;
+      case 'adb':s.sheet='adb';render();break;
+      case 'copy-adb':el.textContent='已复制';announce('命令已复制（模拟）');break;
+    }remember();
+  });
+  root.addEventListener('change',event=>{const el=event.target;
+    if(el===scenarioSelect){stopTimers();s=M.create(el.value,vendorSelect.value);editing=false;temp=null;viewMenu=false;zoom=1;render();remember();}
+    else if(el===vendorSelect){s.vendor=el.value;render();remember();}
+    else if(el.id==='ly-system-enable'){if(el.checked){s.sheet='consent';render();}else{M.disable(s);render();}remember();}
+    else if(el.id==='ly-bubble-toggle'){s.bubble=el.checked;remember();}
+  });
+  root.addEventListener('pointerdown',event=>{if(event.button!==0)return;
+    const bubble=event.target.closest('.ly-bubble');if(bubble){drag={type:'bubble',node:bubble,startX:event.clientX,startY:event.clientY,y:bubbleY,moved:false};bubble.setPointerCapture(event.pointerId);return;}
+    const corner=event.target.closest('[data-corner]');if(corner&&editing){drag={type:'crop',node:corner,corner:corner.dataset.corner,original:{...temp.crop},startX:event.clientX,startY:event.clientY,rect:screen.querySelector('.ly-edit-image').getBoundingClientRect(),moved:false};corner.setPointerCapture(event.pointerId);event.preventDefault();}
+  });
+  root.addEventListener('pointermove',event=>{if(!drag)return;
+    if(drag.type==='bubble'){const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;if(Math.abs(dx)+Math.abs(dy)>6)drag.moved=true;
+      if(drag.moved){bubbleY=Math.max(70,Math.min(590,drag.y+dy));bubbleSide=event.clientX<screen.getBoundingClientRect().left+screen.clientWidth/2?'left':'right';Object.assign(drag.node.style,{top:bubbleY+'px',left:bubbleSide==='left'?'8px':'auto',right:bubbleSide==='right'?'8px':'auto'});}}
+    else{drag.moved=true;moveCorner(drag.corner,(event.clientX-drag.startX)/drag.rect.width,(event.clientY-drag.startY)/drag.rect.height,drag.original);}
+  });
+  function endDrag(){if(!drag)return;const old=drag;if(old.type==='crop'&&old.moved){pushCrop();render();}setTimeout(()=>{drag=null;remember();},0);}
+  root.addEventListener('pointerup',endDrag);root.addEventListener('pointercancel',endDrag);
+  root.addEventListener('keydown',event=>{
+    const corner=event.target.dataset.corner;if(corner&&editing&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)){
+      event.preventDefault();moveCorner(corner,event.key==='ArrowLeft'?-.01:event.key==='ArrowRight'?.01:0,event.key==='ArrowUp'?-.01:event.key==='ArrowDown'?.01:0,{...temp.crop});pushCrop();render();remember();return;
+    }
+    if(event.key==='Escape'){if(s.sheet){event.preventDefault();closeSheet();}else if(editing){event.preventDefault();finishEdit(false);remember();}else if(viewMenu){viewMenu=false;render();remember();}}
+    if(event.key==='Tab'&&s.sheet){const controls=[...overlay.querySelectorAll('button:not(:disabled),input:not(:disabled),summary')].filter(e=>e.getClientRects().length);const first=controls[0],last=controls.at(-1);
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+  });
+  new ResizeObserver(()=>{const width=screen.clientWidth;if(Math.abs(width-lastWidth)>1){lastWidth=width;if(s.screen==='result'||editing)render({focus:false});}}).observe(screen);
+  function applyDesign(){root.style.setProperty('--ly-radius',design.radius+'px');root.style.colorScheme=design.appearance==='system'?'inherit':design.appearance;}
+  function restore(value){const state=value?.privateContent;if(!state||state.version!==2||state.stamp===lastStamp||state.stamp?.startsWith(instance+':'))return;
+    const restored=state.experience;if(!restored||![...scenarioSelect.options].some(o=>o.value===restored.scenario)||!H.valid(restored.vendor))return;
+    try{const next=copy(restored);if(next.draft){if(!Array.isArray(next.draft.history)||!next.draft.history.length)return;next.draft.history=next.draft.history.map(M.cleanEdit);next.draft.index=Math.max(0,Math.min(next.draft.history.length-1,Math.round(next.draft.index)));next.draft.frames=Math.max(1,Math.min(4,next.draft.frames));next.draft.height=540+(next.draft.frames-1)*360;}
+      stopTimers();s=next;s.sheet=null;editing=false;temp=null;viewMenu=false;s.pendingStart=false;
+      if(s.screen==='capturing')M.finishCapture(s,true);if(s.exportStatus==='saving')s.exportStatus='idle';
+      if(!['home','system','desktop','target','result','settings','help','app-info','battery'].includes(s.screen)||s.screen==='result'&&!s.draft)s.screen='home';
+      M.refreshSaved(s);scenarioSelect.value=s.scenario;vendorSelect.value=s.vendor;
+      if(['system','light','dark'].includes(state.appearance))design.appearance=state.appearance;
+      zoom=Math.max(1,Math.min(2.5,state.zoom||1));bubbleY=Math.max(70,Math.min(590,state.bubbleY||245));bubbleSide=state.bubbleSide==='left'?'left':'right';lastStamp=state.stamp;applyDesign();render({focus:false});
+    }catch{}
+  }
+  render();applyDesign();restore(window.openai?.widgetState);
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:applyDesign});tweak.addSlider(design,'radius',{label:'内容圆角',min:12,max:28,step:2,unit:'px',reference:'--ly-radius'});tweak.addSelect(design,'appearance',{label:'外观',options:[{label:'跟随环境',value:'system'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});}
+})();
+
+</script>

@@ -1,0 +1,60 @@
+<style>
+#ly-refined-01 figure { margin: 0; padding: 12px 0; }
+#ly-refined-01 figcaption { padding-top: 8px; }
+#ly-refined-01 .ly-proof { width: 100%; background-repeat: no-repeat; background-position: center; background-size: contain; }
+#ly-refined-01 .ly-brand { aspect-ratio: 3 / 2; }
+#ly-refined-01 .ly-wide { aspect-ratio: 2 / 1; }
+#ly-refined-01 .ly-light { background-image: url('__LIGHT__'); }
+#ly-refined-01 .ly-dark { background-image: url('__DARK__'); }
+#ly-refined-01 .ly-apps { background-image: url('__APPS__'); }
+#ly-refined-01 .ly-mono { background-image: url('__MONO__'); }
+#ly-refined-01 .ly-small-item { min-width: 84px; text-align: center; }
+#ly-refined-01 .ly-small-stage { height: 64px; display: flex; align-items: center; justify-content: center; }
+#ly-refined-01 .ly-pixels { background-repeat: no-repeat; background-position: center; background-size: 100% 100%; }
+#ly-refined-01 .ly-p24 { width: 24px; height: 24px; background-image: url('__S24__'); }
+#ly-refined-01 .ly-p32 { width: 32px; height: 32px; background-image: url('__S32__'); }
+#ly-refined-01 .ly-p48 { width: 48px; height: 48px; background-image: url('__S48__'); }
+#ly-refined-01 .ly-p64 { width: 64px; height: 64px; background-image: url('__S64__'); }
+#ly-refined-01 .ly-a24 { width: 24px; height: 24px; background-image: url('__A24__'); }
+#ly-refined-01 .ly-a32 { width: 32px; height: 32px; background-image: url('__A32__'); }
+#ly-refined-01 .ly-a48 { width: 48px; height: 48px; background-image: url('__A48__'); }
+#ly-refined-01 .ly-a64 { width: 64px; height: 64px; background-image: url('__A64__'); }
+</style>
+<div id="ly-refined-01">
+  <div class="nav nav-pills" role="tablist" aria-label="连页首选方案精修">
+    <button class="nav-link active" id="ly-r-brand-tab" type="button" role="tab" aria-controls="ly-r-brand-panel" aria-selected="true">主标识</button>
+    <button class="nav-link" id="ly-r-apps-tab" type="button" role="tab" aria-controls="ly-r-apps-panel" aria-selected="false">桌面图标</button>
+    <button class="nav-link" id="ly-r-mono-tab" type="button" role="tab" aria-controls="ly-r-mono-panel" aria-selected="false">单色</button>
+    <button class="nav-link" id="ly-r-dark-tab" type="button" role="tab" aria-controls="ly-r-dark-panel" aria-selected="false">深色</button>
+    <button class="nav-link" id="ly-r-small-tab" type="button" role="tab" aria-controls="ly-r-small-panel" aria-selected="false">小尺寸</button>
+  </div>
+  <div id="ly-r-brand-panel" role="tabpanel" aria-labelledby="ly-r-brand-tab">
+    <figure><div class="ly-proof ly-brand ly-light" role="img" aria-label="连页精修：四个石墨色取景角，一张橙色连续长图穿过下方边界，旁边为连页与自动长截图字样"></div><figcaption>有限取景 · 连续长图</figcaption></figure>
+  </div>
+  <div id="ly-r-apps-panel" role="tabpanel" aria-labelledby="ly-r-apps-tab" hidden>
+    <figure><div class="ly-proof ly-wide ly-apps" role="img" aria-label="同一精修标识的圆角方形与圆形桌面遮罩预览，取景角与长图均完整保留"></div><figcaption>圆角方形与圆形</figcaption></figure>
+  </div>
+  <div id="ly-r-mono-panel" role="tabpanel" aria-labelledby="ly-r-mono-tab" hidden>
+    <figure><div class="ly-proof ly-wide ly-mono" role="img" aria-label="精修标识的单色正形与反白版本，均保持四个分离角标和一张完整长图"></div><figcaption>单色正形与反形</figcaption></figure>
+  </div>
+  <div id="ly-r-dark-panel" role="tabpanel" aria-labelledby="ly-r-dark-tab" hidden>
+    <figure><div class="ly-proof ly-brand ly-dark" role="img" aria-label="深石墨背景上的暖白取景角与橙色长图，连页名称和自动长截图描述为暖白"></div><figcaption>深色应用</figcaption></figure>
+  </div>
+  <div id="ly-r-small-panel" role="tabpanel" aria-labelledby="ly-r-small-tab" hidden>
+    <div class="text-small">单色光学校正版</div>
+    <div class="viz-row">
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-p24" role="img" aria-label="24像素单色光学校正版，实际尺寸"></div></div><figcaption class="text-small">24 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-p32" role="img" aria-label="32像素单色光学校正版，实际尺寸"></div></div><figcaption class="text-small">32 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-p48" role="img" aria-label="48像素单色光学校正版，实际尺寸"></div></div><figcaption class="text-small">48 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-p64" role="img" aria-label="64像素单色光学校正版，实际尺寸"></div></div><figcaption class="text-small">64 px</figcaption></figure>
+    </div>
+    <hr>
+    <div class="text-small">桌面图标预览</div>
+    <div class="viz-row">
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-a24" role="img" aria-label="24像素桌面图标预览，实际尺寸"></div></div><figcaption class="text-small">24 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-a32" role="img" aria-label="32像素桌面图标预览，实际尺寸"></div></div><figcaption class="text-small">32 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-a48" role="img" aria-label="48像素桌面图标预览，实际尺寸"></div></div><figcaption class="text-small">48 px</figcaption></figure>
+      <figure class="ly-small-item"><div class="ly-small-stage"><div class="ly-pixels ly-a64" role="img" aria-label="64像素桌面图标预览，实际尺寸"></div></div><figcaption class="text-small">64 px</figcaption></figure>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">连页：方向 C，下展口</title>
+  <desc id="desc">原创黑白捕获动作探索。上边界闭合，两条粗侧边向下延伸并张开，中间的取景负形贯通下方。画面展示大标识、48、32、24 像素对照及反白图标容器。</desc>
+  <defs>
+    <symbol id="mark" viewBox="20 16 216 216">
+      <path fill="currentColor" d="M20 224L64 48Q72 16 104 16H152Q184 16 192 48L236 224L202 232L162 72Q160 54 148 54H108Q96 54 94 72L54 232Z"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="760" fill="#fff"/>
+  <g fill="#000" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <text x="60" y="70" font-size="34" font-weight="700">连页 ／ C　下展口</text>
+    <text x="60" y="110" font-size="17">从捕获动作出发：上界固定，范围从下方继续伸出。</text>
+    <path d="M60 150H1140" fill="none" stroke="#000" stroke-width="1"/>
+    <text x="60" y="191" font-size="14">主标识 / 开放轮廓</text>
+    <use href="#mark" x="140" y="244" width="320" height="320" color="#000"/>
+    <text x="640" y="191" font-size="14">原生尺寸检验</text>
+    <use href="#mark" x="645" y="252" width="48" height="48" color="#000"/>
+    <use href="#mark" x="815" y="260" width="32" height="32" color="#000"/>
+    <use href="#mark" x="983" y="264" width="24" height="24" color="#000"/>
+    <text x="645" y="337" font-size="14">48 px</text>
+    <text x="810" y="337" font-size="14">32 px</text>
+    <text x="975" y="337" font-size="14">24 px</text>
+    <text x="640" y="402" font-size="14">图标容器 / 反白</text>
+    <rect x="640" y="431" width="160" height="160" rx="38"/>
+    <use href="#mark" x="674" y="465" width="92" height="92" color="#fff"/>
+    <text x="836" y="476" font-size="17" font-weight="700">范围留在空白里。</text>
+    <text x="836" y="511" font-size="15">粗侧边保持一个清楚的开口，</text>
+    <text x="836" y="539" font-size="15">向下张开的轮廓承载延伸动作。</text>
+    <path d="M60 649H1140" fill="none" stroke="#000" stroke-width="1"/>
+    <text x="60" y="690" font-size="15">观察重点：开口在 24 px 是否仍清楚；门洞、帐篷或倒置漏斗的联想是否过强。</text>
+    <text x="60" y="722" font-size="13">Alpha 追加独立探索 · 黑白结构稿 · 2026-10-03</text>
+  </g>
+</svg>

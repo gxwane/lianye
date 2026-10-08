@@ -1,0 +1,640 @@
+<section id="ly-interaction-prototype" aria-label="连页交互原型">
+  <div class="ly-review-controls">
+    <label class="form-label" for="ly-scenario">体验情境</label>
+    <select class="form-select" id="ly-scenario">
+      <option value="first">首次使用</option>
+      <option value="ready">已准备好</option>
+      <option value="draft">未保存草稿</option>
+      <option value="denied">权限被拒</option>
+      <option value="interrupt">截取中断</option>
+      <option value="savefail">保存失败</option>
+      <option value="android10">Android 10 授权</option>
+    </select>
+  </div>
+  <div class="ly-phone" aria-label="连页 Android 应用">
+    <div class="ly-statusbar"><span>9:41</span><span class="ly-status-icons"><i data-lucide="signal" aria-hidden="true"></i><i data-lucide="wifi" aria-hidden="true"></i><i data-lucide="battery-full" aria-hidden="true"></i></span></div>
+    <div id="ly-screen"></div>
+    <div id="ly-overlay"></div>
+    <div class="ly-navigation"><span></span></div>
+  </div>
+  <div class="text-small text-muted ly-review-caption">交互原型 · 授权、截图与导出为模拟</div>
+  <div class="sr-only" id="ly-announcement" aria-live="polite"></div>
+</section>
+<style>
+#ly-interaction-prototype { --ly-paper:light-dark(#F7F4EE,#1D2422); --ly-ink:light-dark(#252B2A,#F7F4EE); --ly-muted:light-dark(#646C67,#ADB7B0); --ly-surface:light-dark(#FFFFFF,#29322F); --ly-line:light-dark(#D7DCD5,#45514B); --ly-soft:light-dark(#ECEEE6,#303B35); --ly-accent:#DB653D; --ly-accent-text:light-dark(#A54023,#F4A584); --ly-radius:22px; width:100%; }
+#ly-interaction-prototype .ly-review-controls { max-width:390px; margin:0 auto 14px; }
+#ly-interaction-prototype .ly-review-caption { text-align:center; margin-top:12px; }
+#ly-interaction-prototype .ly-phone { position:relative; width:100%; max-width:390px; height:748px; margin:auto; overflow:hidden; border:1px solid var(--ly-line); border-radius:30px; background:var(--ly-paper); color:var(--ly-ink); box-shadow:0 8px 28px #00000010; font:400 15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; text-align:left; }
+#ly-interaction-prototype .ly-phone * { box-sizing:border-box; }
+#ly-interaction-prototype .ly-phone button,#ly-interaction-prototype .ly-phone input,#ly-interaction-prototype .ly-phone select { font:inherit; }
+#ly-interaction-prototype .ly-phone button { cursor:pointer; color:inherit; -webkit-tap-highlight-color:transparent; }
+#ly-interaction-prototype .ly-phone button:disabled { opacity:.4; cursor:default; }
+#ly-interaction-prototype .ly-phone h1,#ly-interaction-prototype .ly-phone h2,#ly-interaction-prototype .ly-phone h3,#ly-interaction-prototype .ly-phone p { margin:0; }
+#ly-interaction-prototype .ly-phone h1 { font-size:32px; line-height:1.3; letter-spacing:-.8px; font-weight:650; }
+#ly-interaction-prototype .ly-phone h2 { font-size:24px; line-height:1.4; font-weight:650; }
+#ly-interaction-prototype .ly-phone h3 { font-size:17px; font-weight:600; }
+#ly-interaction-prototype .ly-statusbar { height:34px; padding:8px 24px 0; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; }
+#ly-interaction-prototype .ly-status-icons { display:flex; gap:5px; }
+#ly-interaction-prototype .ly-status-icons svg { width:14px; height:14px; }
+#ly-interaction-prototype #ly-screen { height:690px; position:relative; }
+#ly-interaction-prototype .ly-navigation { height:24px; display:grid; place-items:center; }
+#ly-interaction-prototype .ly-navigation span { width:108px; height:4px; background:var(--ly-ink); border-radius:4px; opacity:.8; }
+#ly-interaction-prototype .ly-page { display:flex; flex-direction:column; height:100%; position:relative; }
+#ly-interaction-prototype .ly-header { padding:10px 20px; min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+#ly-interaction-prototype .ly-brand { display:flex; align-items:center; gap:11px; font-size:23px; font-weight:650; letter-spacing:1px; }
+#ly-interaction-prototype .ly-logo { display:block; width:42px; height:42px; border-radius:12px; background:#F7F4EE url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACSUlEQVR4nOybYU7bMBTH/3Z6DzwJpK7iCEMLJ1knDWm3WLnFPkxabkKQdgTUVRSJcI/GD7sEBKjUJo1Tovd+Xyo1bmr/4/fy/PyswRwN5rAXYBTbcDwem1rrnICDjQ20vry5uirRA4fHxzms/brpmgLuSOsqti9RAhxNJtNa4W/zBxsha2fuo0QfuMErhdlblxXZ6nAyKW7m83MEiDOBZvADwjiBpn7WhhoGBfBPH8PErEYjE2oU7QOGiLLWhNq0EiCr7afFYlFhTzS2/cK+104607d4J/IaREKuz06miugAu3HpbLn6/LuskIAkAqwHjubNoRR2ZVTXWP74cnr051+JjkliAk+D7xBSKsmrODgDMmvLldYzRPL/Z27gnljXOFGNv/c2UyB6FRy5iBDh+3aLm6q5m/YXSAFR52bQTxzQouNJhXyGLIfBHBEAzBEBwBwRAMwRAcAcEQDMEQHAnOByeL0voPDr+XcuK3y6z6zwJpqs8MvlM+F8OZ8X234Xmw8wGAYG70R8AJgjThAtcFnib277udeagLfwzs/3Z4V2Gd5WAjztzVv7HXvGF21sqxUIETQBisitf1Ri+h4UoJniFYZHVJlMlBP0gY/Ts8RwhCge+hwmygc0UV/UDfumifQKtETiADBHBABzRAAwRwQAc0QAMEcEAHNEADBHkqLoA6Uulmcn+Ih0PgN8aTsSMYhqcV/MTAlSZ5QoHZemXJ6oSNDh4BG4NnReLf6IL23P6jrf9cQIKXVXZ1mZ6sRIMgGGgsQBYM49AAAA///1QdwOAAAABklEQVQDAKdeuBQ2OrmlAAAAAElFTkSuQmCC") center/38px no-repeat; flex-shrink:0; }
+#ly-interaction-prototype .ly-logo-app { width:58px; height:58px; border-radius:17px; background:#F7F4EE url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACSUlEQVR4nOybYU7bMBTH/3Z6DzwJpK7iCEMLJ1knDWm3WLnFPkxabkKQdgTUVRSJcI/GD7sEBKjUJo1Tovd+Xyo1bmr/4/fy/PyswRwN5rAXYBTbcDwem1rrnICDjQ20vry5uirRA4fHxzms/brpmgLuSOsqti9RAhxNJtNa4W/zBxsha2fuo0QfuMErhdlblxXZ6nAyKW7m83MEiDOBZvADwjiBpn7WhhoGBfBPH8PErEYjE2oU7QOGiLLWhNq0EiCr7afFYlFhTzS2/cK+104607d4J/IaREKuz06miugAu3HpbLn6/LuskIAkAqwHjubNoRR2ZVTXWP74cnr051+JjkliAk+D7xBSKsmrODgDMmvLldYzRPL/Z27gnljXOFGNv/c2UyB6FRy5iBDh+3aLm6q5m/YXSAFR52bQTxzQouNJhXyGLIfBHBEAzBEBwBwRAMwRAcAcEQDMEQHAnOByeL0voPDr+XcuK3y6z6zwJpqs8MvlM+F8OZ8X234Xmw8wGAYG70R8AJgjThAtcFnib277udeagLfwzs/3Z4V2Gd5WAjztzVv7HXvGF21sqxUIETQBisitf1Ri+h4UoJniFYZHVJlMlBP0gY/Ts8RwhCge+hwmygc0UV/UDfumifQKtETiADBHBABzRAAwRwQAc0QAMEcEAHNEADBHkqLoA6Uulmcn+Ih0PgN8aTsSMYhqcV/MTAlSZ5QoHZemXJ6oSNDh4BG4NnReLf6IL23P6jrf9cQIKXVXZ1mZ6sRIMgGGgsQBYM49AAAA///1QdwOAAAABklEQVQDAKdeuBQ2OrmlAAAAAElFTkSuQmCC") center/49px no-repeat; }
+#ly-interaction-prototype .ly-icon-button { min-width:44px; height:44px; border:0; background:transparent; display:inline-flex; align-items:center; justify-content:center; border-radius:12px; padding:10px; }
+#ly-interaction-prototype .ly-icon-button svg { width:21px; height:21px; }
+#ly-interaction-prototype .ly-icon-button:hover { background:var(--ly-soft); }
+#ly-interaction-prototype .ly-icon-button[aria-pressed="true"] { background:var(--ly-soft); color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-content { flex:1; min-height:0; overflow:auto; padding:16px 24px 22px; }
+#ly-interaction-prototype .ly-eyebrow { color:var(--ly-accent-text); font-size:13px; font-weight:600; letter-spacing:2px; margin-bottom:12px; }
+#ly-interaction-prototype .ly-description { color:var(--ly-muted); font-size:15px; margin-top:14px !important; line-height:1.75; }
+#ly-interaction-prototype .ly-footer { padding:16px 24px 18px; flex-shrink:0; }
+#ly-interaction-prototype .ly-primary { display:flex; align-items:center; justify-content:center; gap:10px; border:0; background:var(--ly-ink); color:var(--ly-paper) !important; width:100%; padding:14px 20px; min-height:54px; border-radius:calc(var(--ly-radius) - 6px); font-weight:600 !important; }
+#ly-interaction-prototype .ly-secondary { display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; width:100%; padding:10px 16px; background:var(--ly-soft); border:1px solid transparent; border-radius:14px; }
+#ly-interaction-prototype .ly-text-button { display:flex; align-items:center; justify-content:center; gap:6px; border:0; background:transparent; min-height:44px; padding:8px 12px; color:var(--ly-muted) !important; }
+#ly-interaction-prototype .ly-primary svg,#ly-interaction-prototype .ly-secondary svg { width:19px; height:19px; }
+#ly-interaction-prototype .ly-footnote { text-align:center; color:var(--ly-muted); font-size:12px; margin-top:12px; display:flex; justify-content:center; align-items:center; gap:5px; }
+#ly-interaction-prototype .ly-footnote svg { width:13px; height:13px; }
+#ly-interaction-prototype .ly-illustration { position:relative; margin:26px 0 0; height:270px; background:radial-gradient(ellipse at 50% 48%,var(--ly-soft),transparent 72%); }
+#ly-interaction-prototype .ly-mini-page { position:absolute; width:154px; height:236px; left:calc(50% - 77px); top:11px; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:7px; overflow:hidden; padding:17px; box-shadow:0 10px 24px #252B2A12; }
+#ly-interaction-prototype .ly-mini-visual { height:74px; background:var(--ly-soft); border-radius:3px; margin:12px 0; position:relative; overflow:hidden; }
+#ly-interaction-prototype .ly-mini-visual::before { content:""; position:absolute; width:86px; height:86px; border-radius:50%; background:var(--ly-accent); right:-12px; top:20px; opacity:.5; }
+#ly-interaction-prototype .ly-mini-visual::after { content:""; position:absolute; background:var(--ly-ink); opacity:.2; width:75px; height:75px; transform:rotate(30deg); left:-12px; top:35px; border-radius:14px; }
+#ly-interaction-prototype .ly-mini-page b { font-size:11px; letter-spacing:.2px; }
+#ly-interaction-prototype .ly-mini-lines { height:5px; width:100%; background:var(--ly-line); border-radius:2px; margin:7px 0; }
+#ly-interaction-prototype .ly-mini-lines.short { width:68%; }
+#ly-interaction-prototype .ly-frame { position:absolute; width:210px; height:170px; left:calc(50% - 105px); top:0; }
+#ly-interaction-prototype .ly-corner { position:absolute; width:23px; height:23px; border-color:var(--ly-ink); border-style:solid; border-width:0; border-radius:4px; }
+#ly-interaction-prototype .ly-corner.a { top:0; left:0; border-left-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.b { top:0; right:0; border-right-width:2px; border-top-width:2px; }
+#ly-interaction-prototype .ly-corner.c { bottom:0; left:0; border-left-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-corner.d { bottom:0; right:0; border-right-width:2px; border-bottom-width:2px; }
+#ly-interaction-prototype .ly-continuity { position:absolute; right:18px; top:192px; width:63px; color:var(--ly-accent-text); display:flex; align-items:center; gap:5px; font-size:12px; }
+#ly-interaction-prototype .ly-ready { display:inline-flex; align-items:center; gap:5px; color:var(--ly-muted); font-size:12px; margin-top:9px; }
+#ly-interaction-prototype .ly-ready svg { width:14px; height:14px; }
+#ly-interaction-prototype .ly-notice { background:var(--ly-soft); padding:12px 14px; border-radius:13px; font-size:13px; line-height:1.6; display:flex; gap:9px; align-items:flex-start; }
+#ly-interaction-prototype .ly-notice svg { flex-shrink:0; width:17px; height:17px; margin-top:2px; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-notice.error { color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-draft-card { background:var(--ly-surface); border:1px solid var(--ly-line); padding:20px; border-radius:var(--ly-radius); margin-top:25px; display:flex; align-items:center; gap:20px; }
+#ly-interaction-prototype .ly-draft-thumb { width:78px; height:194px; background:#F5F1E5; border:1px solid #D7DCD5; padding:8px; color:#252B2A; overflow:hidden; flex-shrink:0; border-radius:4px; }
+#ly-interaction-prototype .ly-draft-thumb .ly-mini-visual { height:38px; }
+#ly-interaction-prototype .ly-draft-thumb b { font-size:8px; }
+#ly-interaction-prototype .ly-draft-meta { font-size:13px; color:var(--ly-muted); margin-top:8px !important; }
+#ly-interaction-prototype .ly-badge { font-size:11px; color:var(--ly-muted); display:inline-flex; align-items:center; gap:5px; }
+#ly-interaction-prototype #ly-overlay { position:absolute; inset:34px 0 24px; pointer-events:none; z-index:10; }
+#ly-interaction-prototype .ly-scrim { position:absolute; inset:0; background:#151A1966; display:flex; align-items:flex-end; pointer-events:auto; }
+#ly-interaction-prototype .ly-sheet { padding:8px 24px 24px; width:100%; background:var(--ly-paper); border-radius:calc(var(--ly-radius) + 4px) calc(var(--ly-radius) + 4px) 0 0; max-height:94%; overflow:auto; box-shadow:0 -8px 30px #00000012; }
+#ly-interaction-prototype .ly-sheet-handle { width:36px; height:4px; border-radius:4px; background:var(--ly-line); margin:3px auto 14px; }
+#ly-interaction-prototype .ly-sheet-title { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:9px; }
+#ly-interaction-prototype .ly-sheet-title h2 { font-size:23px; }
+#ly-interaction-prototype .ly-sheet .ly-primary { margin-top:22px; }
+#ly-interaction-prototype .ly-sheet .ly-secondary { margin-top:10px; }
+#ly-interaction-prototype .ly-sheet .ly-description { margin-top:8px !important; font-size:14px; }
+#ly-interaction-prototype .ly-permission-list { padding:20px 0 4px; display:grid; gap:18px; }
+#ly-interaction-prototype .ly-permission-item { display:flex; align-items:flex-start; gap:13px; }
+#ly-interaction-prototype .ly-permission-item>span { width:38px; height:38px; border-radius:12px; background:var(--ly-soft); display:grid; place-items:center; flex-shrink:0; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-permission-item svg { width:19px; height:19px; }
+#ly-interaction-prototype .ly-permission-item p { font-size:13px; color:var(--ly-muted); margin-top:3px; }
+#ly-interaction-prototype .ly-system { background:light-dark(#FBFCFF,#20232A); }
+#ly-interaction-prototype .ly-system .ly-header { padding-left:10px; }
+#ly-interaction-prototype .ly-system .ly-header h3 { flex:1; }
+#ly-interaction-prototype .ly-system-row { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:22px 16px; background:light-dark(#EEF1FA,#2F3440); border-radius:22px; margin:24px 0; }
+#ly-interaction-prototype .ly-system input[type="checkbox"] { width:24px; height:24px; accent-color:light-dark(#365EC7,#ACC3FF); }
+#ly-interaction-prototype .ly-system-dialog { background:light-dark(#F1F3FC,#303541); border-radius:24px; padding:24px; width:calc(100% - 40px); margin:auto; box-shadow:0 16px 35px #00000022; }
+#ly-interaction-prototype .ly-system-dialog h2 { font-size:22px; }
+#ly-interaction-prototype .ly-system-dialog p { font-size:14px; margin:14px 0 22px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-system-actions { display:flex; justify-content:flex-end; gap:8px; }
+#ly-interaction-prototype .ly-system-action { background:transparent; border:0; color:light-dark(#274FAB,#B8CCFF) !important; min-height:44px; padding:8px 14px; font-weight:600; }
+#ly-interaction-prototype .ly-desktop { background:var(--ly-soft); justify-content:space-between; padding:38px 24px 28px; }
+#ly-interaction-prototype .ly-desktop-time { font-size:52px; line-height:1.15; font-weight:400; letter-spacing:-2px; }
+#ly-interaction-prototype .ly-app-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 8px; margin-top:34px; }
+#ly-interaction-prototype .ly-app { border:0; background:transparent; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px !important; padding:8px 0; }
+#ly-interaction-prototype .ly-app-square { width:58px; height:58px; display:grid; place-items:center; background:var(--ly-surface); border:1px solid var(--ly-line); border-radius:17px; }
+#ly-interaction-prototype .ly-app-square svg { width:27px; height:27px; }
+#ly-interaction-prototype .ly-desktop-hint { background:var(--ly-paper); padding:17px 19px; border-radius:18px; line-height:1.7; font-size:14px; }
+#ly-interaction-prototype .ly-browser-header { padding:12px 14px; display:flex; gap:10px; align-items:center; background:var(--ly-surface); min-height:62px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-address { display:flex; align-items:center; gap:8px; background:var(--ly-soft); flex:1; min-width:0; padding:9px 12px; border-radius:22px; font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-address svg { width:13px; height:13px; }
+#ly-interaction-prototype .ly-target-scroll { flex:1; min-height:0; overflow:auto; background:#F5F1E5; }
+#ly-interaction-prototype .ly-article { width:320px; height:1620px; padding:26px 25px; background:#F5F1E5; color:#252B2A; overflow:hidden; font:400 15px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+#ly-interaction-prototype .ly-target-scroll .ly-article { width:100%; }
+#ly-interaction-prototype .ly-article .ly-article-kicker { font-size:11px; letter-spacing:2px; color:#616C60; margin-bottom:16px; }
+#ly-interaction-prototype .ly-article h2 { font-size:29px; line-height:1.4; letter-spacing:-.6px; }
+#ly-interaction-prototype .ly-article .ly-article-intro { color:#5D665F; font-size:14px; margin:15px 0 21px; }
+#ly-interaction-prototype .ly-landscape { height:174px; background:#D8DFC9; position:relative; overflow:hidden; border-radius:3px; }
+#ly-interaction-prototype .ly-sun { position:absolute; width:60px; height:60px; border-radius:50%; background:#D97C53; top:26px; right:37px; }
+#ly-interaction-prototype .ly-hill { position:absolute; border-radius:50%; width:270px; height:160px; background:#86977E; bottom:-56px; left:-63px; transform:rotate(-19deg); }
+#ly-interaction-prototype .ly-hill.second { background:#5A7365; left:128px; bottom:-87px; height:190px; }
+#ly-interaction-prototype .ly-path { position:absolute; background:#F5E3BE; width:18px; height:210px; border-radius:50%; transform:rotate(30deg); bottom:-130px; left:55%; }
+#ly-interaction-prototype .ly-article .ly-article-section { padding-top:24px; border-bottom:1px solid #D6DACA; padding-bottom:23px; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 { font-size:18px; margin-bottom:12px; display:flex; gap:10px; align-items:center; }
+#ly-interaction-prototype .ly-article .ly-article-section h3 span { font-size:12px; color:#A54023; }
+#ly-interaction-prototype .ly-article .ly-article-section p { font-size:14px; line-height:1.95; margin-top:10px; }
+#ly-interaction-prototype .ly-article .ly-article-note { padding:15px; background:#E5E9DB; border-radius:4px; margin:18px 0 0; font-size:13px; }
+#ly-interaction-prototype .ly-article .ly-contact { margin-top:20px; font-size:13px; padding:15px 0; border-top:1px solid #D6DACA; }
+#ly-interaction-prototype .ly-bubble { position:absolute; z-index:4; right:8px; top:245px; border-radius:24px; background:var(--ly-ink); color:var(--ly-paper) !important; border:1px solid var(--ly-paper); box-shadow:0 4px 15px #00000024; min-width:70px; min-height:50px; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; touch-action:none; user-select:none; }
+#ly-interaction-prototype .ly-bubble svg { width:17px; height:17px; }
+#ly-interaction-prototype .ly-bubble.recording { background:var(--ly-paper); color:var(--ly-ink) !important; border-color:var(--ly-line); }
+#ly-interaction-prototype .ly-live-dot { width:8px; height:8px; border-radius:50%; background:var(--ly-accent); flex-shrink:0; }
+#ly-interaction-prototype .ly-capture-label { position:absolute; z-index:3; left:14px; bottom:16px; background:var(--ly-paper); color:var(--ly-ink); padding:10px 14px; border-radius:20px; border:1px solid var(--ly-line); font-size:12px; display:flex; align-items:center; gap:8px; box-shadow:0 3px 12px #00000010; }
+#ly-interaction-prototype .ly-result-header { min-height:62px; padding:8px 12px; }
+#ly-interaction-prototype .ly-result-header h3 { flex:1; }
+#ly-interaction-prototype .ly-result-meta { padding:0 20px 10px; display:flex; justify-content:space-between; align-items:center; color:var(--ly-muted); font-size:12px; }
+#ly-interaction-prototype .ly-result-area { background:var(--ly-soft); flex:1; min-height:0; position:relative; overflow:hidden; }
+#ly-interaction-prototype .ly-result-scroll { height:100%; overflow:auto; padding:18px 48px 18px 18px; }
+#ly-interaction-prototype .ly-preview-space { position:relative; margin:0 auto; box-shadow:0 2px 10px #00000010; flex-shrink:0; }
+#ly-interaction-prototype .ly-preview-clip { position:absolute; inset:0; overflow:hidden; background:#F5F1E5; }
+#ly-interaction-prototype .ly-preview-source { position:absolute; top:0; left:0; transform-origin:0 0; }
+#ly-interaction-prototype .ly-mask-layer { position:absolute; inset:0; pointer-events:none; }
+#ly-interaction-prototype .ly-mask { position:absolute; background:#171D1B; }
+#ly-interaction-prototype .ly-locator { position:absolute; right:4px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; background:var(--ly-paper); border-radius:18px; border:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-locator button { width:44px; min-height:44px; border:0; padding:5px; background:transparent; font-size:11px; }
+#ly-interaction-prototype .ly-locator svg { width:15px; height:15px; }
+#ly-interaction-prototype .ly-result-notice { padding:10px 16px; border-bottom:1px solid var(--ly-line); font-size:12px; background:var(--ly-paper); display:flex; gap:7px; align-items:center; }
+#ly-interaction-prototype .ly-result-notice svg { width:16px; height:16px; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-editor-toolbar { display:grid; grid-template-columns:repeat(4,1fr); padding:8px 14px 0; border-top:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-tool { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-height:56px; background:transparent; border:0; border-radius:12px; font-size:11px !important; }
+#ly-interaction-prototype .ly-tool svg { width:20px; height:20px; }
+#ly-interaction-prototype .ly-result-actions { display:grid; grid-template-columns:1fr 58px; gap:10px; padding:12px 20px 15px; }
+#ly-interaction-prototype .ly-share-button { border:1px solid var(--ly-line); border-radius:16px; background:var(--ly-paper); display:grid; place-items:center; min-height:54px; }
+#ly-interaction-prototype .ly-share-button svg { width:22px; height:22px; }
+#ly-interaction-prototype .ly-editor-header { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; min-height:60px; border-bottom:1px solid var(--ly-line); }
+#ly-interaction-prototype .ly-apply { border:0; border-radius:13px; background:var(--ly-ink); color:var(--ly-paper) !important; padding:9px 15px; min-height:44px; }
+#ly-interaction-prototype .ly-editor-stage { flex:1; min-height:0; background:var(--ly-soft); padding:18px 30px; display:flex; justify-content:center; align-items:center; overflow:hidden; position:relative; }
+#ly-interaction-prototype .ly-edit-image { position:relative; flex-shrink:0; touch-action:none; }
+#ly-interaction-prototype .ly-crop-shade { position:absolute; border:2px solid var(--ly-accent); box-shadow:0 0 0 800px #15211C55; touch-action:none; }
+#ly-interaction-prototype .ly-crop-handle { width:44px; height:44px; position:absolute; border:0; background:transparent; transform:translate(-50%,-50%); padding:0; touch-action:none; }
+#ly-interaction-prototype .ly-crop-handle::after { content:""; display:block; width:11px; height:11px; background:var(--ly-accent); border:2px solid #F7F4EE; border-radius:2px; margin:auto; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tl"] { left:0;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="tr"] { left:100%;top:0; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="bl"] { left:0;top:100%; }
+#ly-interaction-prototype .ly-crop-handle[data-corner="br"] { left:100%;top:100%; }
+#ly-interaction-prototype .ly-editor-controls { padding:13px 20px 16px; border-top:1px solid var(--ly-line); background:var(--ly-paper); }
+#ly-interaction-prototype .ly-editor-hint { text-align:center; font-size:12px; color:var(--ly-muted); margin-bottom:10px; }
+#ly-interaction-prototype .ly-range-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 18px; }
+#ly-interaction-prototype .ly-range-field { display:block; font-size:12px; color:var(--ly-muted); }
+#ly-interaction-prototype .ly-range-field span { display:flex; justify-content:space-between; align-items:center; }
+#ly-interaction-prototype .ly-range-field input { width:100%; min-height:28px; accent-color:var(--ly-accent); }
+#ly-interaction-prototype .ly-mask-editor .ly-edit-image { cursor:crosshair; }
+#ly-interaction-prototype .ly-selected-mask { outline:2px solid var(--ly-accent); outline-offset:2px; }
+#ly-interaction-prototype .ly-control-row { display:flex; gap:8px; align-items:center; justify-content:space-between; }
+#ly-interaction-prototype .ly-control-row .ly-secondary { width:auto; min-height:44px; font-size:13px; padding:8px 10px; }
+#ly-interaction-prototype .ly-control-row .ly-secondary[aria-pressed="true"] { color:var(--ly-accent-text); border-color:var(--ly-line); }
+#ly-interaction-prototype .ly-setting-row { display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px; background:transparent; border:0; min-height:62px; padding:14px 0; border-bottom:1px solid var(--ly-line); text-align:left; }
+#ly-interaction-prototype .ly-setting-row input { width:22px; height:22px; accent-color:var(--ly-ink); }
+#ly-interaction-prototype .ly-setting-row small { display:block; color:var(--ly-muted); font-size:12px; margin-top:3px; }
+#ly-interaction-prototype .ly-success-icon { width:54px; height:54px; background:var(--ly-soft); border-radius:50%; display:grid; place-items:center; margin:10px 0 17px; color:var(--ly-accent-text); }
+#ly-interaction-prototype .ly-success-icon svg { width:26px; height:26px; }
+#ly-interaction-prototype .ly-share-apps { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:17px 0 7px; }
+#ly-interaction-prototype .ly-share-apps button { border:0; background:transparent; display:flex; align-items:center; flex-direction:column; gap:9px; font-size:12px; padding:9px 0; }
+#ly-interaction-prototype .ly-share-apps button span { width:52px; height:52px; background:var(--ly-soft); display:grid; place-items:center; border-radius:16px; }
+#ly-interaction-prototype .ly-share-apps svg { width:23px; height:23px; }
+#ly-interaction-prototype .ly-steps { display:grid; gap:22px; margin-top:26px; }
+#ly-interaction-prototype .ly-steps div { display:flex; gap:15px; }
+#ly-interaction-prototype .ly-steps b { font-size:12px; color:var(--ly-accent-text); padding-top:4px; }
+#ly-interaction-prototype .ly-steps p { font-size:14px; color:var(--ly-muted); margin-top:4px; }
+@media(max-width:350px) { #ly-interaction-prototype .ly-phone {border-radius:24px;} #ly-interaction-prototype .ly-content {padding:14px 20px 20px;} #ly-interaction-prototype .ly-phone h1 {font-size:29px;} #ly-interaction-prototype .ly-footer {padding:14px 20px 18px;} #ly-interaction-prototype .ly-illustration {height:250px;} #ly-interaction-prototype .ly-sheet {padding-left:20px;padding-right:20px;} }
+@media(prefers-reduced-motion:reduce) { #ly-interaction-prototype * { scroll-behavior:auto !important; } }
+
+</style>
+<script>
+(function (scope) {
+  'use strict';
+  const copy = value => JSON.parse(JSON.stringify(value));
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  function cleanEdit(edit) {
+    const c = edit.crop;
+    const x = clamp(c.x, 0, .9), y = clamp(c.y, 0, .9);
+    return {
+      crop: {x, y, w:clamp(c.w, .1, 1-x), h:clamp(c.h, .1, 1-y)},
+      masks: (edit.masks || []).map(m => {
+        const mx=clamp(m.x,0,.98), my=clamp(m.y,0,.98);
+        return {x:mx,y:my,w:clamp(m.w,.02,1-mx),h:clamp(m.h,.01,1-my)};
+      })
+    };
+  }
+  function draft(frames, interrupted=false) {
+    return {frames, height:540+(frames-1)*360, interrupted, saved:false, shared:false,
+      history:[{crop:{x:0,y:0,w:1,h:1},masks:[]}], index:0};
+  }
+  function create(scenario='first') {
+    const ready = !['first','denied','android10'].includes(scenario);
+    return {scenario,screen:'home',permission:ready,bubble:ready,legacy:scenario==='android10',
+      projection:false,denied:scenario==='denied',frames:0,draft:['draft','savefail'].includes(scenario)?draft(4):null,
+      failConsumed:false,exportStatus:'idle',sheet:null};
+  }
+  function grant(s, allowed) {
+    s.permission=allowed; s.bubble=allowed; s.denied=!allowed;
+    s.screen='home'; s.sheet=null;
+  }
+  function disable(s) { s.permission=false; s.bubble=false; s.projection=false; }
+  function startCapture(s) {
+    s.frames=1; s.screen='capturing'; s.sheet=null; s.exportStatus='idle';
+  }
+  function stepCapture(s) { if(s.screen==='capturing') s.frames=Math.min(4,s.frames+1); }
+  function finishCapture(s, interrupted=false) {
+    s.draft=draft(Math.max(1,s.frames),interrupted); s.screen='result'; s.sheet=null;
+  }
+  function current(s) { return s.draft?copy(s.draft.history[s.draft.index]):null; }
+  function commit(s, edit) {
+    if(!s.draft) return;
+    s.draft.history=s.draft.history.slice(0,s.draft.index+1);
+    s.draft.history.push(cleanEdit(edit)); s.draft.index++;
+    s.draft.saved=false; s.draft.shared=false;
+  }
+  function undo(s) { if(s.draft && s.draft.index>0){s.draft.index--;s.draft.saved=false;s.draft.shared=false;} }
+  function redo(s) { if(s.draft && s.draft.index<s.draft.history.length-1){s.draft.index++;s.draft.saved=false;s.draft.shared=false;} }
+  function exportResult(s, type, success) {
+    s.exportStatus=success?'success':'failed';
+    if(success&&s.draft) s.draft[type==='save'?'saved':'shared']=true;
+  }
+  function needsProtection(s) { return !!s.draft&&!s.draft.saved; }
+  function clearDraft(s) { s.draft=null;s.screen='home';s.sheet=null;s.exportStatus='idle'; }
+  const api={create,grant,disable,startCapture,stepCapture,finishCapture,current,commit,undo,redo,exportResult,needsProtection,clearDraft,cleanEdit};
+  if(typeof module!=='undefined'&&module.exports) module.exports=api;
+  else scope.LianyePrototypeModel=api;
+})(globalThis);
+
+(function () {
+  'use strict';
+  const root=document.getElementById('ly-interaction-prototype');
+  if(!root) return;
+  const screen=root.querySelector('#ly-screen'), overlay=root.querySelector('#ly-overlay');
+  const scenarioSelect=root.querySelector('#ly-scenario');
+  const M=globalThis.LianyePrototypeModel;
+  let s=M.create(), tool=null, temp=null, selectedMask=-1, zoom=1, cropZoom=1, maskPan=false;
+  let captureTimer=null, exportTimer=null, pendingExit=null, drag=null, returnFocus=null;
+  let bubbleY=245, bubbleSide='right', lastPhoneWidth=0;
+  let stateSequence=0, lastSavedStamp=null;
+  const instanceStamp=Math.random().toString(36).slice(2);
+  const design={radius:22,appearance:'system'};
+  const esc=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icon=name=>`<i data-lucide="${name}" aria-hidden="true"></i>`;
+  const button=(action,label,cls='ly-primary',extra='')=>`<button type="button" class="${cls}" data-action="${action}" ${extra}>${label}</button>`;
+  const ib=(action,name,label,extra='')=>button(action,icon(name),'ly-icon-button',`aria-label="${label}" ${extra}`);
+  const close=()=>ib('close-sheet','x','关闭');
+  const announce=text=>{root.querySelector('#ly-announcement').textContent=text;};
+  function icons(){if(globalThis.lucide) globalThis.lucide.createIcons({attrs:{width:16,height:16}});}
+  function remember(){
+    const api=window.openai;
+    if(api&&typeof api.setWidgetState==='function') {
+      const experience=JSON.parse(JSON.stringify(s));
+      if(experience.draft&&JSON.stringify(experience).length>11000){experience.draft.history=[M.current(s)];experience.draft.index=0;}
+      const privateContent={version:1,stamp:instanceStamp+':'+(++stateSequence),experience,appearance:design.appearance,zoom,bubbleY,bubbleSide};
+      const value={modelContent:{product:'连页',scenario:s.scenario,screen:s.screen,hasDraft:!!s.draft},privateContent};
+      if(JSON.stringify(value).length>15000)return;
+      lastSavedStamp=privateContent.stamp;
+      try {api.setWidgetState(value)?.catch?.(()=>{});}catch{}
+    }
+  }
+  function stopTimers(){clearInterval(captureTimer);clearTimeout(exportTimer);captureTimer=null;exportTimer=null;}
+  function article(){return `<article class="ly-article" aria-label="示例内容：周末散步指南">
+    <div class="ly-article-kicker">慢一点 · 周末提案</div><h2>留一个下午，<br>沿着河边走走。</h2>
+    <p class="ly-article-intro">不用安排很满。带一瓶水，穿一双舒服的鞋，把时间留给路边的风景。</p>
+    <div class="ly-landscape" role="img" aria-label="河畔丘陵与落日插画"><span class="ly-sun"></span><span class="ly-hill"></span><span class="ly-hill second"></span><span class="ly-path"></span></div>
+    <div class="ly-article-section"><h3><span>01</span> 从旧桥出发</h3><p>穿过桥头的小广场，沿河向东走。树荫下的石板路很平缓，适合边走边看。</p><p>第一段不必赶路。听听水声，看一看桥下的倒影，在想停下的地方停一会儿。</p></div>
+    <div class="ly-article-section"><h3><span>02</span> 找一处树荫</h3><p>经过第三张长椅，路边会出现一片低矮的树林。带来的水和小点心，刚好可以在这里派上用场。</p><div class="ly-article-note">随手记：走走停停，比一路赶到终点更适合这个下午。</div></div>
+    <div class="ly-article-section"><h3><span>03</span> 等一束傍晚的光</h3><p>河湾开阔处没有遮挡。太阳低下来时，水面上会出现一条长长的光带。</p><p>可以拍一张照片，也可以把手机收起来。让这一刻只是一个安静的傍晚。</p></div>
+    <div class="ly-article-section"><h3><span>04</span> 慢慢走回去</h3><p>回程沿原路走，熟悉的风景换了光线，又像一条新的路。趁天色还亮，回家吃一顿简单的晚饭。</p></div>
+    <div class="ly-contact">示例联系号码<br><b>138 0000 2468</b><br><span>以上为原型示例内容</span></div>
+  </article>`;}
+  function mini(){return `<b>周末散步指南</b><div class="ly-mini-visual"></div>${Array.from({length:5},(_,i)=>`<div class="ly-mini-lines ${i===4?'short':''}"></div>`).join('')}`;}
+  function home(){
+    const d=s.draft;
+    return `<div class="ly-page">
+      <header class="ly-header"><div class="ly-brand"><span class="ly-logo" role="img" aria-label="连页标识"></span>连页</div>${ib('settings','settings-2','设置与帮助')}</header>
+      <main class="ly-content">
+        <div class="ly-eyebrow">自动长截图</div>
+        <h1>${d?'接着完成，<br>刚才那一页。':'一屏之外，<br>完整留下。'}</h1>
+        <p class="ly-description">${d?'草稿和编辑都在，随时接着处理。':'自动滚动，将连续画面接成一张长图。'}</p>
+        ${d?`<div class="ly-draft-card"><div class="ly-draft-thumb" aria-hidden="true">${mini()}${mini()}</div><div><span class="ly-badge">${icon('file-image')}当前草稿</span><h3 style="margin-top:9px">${d.saved?'已保存的长图':'还有一张未保存'}</h3><p class="ly-draft-meta">${d.frames} 屏内容<br>${d.history.length>1?'已保留编辑记录':'今天 · 刚刚截取'}</p></div></div>`:
+        `<div class="ly-illustration" aria-label="长图越过单屏取景边界的示意" role="img"><div class="ly-mini-page">${mini()}<div class="ly-mini-lines"></div></div><div class="ly-frame"><span class="ly-corner a"></span><span class="ly-corner b"></span><span class="ly-corner c"></span><span class="ly-corner d"></span></div><span class="ly-continuity">${icon('arrow-down')}接完整</span></div>`}
+        ${s.denied?`<div class="ly-notice error" role="alert">${icon('info')}<span>还未开启截图服务。准备好后，可以重新开始。</span></div>`:''}
+      </main>
+      <footer class="ly-footer">
+        ${button(d?'resume':'start',`${icon(d?'file-image':'scan-line')}${d?'继续编辑':s.permission?'去截图':'开始长截图'}`)}
+        ${d?button('new','新建长截图','ly-text-button','style="width:100%;margin-top:4px"'):`<div class="ly-footnote">${icon(s.permission?'circle-check':'shield-check')}${s.permission?'已准备好 · 截图按钮将出现在屏幕侧边':'本机处理 · 无需账号'}</div>`}
+      </footer>
+    </div>`;
+  }
+  function system(){return `<div class="ly-page ly-system">
+    <header class="ly-header">${ib('system-back','arrow-left','返回连页')}<h3>无障碍 · 连页</h3></header>
+    <main class="ly-content"><span class="ly-logo-app ly-logo" style="margin:18px 0"></span><h2>使用连页</h2>
+    <label class="ly-system-row"><span>允许连页使用无障碍服务</span><input id="ly-system-enable" type="checkbox" ${s.permission?'checked':''} aria-label="开启连页无障碍服务"></label>
+    <p class="ly-description">此服务用于读取屏幕截图、自动滚动和显示截图按钮。</p>
+    <p class="ly-description">只有开始截取时，连页才会处理截图。截取结果保存在手机本地。</p>
+    ${button('restricted','无法开启？','ly-text-button','style="margin:24px auto 0"')}</main></div>`;}
+  function desktop(){return `<div class="ly-page ly-desktop">
+    <div><div class="ly-desktop-time">9:41</div><p class="ly-description">10 月 6 日 · 星期二</p>
+    <div class="ly-app-grid">
+      ${button('open-browser','<span class="ly-app-square">'+icon('globe-2')+'</span>浏览器','ly-app')}
+      ${button('home','<span class="ly-logo-app"></span>连页','ly-app')}
+      ${button('desktop-settings','<span class="ly-app-square">'+icon('settings')+'</span>系统设置','ly-app')}
+    </div></div><div class="ly-desktop-hint">打开需要截取的页面，<br>再点屏幕侧边的「截取」。</div></div>`;}
+  function target(){const capturing=s.screen==='capturing';return `<div class="ly-page">
+    <header class="ly-browser-header">${ib('target-back','arrow-left','返回桌面')}<div class="ly-address">${icon('lock-keyhole')}周末散步指南</div>${ib('home','house','返回连页')}</header>
+    <div class="ly-target-scroll">${article()}</div>
+    ${s.bubble?`<button type="button" class="ly-bubble ${capturing?'recording':''}" data-action="${capturing?'stop':'capture'}" aria-label="${capturing?'结束截取':'开始截取，可拖动位置'}" style="top:${bubbleY}px;${bubbleSide==='left'?'left:8px;right:auto':''}">${capturing?'<span class="ly-live-dot"></span>':icon('scan-line')}${capturing?'结束':'截取'}</button>`:''}
+    ${capturing?`<div class="ly-capture-label"><span class="ly-live-dot"></span><span>正在截取 · 已保留 ${s.frames} 屏</span></div>`:''}
+    ${!s.bubble?`<div class="ly-capture-label">截图按钮已隐藏 ${button('show-bubble','显示','ly-text-button')}</div>`:''}
+  </div>`;}
+  function masksHTML(edit){return edit.masks.map((m,i)=>`<span class="ly-mask ${tool==='mask'&&selectedMask===i?'ly-selected-mask':''}" data-mask="${i}" style="left:${m.x*100}%;top:${m.y*100}%;width:${m.w*100}%;height:${m.h*100}%"></span>`).join('');}
+  function sourceHTML(edit,scale){return `<div class="ly-preview-source" style="width:320px;height:${s.draft.height}px;transform:scale(${scale})">${article()}<div class="ly-mask-layer">${masksHTML(edit)}</div></div>`;}
+  function result(){
+    const edit=M.current(s), d=s.draft, c=edit.crop;
+    const scale=(screen.clientWidth-70)/(320*c.w)*zoom;
+    const w=320*c.w*scale,h=d.height*c.h*scale;
+    return `<div class="ly-page"><header class="ly-header ly-result-header">${ib('draft-home','arrow-left','返回首页，保留草稿')}<h3>检查长图</h3>${button('done','完成','ly-text-button')}</header>
+      <div class="ly-result-meta"><span>${d.frames} 屏 · PNG</span><span>${d.saved?'已保存至相册':'未保存草稿'}</span></div>
+      ${d.interrupted?`<div class="ly-result-notice">${icon('info')}截取中断，已保留 ${d.frames} 屏有效内容。</div>`:''}
+      <main class="ly-result-area"><div class="ly-result-scroll" aria-label="长图预览，可滚动查看">
+        <div class="ly-preview-space" style="width:${w}px;height:${h}px"><div class="ly-preview-clip">${sourceHTML(edit,scale)}</div></div>
+      </div><div class="ly-locator">${button('top',icon('arrow-up-to-line'),'','aria-label="定位图片顶部"')}${button('zoom-in',icon('plus'),'','aria-label="放大图片"')}${button('zoom-out',icon('minus'),'','aria-label="缩小图片"')}${button('bottom',icon('arrow-down-to-line'),'','aria-label="定位图片底部"')}</div></main>
+      <div class="ly-editor-toolbar" aria-label="编辑长图">
+        ${button('crop',icon('crop')+'裁剪','ly-tool')}${button('mask',icon('square')+'遮盖','ly-tool')}
+        ${button('undo',icon('undo-2')+'撤销','ly-tool',d.index===0?'disabled':'')}${button('redo',icon('redo-2')+'重做','ly-tool',d.index>=d.history.length-1?'disabled':'')}
+      </div><footer class="ly-result-actions">${button('save',icon('download')+'保存图片')}${button('share',icon('share-2'),'ly-share-button','aria-label="分享图片"')}</footer></div>`;
+  }
+  function cropInputs(){const c=temp.crop;const values={top:c.y,bottom:1-c.y-c.h,left:c.x,right:1-c.x-c.w};return `<div class="ly-range-grid">${Object.entries(values).map(([key,v])=>`<label class="ly-range-field"><span>${({top:'上边',bottom:'下边',left:'左边',right:'右边'})[key]}<output id="ly-crop-${key}-value">${Math.round(v*100)}%</output></span><input type="range" min="0" max="80" step="1" value="${Math.round(v*100)}" data-crop-edge="${key}" aria-label="裁剪${({top:'上边',bottom:'下边',left:'左边',right:'右边'})[key]}"></label>`).join('')}</div>`;}
+  function maskInputs(){if(selectedMask<0||!temp.masks[selectedMask]) return '';const m=temp.masks[selectedMask];return `<div class="ly-range-grid" style="margin-top:8px">${['x','y','w','h'].map(k=>`<label class="ly-range-field"><span>${({x:'横向位置',y:'纵向位置',w:'宽度',h:'高度'})[k]}<output id="ly-mask-${k}-value">${Math.round(m[k]*100)}%</output></span><input type="range" min="${['w','h'].includes(k)?2:0}" max="100" value="${Math.round(m[k]*100)}" data-mask-field="${k}" aria-label="遮盖${({x:'横向位置',y:'纵向位置',w:'宽度',h:'高度'})[k]}"></label>`).join('')}</div>`;}
+  function editor(){const isCrop=tool==='crop';
+    const controlH=isCrop?202:selectedMask>=0?212:110;
+    const c=temp.crop;
+    const scale=isCrop?Math.min((screen.clientWidth-90)/320,(screen.clientHeight-60-controlH-36)/s.draft.height)*cropZoom:(screen.clientWidth-58)/(320*c.w);
+    const w=320*(isCrop?1:c.w)*scale,h=s.draft.height*(isCrop?1:c.h)*scale;
+    return `<div class="ly-page ${isCrop?'':'ly-mask-editor'}"><header class="ly-editor-header">${button('cancel-edit','取消','ly-text-button')}<h3>${isCrop?'裁剪':'遮盖隐私'}</h3>${button('apply-edit','应用','ly-apply')}</header>
+      <div class="ly-editor-stage" ${isCrop&&cropZoom===1?'':'style="display:block;overflow:auto;padding:22px 29px"'}>
+      <div class="ly-edit-image" style="width:${w}px;height:${h}px;margin:0 auto;touch-action:${isCrop||maskPan?'auto':'none'};${maskPan?'cursor:grab':''}" data-scale="${scale}">${isCrop?sourceHTML(temp,scale):`<div class="ly-preview-clip">${sourceHTML(temp,scale)}</div>`}
+        ${isCrop?`<div class="ly-crop-shade" style="left:${c.x*100}%;top:${c.y*100}%;width:${c.w*100}%;height:${c.h*100}%">${['tl','tr','bl','br'].map(corner=>`<button type="button" class="ly-crop-handle" data-corner="${corner}" aria-label="${({tl:'左上',tr:'右上',bl:'左下',br:'右下'})[corner]}裁剪角，方向键调整"></button>`).join('')}</div>`:''}
+      </div></div><footer class="ly-editor-controls"><div class="ly-editor-hint">${isCrop?'拖动四角，或调整下方边界':maskPan?'滑动浏览，找到需要遮盖的位置':'在图上拖出遮盖区域，遮住敏感信息'}</div>
+        ${isCrop?`<div class="ly-control-row" style="margin-bottom:8px"><span class="ly-badge">${cropZoom===1?'全图预览':'放大调整'}</span>${button('crop-zoom',icon(cropZoom===1?'zoom-in':'maximize')+(cropZoom===1?'放大调整':'查看全图'),'ly-text-button')}</div>${cropInputs()}`:`<div class="ly-control-row">${button('add-mask',icon('plus')+'添加遮盖','ly-secondary')}${button('mask-pan',maskPan?'绘制遮盖':'移动查看','ly-secondary',`aria-pressed="${maskPan}"`)}${ib('delete-mask','trash-2','移除选中遮盖',selectedMask<0?'disabled':'')}</div>${maskInputs()}`}
+      </footer></div>`;
+  }
+  function settings(){return `<div class="ly-page"><header class="ly-header">${ib('home','arrow-left','返回首页')}<h3 style="flex:1">设置与帮助</h3></header>
+    <main class="ly-content"><h2>按你的习惯来。</h2>
+    <label class="ly-setting-row"><span>侧边截图按钮<small>${s.permission?'只控制显示，不停用服务':'开启截图服务后可使用'}</small></span><input type="checkbox" id="ly-bubble-toggle" ${s.bubble?'checked':''} ${s.permission?'':'disabled'}></label>
+    ${button('disable','<span>停用截图服务<small>停止读取画面和自动滚动</small></span>'+icon('chevron-right'),'ly-setting-row',s.permission?'':'disabled')}
+    ${button('help','<span>如何截取长图</span>'+icon('chevron-right'),'ly-setting-row')}
+    ${button('restricted','<span>无法开启服务？</span>'+icon('chevron-right'),'ly-setting-row')}
+    <div style="margin-top:28px"><span class="ly-logo" style="margin-bottom:14px"></span><h3>连页</h3><p class="ly-description">画面只在你开始截取后处理。<br>截图、草稿和编辑留在本机。</p></div></main></div>`;}
+  function help(){return `<div class="ly-page"><header class="ly-header">${ib('settings','arrow-left','返回设置')}<h3 style="flex:1">如何截取长图</h3></header><main class="ly-content"><h2>三步，接完整。</h2><div class="ly-steps"><div><b>01</b><section><h3>打开目标页面</h3><p>从连页点「去截图」，再打开需要截取的 App 和页面。</p></section></div><div><b>02</b><section><h3>点侧边「截取」</h3><p>连页会自动滚动。到达底部后结束，也可以随时点「结束」。</p></section></div><div><b>03</b><section><h3>检查，再保存</h3><p>确认内容接好了，裁掉多余部分、遮住隐私，然后保存或分享。</p></section></div></div><div class="ly-notice" style="margin-top:30px">${icon('info')}<span>动态画面和受保护页面可能无法完整截取。请在导出前检查接合位置。</span></div></main></div>`;}
+  function sheetFrame(title,body){return `<div class="ly-scrim" data-scrim="true"><section class="ly-sheet" role="dialog" aria-modal="true" aria-label="${title}"><div class="ly-sheet-handle"></div><div class="ly-sheet-title"><h2>${title}</h2>${close()}</div>${body}</section></div>`;}
+  function sheet(){
+    if(!s.sheet) return '';
+    if(s.sheet==='prepare') return sheetFrame('先准备一下',`<p class="ly-description">开启截图服务，就能在其他 App 里自动截取长图。</p><div class="ly-permission-list">
+      <div class="ly-permission-item"><span>${icon('scan-line')}</span><div><h3>截取画面、自动滚动</h3><p>仅在开始截取后读取画面并滚动页面。</p></div></div>
+      <div class="ly-permission-item"><span>${icon('panel-right')}</span><div><h3>显示侧边截图按钮</h3><p>在目标页面一键开始，也能随时结束。</p></div></div>
+      <div class="ly-permission-item"><span>${icon('shield-check')}</span><div><h3>截图留在本机</h3><p>无须账号，处理过程无需联网。</p></div></div></div>${button('to-system','前往系统设置')}${button('close-sheet','稍后再说','ly-text-button','style="width:100%;margin-top:5px"')}`);
+    if(s.sheet==='system-consent'||s.sheet==='projection'){
+      const projection=s.sheet==='projection';
+      return `<div class="ly-scrim"><section class="ly-system-dialog" role="dialog" aria-modal="true" aria-label="${projection?'允许捕获屏幕':'允许无障碍服务'}"><h2>${projection?'允许连页捕获屏幕？':'允许连页使用无障碍服务？'}</h2><p>${projection?'连页将获取屏幕上的画面，用于这一次长截图。敏感信息也可能出现在截图中。':'连页将能够截取屏幕并执行滚动操作。屏幕上可能包含敏感信息，请只对需要截取的页面使用。'}</p><div class="ly-system-actions">${button(projection?'projection-deny':'system-deny','取消','ly-system-action')}${button(projection?'projection-allow':'system-allow',projection?'立即开始':'允许','ly-system-action')}</div></section></div>`;
+    }
+    if(s.sheet==='restricted') return sheetFrame('系统限制了服务？',`<p class="ly-description">侧载安装的应用可能需要先允许受限制的设置。</p><div class="ly-steps"><div><b>01</b><section><h3>打开连页的应用信息</h3><p>长按桌面图标，进入「应用信息」。</p></section></div><div><b>02</b><section><h3>查找受限制的设置</h3><p>部分系统在右上角菜单中显示。开启后返回无障碍设置。</p></section></div></div><p class="ly-description">不同手机的名称与位置可能不同。</p>${button('retry-permission','返回授权步骤')}`);
+    if(s.sheet==='disable') return sheetFrame('停用截图服务？',`<p class="ly-description">侧边按钮会消失，连页将停止截取画面和自动滚动。当前草稿会保留。</p>${button('confirm-disable','停用服务')}${button('close-sheet','继续使用','ly-text-button','style="width:100%;margin-top:5px"')}`);
+    if(s.sheet==='protect') return sheetFrame(pendingExit==='new'?'先处理当前草稿':'还有一张未保存',`<p class="ly-description">${pendingExit==='new'?'新截图会替换这张草稿。你可以先保存，再开始。':'完成后会清除这张草稿。需要的话，先保存到相册。'}</p>${button('save-before-exit',pendingExit==='new'?'保存并开始新截图':'保存并完成')}${button('discard-exit',pendingExit==='new'?'放弃草稿，开始新截图':'不保存，完成','ly-secondary')}${button('close-sheet','继续编辑','ly-text-button','style="width:100%;margin-top:5px"')}`);
+    if(s.sheet==='saving') return sheetFrame('正在保存',`<p class="ly-description" role="status">正在导出 PNG 图片…</p>`);
+    if(s.sheet==='saved') return sheetFrame('已保存到相册',`<div class="ly-success-icon">${icon('check')}</div><p class="ly-description">${pendingExit==='new'?'这一张已经保存，可以开始下一张了。':'完整图片已保存，你可以继续编辑或结束。'}</p>${button('after-save',pendingExit==='new'?'开始新截图':'完成')}${button('close-sheet','继续编辑','ly-secondary')}`);
+    if(s.sheet==='save-error') return sheetFrame('暂时没能保存',`<div class="ly-notice error" role="alert">${icon('info')}<span>保存失败，草稿和编辑都已保留。</span></div><p class="ly-description">可以检查可用空间，再试一次。</p>${button('retry-save','重新保存')}${button('close-sheet','返回检查','ly-secondary')}`);
+    if(s.sheet==='share') return sheetFrame('分享图片',`<p class="ly-description">PNG 图片 · 分享不会自动保存到相册</p><div class="ly-share-apps">${[['message-circle','聊天'],['mail','邮件'],['folder','文件']].map(([ico,label])=>button('share-to',`<span>${icon(ico)}</span>${label}`,'',`data-share-app="${label}"`)).join('')}</div>${button('close-sheet','取消','ly-secondary')}`);
+    if(s.sheet==='shared') return sheetFrame('已交给所选应用',`<div class="ly-success-icon">${icon('share-2')}</div><p class="ly-description">请在所选应用中完成发送。草稿仍然保留在连页。</p>${button('close-sheet','返回长图')}`);
+    return '';
+  }
+  function render({focus=true}={}){
+    const previous=document.activeElement;
+    const focusKey=previous&&root.contains(previous)?(previous.id?{id:previous.id}:previous.dataset.action?{action:previous.dataset.action}:null):null;
+    const scroll=screen.querySelector('.ly-result-scroll'), oldScroll=scroll?{top:scroll.scrollTop,left:scroll.scrollLeft}:null;
+    const editScroll=screen.querySelector('.ly-editor-stage'),oldEditScroll=editScroll?.scrollTop||0;
+    const previousSheet=overlay.querySelector('[role="dialog"]')?.getAttribute('aria-label');
+    screen.innerHTML=tool?editor():({home,system,desktop,target,capturing:target,result,settings,help}[s.screen]||home)();
+    overlay.innerHTML=sheet(); screen.inert=!!s.sheet;
+    icons();
+    if(s.screen==='result'&&!tool){
+      const source=screen.querySelector('.ly-preview-source'),c=M.current(s).crop;
+      const scale=(screen.clientWidth-70)/(320*c.w)*zoom;
+      source.style.left=`${-c.x*320*scale}px`;source.style.top=`${-c.y*s.draft.height*scale}px`;
+      const viewport=screen.querySelector('.ly-result-scroll');
+      if(oldScroll){viewport.scrollTop=oldScroll.top;viewport.scrollLeft=oldScroll.left;}
+    }
+    if(tool&&screen.querySelector('.ly-editor-stage')) screen.querySelector('.ly-editor-stage').scrollTop=oldEditScroll;
+    if(tool==='mask'){
+      const source=screen.querySelector('.ly-preview-source'),c=temp.crop;
+      const scale=(screen.clientWidth-58)/(320*c.w);
+      source.style.left=`${-c.x*320*scale}px`;source.style.top=`${-c.y*s.draft.height*scale}px`;
+    }
+    if(s.screen==='capturing') screen.querySelector('.ly-target-scroll').scrollTop=(s.frames-1)*360;
+    if(focus){
+      let next;
+      if(s.sheet){
+        const modal=overlay.querySelector('[role="dialog"]');
+        if(modal.getAttribute('aria-label')!==previousSheet) next=modal.querySelector('.ly-primary,.ly-system-action,button');
+        else if(focusKey?.action) next=modal.querySelector(`[data-action="${focusKey.action}"]`);
+      } else if(returnFocus){next=screen.querySelector(`[data-action="${returnFocus}"]`);returnFocus=null;}
+      if(!next&&focusKey?.id) next=root.querySelector('#'+focusKey.id);
+      if(!next&&focusKey?.action) next=screen.querySelector(`[data-action="${focusKey.action}"]`);
+      if(!next&&previous&&screen.contains(previous)===false&&root.contains(previous)===false&&focusKey) next=screen.querySelector('button:not(:disabled)');
+      if(next?.disabled)next=screen.querySelector('button:not(:disabled)');
+      next?.focus({preventScroll:true});
+    }
+  }
+  function openSheet(name,action){returnFocus=action||document.activeElement?.dataset.action||null;s.sheet=name;render();remember();}
+  function closeSheet(){
+    if(s.sheet==='saving') return;
+    s.sheet=null;pendingExit=null;render();remember();
+  }
+  function goCapture(){
+    if(!s.permission){openSheet('prepare','start');return;}
+    if(s.legacy&&!s.projection){openSheet('projection','start');return;}
+    s.bubble=true;s.screen='desktop';s.sheet=null;render();announce('打开目标页面，再点截取');remember();
+  }
+  function startCapture(){
+    M.startCapture(s);render();announce('开始截取');
+    captureTimer=setInterval(()=>{
+      if(s.screen!=='capturing'){clearInterval(captureTimer);return;}
+      if(s.scenario==='interrupt'&&s.frames>=2){finishCapture(true);return;}
+      if(s.frames>=4){finishCapture(false);return;}
+      M.stepCapture(s);render({focus:false});announce(`已保留 ${s.frames} 屏`);
+    },1100);
+    remember();
+  }
+  function finishCapture(interrupted){clearInterval(captureTimer);captureTimer=null;M.finishCapture(s,interrupted);s.projection=false;zoom=1;render();announce(interrupted?'截取中断，已保留有效内容':'截取完成，可以检查长图');remember();}
+  function requestExit(type){pendingExit=type;if(M.needsProtection(s))openSheet('protect');else completeExit();}
+  function completeExit(){const next=pendingExit;M.clearDraft(s);pendingExit=null;tool=null;temp=null;zoom=1;if(next==='new')goCapture();else render();remember();}
+  function save(){
+    if(!s.draft)return;
+    s.sheet='saving';render();announce('正在保存');
+    exportTimer=setTimeout(()=>{
+      const failed=s.scenario==='savefail'&&!s.failConsumed;
+      s.failConsumed=true;M.exportResult(s,'save',!failed);s.sheet=failed?'save-error':'saved';render();announce(failed?'保存失败，草稿已保留':'已保存到相册');remember();
+    },700);
+  }
+  function beginEdit(type){tool=type;temp=M.current(s);selectedMask=-1;cropZoom=1;maskPan=false;render();remember();}
+  function finishEdit(apply){
+    if(apply&&JSON.stringify(temp)!==JSON.stringify(M.current(s)))M.commit(s,temp);
+    returnFocus=tool==='crop'?'crop':'mask';tool=null;temp=null;selectedMask=-1;zoom=1;render();announce(apply?'编辑已应用':'已取消编辑');remember();
+  }
+  function updateEditVisual(){
+    if(!temp)return;
+    const shade=screen.querySelector('.ly-crop-shade');
+    if(shade){const c=temp.crop;Object.assign(shade.style,{left:`${c.x*100}%`,top:`${c.y*100}%`,width:`${c.w*100}%`,height:`${c.h*100}%`});}
+    const layer=screen.querySelector('.ly-mask-layer');if(layer)layer.innerHTML=masksHTML(temp);
+    for(const edge of ['top','bottom','left','right']){
+      const c=temp.crop,v=({top:c.y,bottom:1-c.y-c.h,left:c.x,right:1-c.x-c.w})[edge];
+      const input=screen.querySelector(`[data-crop-edge="${edge}"]`);if(input)input.value=Math.round(v*100);
+      const output=screen.querySelector(`#ly-crop-${edge}-value`);if(output)output.textContent=Math.round(v*100)+'%';
+    }
+    if(selectedMask>=0){for(const k of ['x','y','w','h']){
+      const m=temp.masks[selectedMask],input=screen.querySelector(`[data-mask-field="${k}"]`),out=screen.querySelector(`#ly-mask-${k}-value`);
+      if(input)input.value=Math.round(m[k]*100);if(out)out.textContent=Math.round(m[k]*100)+'%';
+    }}
+  }
+  function moveCorner(corner,dx,dy,original){
+    let x0=original.x,y0=original.y,x1=x0+original.w,y1=y0+original.h;
+    if(corner.includes('l'))x0=Math.max(0,Math.min(x1-.1,x0+dx));else x1=Math.max(x0+.1,Math.min(1,x1+dx));
+    if(corner.includes('t'))y0=Math.max(0,Math.min(y1-.1,y0+dy));else y1=Math.max(y0+.1,Math.min(1,y1+dy));
+    temp.crop={x:x0,y:y0,w:x1-x0,h:y1-y0};updateEditVisual();
+  }
+  root.addEventListener('click',event=>{
+    const el=event.target.closest('[data-action]');if(!el||el.disabled||drag?.moved)return;
+    const action=el.dataset.action;
+    const actions={
+      start:goCapture,new:()=>requestExit('new'),resume:()=>{s.screen='result';render();},
+      home:()=>{if(s.screen==='capturing')finishCapture(true);else{s.screen='home';s.sheet=null;render();}},
+      settings:()=>{s.screen='settings';render();},help:()=>{s.screen='help';render();},
+      'draft-home':()=>{s.screen='home';render();},'close-sheet':closeSheet,
+      'to-system':()=>{s.screen='system';s.sheet=null;render();},
+      'system-back':()=>{s.screen='home';s.sheet=null;render();},
+      'system-deny':()=>{M.grant(s,false);render();announce('还未开启截图服务');},
+      'system-allow':()=>{M.grant(s,true);render();announce('已准备好，可以去截图');},
+      'projection-deny':()=>{s.sheet=null;s.screen='home';render();announce('已取消当次屏幕捕获');},
+      'projection-allow':()=>{s.projection=true;goCapture();},
+      restricted:()=>openSheet('restricted'),
+      'retry-permission':()=>{s.sheet=null;s.screen='system';render();},
+      disable:()=>openSheet('disable'),
+      'confirm-disable':()=>{M.disable(s);s.sheet=null;render();announce('截图服务已停用，草稿保留');},
+      'desktop-settings':()=>{s.screen='system';render();},
+      'open-browser':()=>{s.screen='target';render();},
+      'target-back':()=>{if(s.screen==='capturing')finishCapture(true);else{s.screen='desktop';render();}},
+      'show-bubble':()=>{s.bubble=true;render();},capture:startCapture,stop:()=>finishCapture(false),
+      crop:()=>beginEdit('crop'),mask:()=>beginEdit('mask'),
+      'crop-zoom':()=>{cropZoom=cropZoom===1?Math.min(3,(screen.clientWidth-58)/screen.querySelector('.ly-edit-image').clientWidth):1;render();},
+      'mask-pan':()=>{maskPan=!maskPan;render();},
+      'cancel-edit':()=>finishEdit(false),'apply-edit':()=>finishEdit(true),
+      undo:()=>{M.undo(s);render();announce('已撤销');},redo:()=>{M.redo(s);render();announce('已重做');},
+      'add-mask':()=>{
+        const stage=screen.querySelector('.ly-editor-stage'),image=screen.querySelector('.ly-edit-image');
+        const c=temp.crop;
+        const y=c.y+Math.min(.95,Math.max(0,(stage.scrollTop+stage.clientHeight*.45-22)/image.clientHeight))*c.h;
+        temp.masks.push({x:c.x+.18*c.w,y,w:.64*c.w,h:Math.min(.035,c.y+c.h-y)});selectedMask=temp.masks.length-1;render();
+      },
+      'delete-mask':()=>{if(selectedMask>=0){temp.masks.splice(selectedMask,1);selectedMask=-1;render();}},
+      top:()=>{screen.querySelector('.ly-result-scroll').scrollTop=0;},
+      bottom:()=>{const v=screen.querySelector('.ly-result-scroll');v.scrollTop=v.scrollHeight;},
+      'zoom-in':()=>{zoom=Math.min(2.5,zoom+.25);render();announce(`放大至 ${Math.round(zoom*100)}%`);},
+      'zoom-out':()=>{zoom=Math.max(.5,zoom-.25);render();announce(`缩放至 ${Math.round(zoom*100)}%`);},
+      save, 'retry-save':save,'save-before-exit':save,
+      done:()=>requestExit('done'),'discard-exit':completeExit,
+      'after-save':()=>{if(pendingExit)completeExit();else{pendingExit='done';completeExit();}},
+      share:()=>openSheet('share'),
+      'share-to':()=>{M.exportResult(s,'share',true);s.sheet='shared';render();announce(`已交给${el.dataset.shareApp}应用`);}
+    };
+    actions[action]?.();remember();
+  });
+  root.addEventListener('change',event=>{
+    if(event.target===scenarioSelect){stopTimers();s=M.create(scenarioSelect.value);tool=null;temp=null;pendingExit=null;zoom=1;bubbleY=245;render();remember();}
+    if(event.target.id==='ly-system-enable')openSheet(event.target.checked?'system-consent':'disable');
+    if(event.target.id==='ly-bubble-toggle'){s.bubble=event.target.checked;remember();}
+  });
+  root.addEventListener('input',event=>{
+    const el=event.target;
+    if(el.dataset.cropEdge){const edge=el.dataset.cropEdge,value=Number(el.value)/100,c=temp.crop;
+      if(edge==='top'){const bottom=c.y+c.h;c.y=Math.min(value,bottom-.1);c.h=bottom-c.y;}
+      if(edge==='bottom')c.h=Math.max(.1,1-value-c.y);
+      if(edge==='left'){const right=c.x+c.w;c.x=Math.min(value,right-.1);c.w=right-c.x;}
+      if(edge==='right')c.w=Math.max(.1,1-value-c.x);
+      temp=M.cleanEdit(temp);updateEditVisual();
+    }
+    if(el.dataset.maskField&&selectedMask>=0){const k=el.dataset.maskField;temp.masks[selectedMask][k]=Number(el.value)/100;temp=M.cleanEdit(temp);updateEditVisual();}
+  });
+  root.addEventListener('pointerdown',event=>{
+    if(event.button!==0)return;
+    const bubble=event.target.closest('.ly-bubble');
+    if(bubble){drag={type:'bubble',node:bubble,startX:event.clientX,startY:event.clientY,y:bubbleY,moved:false};bubble.setPointerCapture(event.pointerId);return;}
+    const image=event.target.closest('.ly-edit-image');if(!image||!tool)return;
+    const rect=image.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;
+    const corner=event.target.closest('[data-corner]');
+    if(corner){drag={type:'crop',node:corner,corner:corner.dataset.corner,original:{...temp.crop},startX:event.clientX,startY:event.clientY,rect,moved:false};corner.setPointerCapture(event.pointerId);event.preventDefault();}
+    else if(tool==='mask'&&!maskPan){
+      const c=temp.crop,sx=c.x+x*c.w,sy=c.y+y*c.h;
+      const hit=temp.masks.findIndex(m=>sx>=m.x&&sx<=m.x+m.w&&sy>=m.y&&sy<=m.y+m.h);
+      if(hit>=0){selectedMask=hit;render();return;}
+      const px=Math.max(c.x,Math.min(c.x+c.w-.02,sx)),py=Math.max(c.y,Math.min(c.y+c.h-.01,sy));
+      const previousSelection=selectedMask;
+      temp.masks.push({x:px,y:py,w:.02,h:.01});selectedMask=temp.masks.length-1;
+      drag={type:'mask',node:image,x:px,y:py,rect,crop:{...c},previousSelection,moved:false};image.setPointerCapture(event.pointerId);event.preventDefault();updateEditVisual();
+    }
+  });
+  root.addEventListener('pointermove',event=>{
+    if(!drag)return;
+    if(drag.type==='bubble'){
+      const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;if(Math.abs(dx)+Math.abs(dy)>6)drag.moved=true;
+      if(drag.moved){bubbleY=Math.max(70,Math.min(590,drag.y+dy));bubbleSide=event.clientX<screen.getBoundingClientRect().left+screen.clientWidth/2?'left':'right';drag.node.style.top=bubbleY+'px';drag.node.style.left=bubbleSide==='left'?'8px':'auto';drag.node.style.right=bubbleSide==='right'?'8px':'auto';}
+    } else if(drag.type==='crop'){
+      drag.moved=true;moveCorner(drag.corner,(event.clientX-drag.startX)/drag.rect.width,(event.clientY-drag.startY)/drag.rect.height,drag.original);
+    } else {
+      drag.moved=true;const c=drag.crop;
+      const x=c.x+Math.max(0,Math.min(1,(event.clientX-drag.rect.left)/drag.rect.width))*c.w,y=c.y+Math.max(0,Math.min(1,(event.clientY-drag.rect.top)/drag.rect.height))*c.h;
+      temp.masks[selectedMask]={x:Math.min(drag.x,x),y:Math.min(drag.y,y),w:Math.max(.02,Math.abs(x-drag.x)),h:Math.max(.01,Math.abs(y-drag.y))};temp=M.cleanEdit(temp);updateEditVisual();
+    }
+  });
+  function endDrag(){if(!drag)return;const old=drag;if(old.type==='mask'){if(!old.moved){temp.masks.pop();selectedMask=old.previousSelection;}render();}setTimeout(()=>{drag=null;},0);}
+  root.addEventListener('pointerup',endDrag);root.addEventListener('pointercancel',endDrag);
+  root.addEventListener('keydown',event=>{
+    const corner=event.target.dataset.corner;
+    if(corner&&temp&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)){
+      event.preventDefault();moveCorner(corner,event.key==='ArrowLeft'?-.01:event.key==='ArrowRight'?.01:0,event.key==='ArrowUp'?-.01:event.key==='ArrowDown'?.01:0,{...temp.crop});return;
+    }
+    if(event.key==='Escape'){if(s.sheet){event.preventDefault();closeSheet();}else if(tool){event.preventDefault();finishEdit(false);}}
+    if(event.key==='Tab'&&s.sheet){
+      const controls=[...overlay.querySelectorAll('button:not(:disabled),input:not(:disabled)')];
+      if(!controls.length)return;const first=controls[0],last=controls.at(-1);
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+    }
+  });
+  const ro=new ResizeObserver(()=>{
+    const width=screen.clientWidth;if(Math.abs(width-lastPhoneWidth)>1){lastPhoneWidth=width;if(s.screen==='result'||tool)render({focus:false});}
+  });ro.observe(screen);
+  function applyDesign(){root.style.setProperty('--ly-radius',design.radius+'px');root.style.colorScheme=design.appearance==='system'?'inherit':design.appearance;}
+  function restore(value){const state=value?.privateContent;
+    if(!state||state.version!==1||state.stamp===lastSavedStamp||state.stamp?.startsWith(instanceStamp+':'))return;
+    const restored=state.experience;
+    if(!restored||![...scenarioSelect.options].some(o=>o.value===restored.scenario))return;
+    try {
+      const next=JSON.parse(JSON.stringify(restored));
+      if(next.draft){
+        if(!Array.isArray(next.draft.history)||!next.draft.history.length)return;
+        next.draft.history=next.draft.history.map(M.cleanEdit);
+        next.draft.index=Math.max(0,Math.min(next.draft.history.length-1,Math.round(next.draft.index)));
+        next.draft.frames=Math.max(1,Math.min(4,next.draft.frames));next.draft.height=540+(next.draft.frames-1)*360;
+      }
+      stopTimers();s=next;s.sheet=null;tool=null;temp=null;pendingExit=null;
+      if(s.screen==='capturing'){M.finishCapture(s,true);s.projection=false;}
+      if(!['home','system','desktop','target','result','settings','help'].includes(s.screen)||s.screen==='result'&&!s.draft)s.screen='home';
+      scenarioSelect.value=s.scenario;
+      if(['system','light','dark'].includes(state.appearance))design.appearance=state.appearance;
+      zoom=Math.max(.5,Math.min(2.5,state.zoom||1));bubbleY=Math.max(70,Math.min(590,state.bubbleY||245));bubbleSide=state.bubbleSide==='left'?'left':'right';
+      lastSavedStamp=state.stamp;applyDesign();render({focus:false});
+    }catch{}
+  }
+  render();applyDesign();restore(window.openai?.widgetState);
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:applyDesign});
+    tweak.addSlider(design,'radius',{label:'内容圆角',min:12,max:28,step:2,unit:'px',reference:'--ly-radius'});
+    tweak.addSelect(design,'appearance',{label:'外观',options:[{label:'跟随环境',value:'system'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});
+  }
+})();
+
+</script>

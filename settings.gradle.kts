@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "scroll-loom"
+rootProject.name = "Lianye"
 include(":app")

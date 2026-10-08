@@ -17,11 +17,11 @@ fun localProp(key: String): String? =
     System.getenv(key) ?: localProps.getProperty(key)
 
 android {
-    namespace = "org.scrollloom"
+    namespace = "org.lianye"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.scrollloom"
+        applicationId = "org.lianye"
         minSdk = 29
         targetSdk = 35
         versionCode = 1
@@ -40,6 +40,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -130,7 +134,7 @@ tasks.register("verifyZeroNetworkDependencies") {
             }
         }
         if (violations.isNotEmpty()) {
-            throw GradleException("FATAL: Forbidden network dependencies detected: $violations. ScrollLoom enforces strict zero-network purity!")
+            throw GradleException("FATAL: Forbidden network dependencies detected: $violations. Lianye enforces strict zero-network purity!")
         }
         println("✅ verifyZeroNetworkDependencies passed: 0 forbidden network dependencies found across runtime configurations.")
     }
