@@ -10,6 +10,8 @@
 
 从[正式发布页](https://github.com/gxwane/lianye/releases/latest)下载 `Lianye-v版本号.apk` 安装，版本内容见[更新记录](CHANGELOG.md)。Android 10 及以上可用。当前包名为 `org.lianye`，可与旧测试版分别安装。
 
+F-Droid 用户可从[项目仓库页面](https://gxwane.github.io/lianye/)获取订阅地址。这是项目自行维护的分发仓库。
+
 ## 使用
 
 1. 首页直接选择 **自动滚动** 或 **自己滑动**，点击 **开始长截图**，按系统提示授权。
