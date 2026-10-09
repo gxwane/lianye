@@ -8,9 +8,31 @@
 
 连页是一款 Android 开源长截图工具。支持自动滚动和自己滑动，图片在本机拼接；完成后可以检查、裁剪、保存或分享。无需账号，应用没有网络权限、广告或追踪。
 
+**[下载 Android 版](https://github.com/gxwane/lianye/releases/latest) · [产品介绍与视频演示](https://gxwane.github.io/lianye/) · [更新记录](CHANGELOG.md)**
+
+<p lang="en">Lianye is a free, open-source Android scrolling screenshot app. Capture with automatic or manual scrolling, then review, crop, save, or share. Images are processed on your device. No accounts, network permission, ads, or tracking. Android 10+.</p>
+
 从[正式发布页](https://github.com/gxwane/lianye/releases/latest)下载 `Lianye-v版本号.apk` 安装，版本内容见[更新记录](CHANGELOG.md)。Android 10 及以上可用。当前包名为 `org.lianye`，可与旧测试版分别安装。
 
 F-Droid 用户可从[项目仓库页面](https://gxwane.github.io/lianye/)获取订阅地址。这是项目自行维护的分发仓库。
+
+## 看看连页
+
+<p align="center">
+  <a href="docs/assets/showcase/home.png"><img src="docs/assets/showcase/home.png" width="30%" alt="连页首页：选择自动滚动或自己滑动，点击开始长截图"></a>
+  <a href="docs/assets/showcase/capture.png"><img src="docs/assets/showcase/capture.png" width="30%" alt="手动截图：向上滑动路线和结束悬浮按钮持续显示"></a>
+  <a href="docs/assets/showcase/crop.png"><img src="docs/assets/showcase/crop.png" width="30%" alt="长图裁剪：拖动四角调整范围，支持撤销、重做和查看全图"></a>
+</p>
+
+<p align="center">选择方式，开始截图 · 向上滑，松手稍停 · 检查裁剪，保存分享</p>
+
+### 一次完整操作
+
+<p><img src="docs/assets/showcase/demo.gif" width="320" alt="连页实机演示：开始手动长截图，滑动示例文章，结束后裁剪并保存到相册"></p>
+
+[播放视频](https://gxwane.github.io/lianye/#demo) · [下载 MP4](https://gxwane.github.io/lianye/assets/showcase/demo.mp4) · [查看实际成图](docs/assets/showcase/result.png)
+
+素材来自正式版 **v0.1.0**，华为 STK-AL00 / Android 10；文章为原创演示内容。动图使用手动模式，省略等待和部分重复滑动，并加速播放；实际速度和兼容性取决于设备与页面。更多信息见[素材说明](docs/assets/showcase/README.md)。
 
 ## 使用
 

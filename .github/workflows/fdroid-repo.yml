@@ -103,23 +103,12 @@ jobs:
           fdroid update --create-metadata --rename-apks
 
       - name: Prepare Pages artifact
-        env:
-          PAGES_REPO_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/fdroid/repo
         run: |
-          mkdir -p pages/fdroid
+          mkdir -p pages/fdroid pages/assets/showcase
           cp -r fdroid/repo pages/fdroid/
-          # Generate a simple index.html pointing to the repo
-          cat > pages/index.html << EOF
-          <!DOCTYPE html>
-          <html lang="en">
-          <head><meta charset="UTF-8"><title>Lianye F-Droid Repo</title></head>
-          <body>
-          <h1>Lianye F-Droid Repository</h1>
-          <p>Add this URL to your F-Droid client:</p>
-          <code>${PAGES_REPO_URL}</code>
-          </body>
-          </html>
-          EOF
+          cp -r website/. pages/
+          cp docs/assets/showcase/*.png docs/assets/showcase/*.gif docs/assets/showcase/*.mp4 pages/assets/showcase/
+          touch pages/.nojekyll
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5.0.0
