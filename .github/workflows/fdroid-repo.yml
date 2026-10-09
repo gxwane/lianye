@@ -76,7 +76,7 @@ jobs:
           cat > fdroid/config.yml << EOF
           repo_url: "${PAGES_REPO_URL}"
           repo_name: "Lianye"
-          repo_icon: icons/icon.png
+          repo_icon: icon.png
           repo_description: "Official Lianye F-Droid repository. Zero network, MIT licensed."
           archive_older: 3
           keystore: keystore.jks
