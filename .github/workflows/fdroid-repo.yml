@@ -94,10 +94,11 @@ jobs:
           mkdir -p metadata
           cp ../metadata/org.lianye.yml metadata/
           mkdir -p repo/icons
-          rsvg-convert --width=512 --height=512 ../design/brand/logo_master.svg > repo/icons/icon.png
+          rsvg-convert --width=512 --height=512 ../design/brand/logo_master.svg > icon.png
+          cp icon.png repo/icons/icon.png
           for locale in en-US zh-CN; do
             mkdir -p "metadata/org.lianye/$locale/images"
-            cp repo/icons/icon.png "metadata/org.lianye/$locale/images/icon.png"
+            cp icon.png "metadata/org.lianye/$locale/images/icon.png"
           done
           fdroid update --create-metadata --rename-apks
 
