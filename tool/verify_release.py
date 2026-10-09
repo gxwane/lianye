@@ -33,8 +33,18 @@ def run(command):
     return result.stdout
 
 
-def verify(apk, tag, sdk, lint_report):
-    gradle = (ROOT / "app/build.gradle.kts").read_text(encoding="utf-8")
+def verify_certificate(signing):
+    signer_count = re.search(r"^Number of signers: (\d+)$", signing, re.MULTILINE)
+    certificates = set(value.lower() for value in re.findall(
+        r"^(?:Signer #\d+|V\d(?:\.\d+)? Signer:) certificate SHA-256 digest: ([0-9a-fA-F]{64})$",
+        signing, re.MULTILINE))
+    require(signer_count is not None and signer_count.group(1) == "1", "APK must have exactly one signer")
+    require(certificates == {RELEASE_CERTIFICATE}, "APK signing certificate differs from the existing release key")
+    return RELEASE_CERTIFICATE
+
+
+def verify(apk, tag, sdk, lint_report, source_root=ROOT):
+    gradle = (source_root / "app/build.gradle.kts").read_text(encoding="utf-8")
     version_name = re.search(r'\bversionName\s*=\s*"([^"]+)"', gradle).group(1)
     version_code = re.search(r"\bversionCode\s*=\s*(\d+)", gradle).group(1)
     require(tag == "v" + version_name, "Release tag differs from the app version")
@@ -50,13 +60,12 @@ def verify(apk, tag, sdk, lint_report):
     require("application-debuggable" not in badging, "APK is debuggable")
     require("android.permission.INTERNET" not in badging, "APK declares network permission")
     signing = run([sdk_tool(sdk, "apksigner"), "verify", "--verbose", "--print-certs", apk])
-    certificates = re.findall(r"Signer #\d+ certificate SHA-256 digest: ([0-9a-fA-F]+)", signing)
-    require(len(certificates) == 1 and certificates[0].lower() == RELEASE_CERTIFICATE, "APK signing certificate differs from the existing release key")
+    certificate = verify_certificate(signing)
     return {
         "package": package.group(1), "version": version_name, "version_code": int(version_code),
         "tag": tag, "apk": apk.name, "bytes": apk.stat().st_size,
         "sha256": hashlib.sha256(apk.read_bytes()).hexdigest(),
-        "certificate_sha256": certificates[0].lower(),
+        "certificate_sha256": certificate,
         "lint_errors": 0, "lint_warnings": sum(issue.attrib.get("severity") == "Warning" for issue in issues),
         "debuggable": False, "network_permission": False,
     }
@@ -68,10 +77,11 @@ def main():
     parser.add_argument("--tag", required=True)
     parser.add_argument("--sdk", type=Path, default=os.environ.get("ANDROID_HOME") or os.environ.get("ANDROID_SDK_ROOT"))
     parser.add_argument("--lint-report", type=Path, default=ROOT / "app/build/reports/lint-results-debug.xml")
+    parser.add_argument("--source-root", type=Path, default=ROOT)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     require(args.sdk is not None, "ANDROID_HOME or --sdk is required")
-    result = verify(args.apk, args.tag, args.sdk, args.lint_report)
+    result = verify(args.apk, args.tag, args.sdk, args.lint_report, args.source_root)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

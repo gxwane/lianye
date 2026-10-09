@@ -28,6 +28,13 @@ jobs:
         with:
           ref: ${{ env.RELEASE_TAG }}
 
+      - name: Checkout release verification tools
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .release-tools
+          sparse-checkout: tool
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -52,16 +59,21 @@ jobs:
           python3 tool/sync_brand_assets.py --check
           python3 - << 'PY'
           import os
+          import sys
           from pathlib import Path
           import subprocess
+          sys.path.insert(0, '.release-tools')
           from tool.verify_release import sdk_tool
           sdk = Path(os.environ.get('ANDROID_HOME') or os.environ['ANDROID_SDK_ROOT'])
           subprocess.run([str(sdk_tool(sdk, 'apksigner')), 'verify', '--verbose', '--print-certs',
                           'app/build/outputs/apk/release/app-release.apk'], check=True)
           PY
-          python3 tool/verify_release.py \
+          python3 -m unittest discover -s .release-tools/tool -p test_verify_release.py
+          python3 .release-tools/tool/verify_release.py \
             --apk app/build/outputs/apk/release/app-release.apk \
             --tag "$RELEASE_TAG" \
+            --source-root . \
+            --lint-report app/build/reports/lint-results-debug.xml \
             --output build/release-verification.json
 
       - name: Rename APK with version tag
